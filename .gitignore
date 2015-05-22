@@ -41,3 +41,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# RIB Exporter で無視する.
+# これらはlibtiffを使用しているため、別途ビルドを促す.
+projects/libtiff/include/*
+projects/libtiff/lib/mac/*
+projects/libtiff/lib/win/win32/*
+projects/libtiff/lib/win/x64/*
