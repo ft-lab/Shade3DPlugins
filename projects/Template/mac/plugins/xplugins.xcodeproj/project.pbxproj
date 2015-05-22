@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		16F9E21B0546323A00F09F49 /* shdplugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16F9E21A0546323A00F09F49 /* shdplugin.icns */; };
+		92C2F913179A29A30064E7EB /* MyPluginInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92C2F911179A29A30064E7EB /* MyPluginInterface.cpp */; };
+		92C2F914179A29A30064E7EB /* MyPluginInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C2F912179A29A30064E7EB /* MyPluginInterface.h */; };
+		92C2F916179A29AF0064E7EB /* HelloShade.info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 92C2F915179A29AF0064E7EB /* HelloShade.info.plist */; };
+		92FABBDE16AFC8300051953F /* GlobalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 92FABBDA16AFC8300051953F /* GlobalHeader.h */; };
+		92FABBDF16AFC8300051953F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92FABBDB16AFC8300051953F /* main.cpp */; };
+		A31F019D08BD316A00C322BE /* sxuls in Resources */ = {isa = PBXBuildFile; fileRef = A31F019408BD316A00C322BE /* sxuls */; };
+		C7A45C7E13DFD68B005C78EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45C7D13DFD68B005C78EC /* Foundation.framework */; };
+		C7A45C8413DFD69F005C78EC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45C8313DFD69F005C78EC /* Cocoa.framework */; };
+		C7A45CCC13DFD717005C78EC /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7A45CCB13DFD717005C78EC /* debug.cpp */; };
+		C7A45CD413DFD75B005C78EC /* com.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7A45CD313DFD75B005C78EC /* com.cpp */; };
+		C7A45CD613DFD773005C78EC /* vectors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7A45CD513DFD773005C78EC /* vectors.cpp */; };
+		C7A45CDC13DFD915005C78EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		16F9E21A0546323A00F09F49 /* shdplugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = shdplugin.icns; path = ../xshade/icns/shdplugin.icns; sourceTree = SOURCE_ROOT; };
+		32DBCF630370AF2F00C91783 /* xplugins_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xplugins_Prefix.pch; sourceTree = "<group>"; };
+		92C2F911179A29A30064E7EB /* MyPluginInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyPluginInterface.cpp; path = ../../source/MyPluginInterface.cpp; sourceTree = "<group>"; };
+		92C2F912179A29A30064E7EB /* MyPluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyPluginInterface.h; path = ../../source/MyPluginInterface.h; sourceTree = "<group>"; };
+		92C2F915179A29AF0064E7EB /* HelloShade.info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = HelloShade.info.plist; path = plists/HelloShade.info.plist; sourceTree = "<group>"; };
+		92FABBDA16AFC8300051953F /* GlobalHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalHeader.h; path = ../../source/GlobalHeader.h; sourceTree = "<group>"; };
+		92FABBDB16AFC8300051953F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../source/main.cpp; sourceTree = "<group>"; };
+		A31F019508BD316A00C322BE /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = ../../source/resources/en.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		A31F01A808BD318900C322BE /* ja */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ja; path = ../../source/resources/ja.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		A31F01B308BD319F00C322BE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = folder; name = zh_CN; path = ../../source/resources/zh_CN.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		C7A4595013DFB59C005C78EC /* config.plugins.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = config.plugins.xcconfig; sourceTree = "<group>"; };
+		C7A45C7D13DFD68B005C78EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		C7A45C8313DFD69F005C78EC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		C7A45CCB13DFD717005C78EC /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = ../../../../include/sx/core/debug.cpp; sourceTree = SOURCE_ROOT; };
+		C7A45CD313DFD75B005C78EC /* com.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = com.cpp; path = ../../../../include/sx/core/com.cpp; sourceTree = SOURCE_ROOT; };
+		C7A45CD513DFD773005C78EC /* vectors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectors.cpp; path = ../../../../include/sx/core/vectors.cpp; sourceTree = SOURCE_ROOT; };
+		C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B8C4EB8404BCA9FB00A80009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7A45C7E13DFD68B005C78EC /* Foundation.framework in Frameworks */,
+				C7A45C8413DFD69F005C78EC /* Cocoa.framework in Frameworks */,
+				C7A45CDC13DFD915005C78EC /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* xplugins */ = {
+			isa = PBXGroup;
+			children = (
+				C7A4595013DFB59C005C78EC /* config.plugins.xcconfig */,
+				4A3E5BC70B0029410006A4FF /* sources */,
+				B8F429BB04BCB35A00A80009 /* plists */,
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* include */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = xplugins;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				C7A45C7D13DFD68B005C78EC /* Foundation.framework */,
+				C7A45C8313DFD69F005C78EC /* Cocoa.framework */,
+				C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A31F019408BD316A00C322BE /* sxuls */,
+				16F9E21A0546323A00F09F49 /* shdplugin.icns */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C7A45CD513DFD773005C78EC /* vectors.cpp */,
+				C7A45CD313DFD75B005C78EC /* com.cpp */,
+				C7A45CCB13DFD717005C78EC /* debug.cpp */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				32DBCF630370AF2F00C91783 /* xplugins_Prefix.pch */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		4A3E5BC70B0029410006A4FF /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				92C2F911179A29A30064E7EB /* MyPluginInterface.cpp */,
+				92C2F912179A29A30064E7EB /* MyPluginInterface.h */,
+				92FABBDA16AFC8300051953F /* GlobalHeader.h */,
+				92FABBDB16AFC8300051953F /* main.cpp */,
+			);
+			name = sources;
+			sourceTree = "<group>";
+		};
+		B8F429BB04BCB35A00A80009 /* plists */ = {
+			isa = PBXGroup;
+			children = (
+				92C2F915179A29AF0064E7EB /* HelloShade.info.plist */,
+			);
+			name = plists;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		B8C4EB8104BCA9FB00A80009 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92FABBDE16AFC8300051953F /* GlobalHeader.h in Headers */,
+				92C2F914179A29A30064E7EB /* MyPluginInterface.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		B8C4EB8504BCA9FB00A80009 /* HelloShade */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A31F017508BD30B100C322BE /* Build configuration list for PBXNativeTarget "HelloShade" */;
+			buildPhases = (
+				B8C4EB8104BCA9FB00A80009 /* Headers */,
+				B8C4EB8204BCA9FB00A80009 /* Resources */,
+				B8C4EB8304BCA9FB00A80009 /* Sources */,
+				B8C4EB8404BCA9FB00A80009 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HelloShade;
+			productName = multi_plugin;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A31F017D08BD30B100C322BE /* Build configuration list for PBXProject "xplugins" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				de,
+				en,
+				es,
+				fr,
+				ja,
+				zh_CN,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* xplugins */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B8C4EB8504BCA9FB00A80009 /* HelloShade */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B8C4EB8204BCA9FB00A80009 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16F9E21B0546323A00F09F49 /* shdplugin.icns in Resources */,
+				A31F019D08BD316A00C322BE /* sxuls in Resources */,
+				92C2F916179A29AF0064E7EB /* HelloShade.info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B8C4EB8304BCA9FB00A80009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7A45CCC13DFD717005C78EC /* debug.cpp in Sources */,
+				C7A45CD413DFD75B005C78EC /* com.cpp in Sources */,
+				C7A45CD613DFD773005C78EC /* vectors.cpp in Sources */,
+				92FABBDF16AFC8300051953F /* main.cpp in Sources */,
+				92C2F913179A29A30064E7EB /* MyPluginInterface.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A31F019408BD316A00C322BE /* sxuls */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A31F019508BD316A00C322BE /* en */,
+				A31F01A808BD318900C322BE /* ja */,
+				A31F01B308BD319F00C322BE /* zh_CN */,
+			);
+			name = sxuls;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A31F017608BD30B100C322BE /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = xplugins_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(MACROS)";
+				GCC_VERSION = "";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(BOOSTPATH)",
+					/usr/local/include,
+				);
+				INFOPLIST_FILE = plists/HelloShade.Info.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HelloShade;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				SYMROOT = build;
+				USER_HEADER_SEARCH_PATHS = "$(INCLUDEPATH) $(INCLUDEPATH)/openexr-1.6.1/macos $(INCLUDEPATH)/openexr-1.6.1/**";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		A31F017708BD30B100C322BE /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = xplugins_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(MACROS)";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = "";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(BOOSTPATH)",
+					../../../../include,
+					../../../../boost,
+					../../include,
+					../../boost,
+					/opt/local/include,
+				);
+				INFOPLIST_FILE = plists/HelloShade.Info.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACROS = "SXMACOSX SXDARWIN SXPOSIX __ASSERTMACROS__ SXEXPORT= SXCOREFOUNDATION=1 SXCOCOA=1 __stdcall= DLLEXPORT= STDCALL= __PROJECT_BUILDER__=1 SXCONFIGURATION=$(CONFIGURATION) SXCORE= ";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HelloShade;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				USER_HEADER_SEARCH_PATHS = "$(INCLUDEPATH) $(INCLUDEPATH)/openexr-1.6.1/macos $(INCLUDEPATH)/openexr-1.6.1/**";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		A31F017808BD30B100C322BE /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = xplugins_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(MACROS)";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "$(MACROS)";
+				GCC_VERSION = "";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(BOOSTPATH)",
+					../../../../include,
+					../../../../boost,
+					../../include,
+					../../boost,
+				);
+				INFOPLIST_FILE = plists/HelloShade.Info.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HelloShade;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+			};
+			name = Default;
+		};
+		A31F017E08BD30B100C322BE /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7A4595013DFB59C005C78EC /* config.plugins.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_VERSION = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+			};
+			name = Development;
+		};
+		A31F017F08BD30B100C322BE /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7A4595013DFB59C005C78EC /* config.plugins.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(BOOSTPATH)",
+					/usr/local/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+			};
+			name = Deployment;
+		};
+		A31F018008BD30B100C322BE /* Default */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7A4595013DFB59C005C78EC /* config.plugins.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_VERSION = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A31F017508BD30B100C322BE /* Build configuration list for PBXNativeTarget "HelloShade" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A31F017608BD30B100C322BE /* Development */,
+				A31F017708BD30B100C322BE /* Deployment */,
+				A31F017808BD30B100C322BE /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		A31F017D08BD30B100C322BE /* Build configuration list for PBXProject "xplugins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A31F017E08BD30B100C322BE /* Development */,
+				A31F017F08BD30B100C322BE /* Deployment */,
+				A31F018008BD30B100C322BE /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
