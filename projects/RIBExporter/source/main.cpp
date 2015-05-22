@@ -2,7 +2,6 @@
  * RIB Exporter.
  */
 
-#include "MainHeader.h"
 #include "RIBExporterInterface.h"
 #include "AttributeWindowInterface.h"
 
