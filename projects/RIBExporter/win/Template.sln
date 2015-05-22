@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RIBExporter", "RIBExporter.vcxproj", "{AE28B49E-A606-4575-A80F-2A9A5E87E6A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		RIBExporter|Win32 = RIBExporter|Win32
+		RIBExporter|x64 = RIBExporter|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE28B49E-A606-4575-A80F-2A9A5E87E6A2}.RIBExporter|Win32.ActiveCfg = RIBExporter|Win32
+		{AE28B49E-A606-4575-A80F-2A9A5E87E6A2}.RIBExporter|Win32.Build.0 = RIBExporter|Win32
+		{AE28B49E-A606-4575-A80F-2A9A5E87E6A2}.RIBExporter|x64.ActiveCfg = RIBExporter|x64
+		{AE28B49E-A606-4575-A80F-2A9A5E87E6A2}.RIBExporter|x64.Build.0 = RIBExporter|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

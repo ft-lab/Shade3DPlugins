@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<palette xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sxul.palettes.xsd" layout="true">
+	<vbox>
+		<control size='400 2'/>
+		<static-text id="target_master_surface_name" label="target_master_surface_name" size="200" />
+		<control size='400 2'/>
+		<checkbox id="use_custom" label="Use custom" />
+		<control size='400 2'/>
+		<push-button id="convert_from_surface_but" label="Convert from Surface" />
+		<control size='400 4'/>
+
+		<group id="visibility_group" label="visibility">
+			<checkbox id="visibility_camera" label="camera" />
+			<checkbox id="visibility_diffuse" label="diffuse" />
+			<checkbox id="visibility_specular" label="specular" />
+			<checkbox id="visibility_indirect" label="indirect" />
+		</group>
+		<control size='400 4'/>
+		<checkbox id="use_depth" label="Use depth" />
+		<hbox>
+			<control size='20 4'/>
+			<static-text id="maxdiffusedepth_text" label="maxdiffusedepth" size="100" />
+			<number id="maxdiffusedepth" label="" type="integer" size="64" />
+		</hbox>
+		<hbox>
+			<control size='20 4'/>
+			<static-text id="maxspeculardepth_text" label="maxspeculardepth" size="100" />
+			<number id="maxspeculardepth" label="" type="integer" size="64" />
+		</hbox>
+		<control size='400 4'/>
+
+		<popup-menu id="material_type" label="Material Type">
+			<item id="popup_item_0" label="PxrDiffuse"/>
+			<item id="popup_item_1" label="PxrDisney"/>
+			<item id="popup_item_2" label="PxrGlass"/>
+			<item id="popup_item_3" label="PxrConstant"/>
+<!--			<item id="popup_item_4" label="PxrSkin"/> -->
+<!--			<item id="popup_item_5" label="PxrVolume"/> -->
+		</popup-menu>
+		<control size='400 8'/>
+
+		<tab id="material_tab">
+			<group id="tab_diffuse" label="PxrDiffuse">
+				<hbox>
+					<static-text id="diffuse_diffuseColor_text" label="diffuseColor" size="100" />
+					<color-box id="diffuse_diffuseColor" label="diffuseColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="diffuse_transmissionColor_text" label="transmissionColor" size="100" />
+					<color-box id="diffuse_transmissionColor" label="transmissionColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="diffuse_presence_text" label="presence" size="100" />
+					<number id="diffuse_presence" label="" type="real" size="64" />
+				</hbox>
+			</group>
+
+			<group id="tab_disney" label="PxrDisney">
+				<hbox>
+					<hbox>
+						<static-text id="disney_baseColor_text" label="baseColor" size="100" />
+						<color-box id="disney_baseColor" label="baseColor" size="64" />
+					</hbox>
+				</hbox>
+				<hbox>
+					<static-text id="disney_emitColor_text" label="emitColor" size="100" />
+					<color-box id="disney_emitColor" label="emitColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_subsurface_text" label="subsurface" size="100" />
+					<number id="disney_subsurface" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_subsurfaceColor_text" label="subsurfaceColor" size="100" />
+					<color-box id="disney_subsurfaceColor" label="subsurfaceColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_metallic_text" label="metallic" size="100" />
+					<number id="disney_metallic" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_specular_text" label="specular" size="100" />
+					<number id="disney_specular" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_specularTint_text" label="specularTint" size="100" />
+					<number id="disney_specularTint" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_roughness_text" label="roughness" size="100" />
+					<number id="disney_roughness" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_anisotropic_text" label="anisotropic" size="100" />
+					<number id="disney_anisotropic" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_sheen_text" label="sheen" size="100" />
+					<number id="disney_sheen" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="disney_sheenTint_text" label="sheenTint" size="100" />
+					<number id="disney_sheenTint" label="" type="real" size="64" />
+				</hbox>
+			</group>
+
+			<group id="tab_glass" label="PxrGlass">
+				<hbox>
+					<static-text id="glass_ior_text" label="ior" size="100" />
+					<number id="glass_ior" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_roughness_text" label="roughness" size="100" />
+					<number id="glass_roughness" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_reflectionColor_text" label="reflectionColor" size="100" />
+					<color-box id="glass_reflectionColor" label="reflectionColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_reflectionGain_text" label="reflectionGain" size="100" />
+					<number id="glass_reflectionGain" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_transmissionColor_text" label="transmissionColor" size="100" />
+					<color-box id="glass_transmissionColor" label="transmissionColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_transmissionGain_text" label="transmissionGain" size="100" />
+					<number id="glass_transmissionGain" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_absorptionGain_text" label="absorptionGain" size="100" />
+					<number id="glass_absorptionGain" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="glass_absorptionColor_text" label="absorptionColor" size="100" />
+					<color-box id="glass_absorptionColor" label="" size="64" />
+				</hbox>
+			</group>
+
+			<group id="tab_constant" label="PxrConstant">
+				<hbox>
+					<static-text id="constsnt_emitColor_text" label="emitColor" size="100" />
+					<color-box id="constsnt_emitColor" label="emitColor" size="64" />
+				</hbox>
+			</group>
+<!--
+			<group id="tab_skin" label="PxrSkin">
+			</group>
+
+			<group id="tab_volume" label="PxrVolume">
+			</group>
+-->
+		</tab>
+
+		<control size='400 8'/>
+		<hbox>
+			<push-button id="apply_but" label="Apply" />
+			<push-button id="revert_but" label="Revert" />
+		</hbox>
+	</vbox>
+</palette>

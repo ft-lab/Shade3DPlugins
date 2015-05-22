@@ -44,7 +44,7 @@ Temporary Items
 
 # RIB Exporter で無視する.
 # これらはlibtiffを使用しているため、別途ビルドを促す.
-projects/libtiff/include/*
-projects/libtiff/lib/mac/*
-projects/libtiff/lib/win/win32/*
-projects/libtiff/lib/win/x64/*
+projects/RIBExporter/libtiff/include/*
+projects/RIBExporter/libtiff/lib/mac/*
+projects/RIBExporter/libtiff/lib/win/win32/*
+projects/RIBExporter/libtiff/lib/win/x64/*

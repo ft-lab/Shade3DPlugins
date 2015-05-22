@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog default_button="true" title="RIB Export">
+	<tab id="100" label="RIB Export">
+		<vbox id="200" label="Rendering">
+			<selection id="201" label="Integrators:|PxrPathTracer|PxrVCM|PxrDirectLighting" />
+			<float id="202" label="PixelVariance:" />
+			<int id="203" label="minsamples:" />
+			<int id="204" label="maxsamples:" />
+			<bool id="205" label="incremental" />
+			<float id="206" label="bias:" />
+			<int id="207" label="maxdiffusedepth:" />
+			<int id="208" label="maxspeculardepth:" />
+
+			<group id="220" label="Rendering Image">
+				<selection id="221" label="Image Format:|TIFF|OpenEXR" />
+				<selection id="222" label="Image Type:|RGB|RGBA" />
+			</group>
+
+			<group id="230" label="Statistics">
+				<bool id="231" label="endofframe" />
+				<bool id="232" label="xml file" />
+			</group>
+		</vbox>
+
+		<vbox id="500" label="Light">
+			<bool id="501" label="Day light" />
+		</vbox>
+
+		<vbox id="300" label="Background">
+			<bool id="301" label="Output the background image" />
+			<selection id="302" label="Image Size:|256 x 128|512 x 256|1024 x 512|2048 x 1024|4096 x 2048|8192 x 4096" />
+			<float id="303" label="Light intensity:" />
+			<bool id="304" label="Draw background" />
+		</vbox>
+
+		<vbox id="400" label="Color">
+			<bool id="401" label="Color to linear" />
+			<bool id="402" label="Texture to linear" />
+		</vbox>
+	</tab>
+</dialog>
