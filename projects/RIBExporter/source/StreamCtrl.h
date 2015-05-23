@@ -6,6 +6,7 @@
 
 #include "GlobalHeader.h"
 #include "MaterialCtrl.h"
+#include "LightCtrl.h"
 
 namespace StreamCtrl
 {
@@ -33,6 +34,22 @@ namespace StreamCtrl
 	 * 指定の形状（マスターサーフェス）のRenderManのパラメータを取得.
 	 */
 	CRISMaterialInfo LoadRIBMaterial (sxsdk::shape_class& shape);
+
+	/**
+	 * RenderManの面光源のパラメータを持つか.
+	 */
+	bool HasRIBAreaLight (sxsdk::shape_class& shape);
+
+	/**
+	 * 指定の面光源にRenderManのパラメータを保存.
+	 */
+	void SaveRIBAreaLight (sxsdk::shape_class& shape, const CPxrAreaLight& data);
+
+	/**
+	 * 指定の面光源のRenderManのパラメータを取得.
+	 */
+	CPxrAreaLight LoadRIBAreaLight (sxsdk::shape_class& shape);
+
 }
 
 #endif

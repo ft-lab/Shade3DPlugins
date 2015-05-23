@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog default_button="true" title="RenderMan Area Light">
+	<vbox>
+		<float id="101" label="Intensity:" />
+		<rgb id="102" label="LightColor:" />
+		<float id="103" label="AreaNormalize:" />
+		<rgb id="104" label="SpecAmount:" />
+		<rgb id="105" label="DiffAmount:" />
+		<float id="106" label="ConeAngle:" />
+		<float id="107" label="PenumbraAngle:" />
+		<float id="108" label="PenumbraExponent:" />
+		<float id="109" label="ProfileRange:" />
+		<float id="110" label="CosinePower:" />
+		<float id="111" label="AngularVisibility:" />
+		<rgb id="112" label="ShadowColor:" />
+		<float id="113" label="TraceShadows:" />
+		<float id="114" label="AdaptiveShadows:" />
+	</vbox>
+</dialog>

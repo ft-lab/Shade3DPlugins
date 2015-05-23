@@ -1082,6 +1082,16 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		// 面光源以外はスキップ.
 		if (lightInfo.lightType != light_type_area) continue;
 
+		// PxrAreaLightとしての面光源情報を取得 (streamに情報が保持されている).
+		CPxrAreaLight pxrAreaLightInfo;
+		if (lightInfo.shape) {
+			CLightInfo tmpLInfo = LightCtrl::GetAreaLightInfo(*lightInfo.shape);			// 光源情報を取得.
+			LightCtrl::ConvAreaLightShade3DToRIS(shade, tmpLInfo, pxrAreaLightInfo);		// RenderMan向けのパラメータに変換.
+			if (StreamCtrl::HasRIBAreaLight(*lightInfo.shape)) {
+				pxrAreaLightInfo = StreamCtrl::LoadRIBAreaLight(*lightInfo.shape);			// streamよりPxrAreaLightの光源情報を読み込み.
+			}
+		}
+
 		// 面光源の場合は、AttributeBegin - AttributeEndで囲む必要あり.
 		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line) {
 			m_WriteLine("AttributeBegin");
@@ -1183,9 +1193,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine(s.str());
 #endif
 			// 面光源の面積を計算.
-			const double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
+			//const double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
+			//intensity = (intensity * intensity) * sx::pi / area;
 
-			intensity = (intensity * intensity) * sx::pi / area;
+			intensity       = pxrAreaLightInfo.intensity;
+			lightInfo.color = pxrAreaLightInfo.lightColor;
 		}
 
 		const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
@@ -1224,6 +1236,75 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		}
 
 		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line) {
+			if (!sx::zero(pxrAreaLightInfo.areaNormalize)) {
+					std::stringstream s;
+					s << "  \"float areaNormalize\" [" << pxrAreaLightInfo.areaNormalize << "]";
+					m_WriteLine(s.str());
+			}
+			{
+				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.specAmount);
+				if (!sx::zero(col.red - 1.0f) || !sx::zero(col.green - 1.0f) || !sx::zero(col.blue - 1.0f)) {
+					std::stringstream s;
+					s << "  \"color specAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
+					m_WriteLine(s.str());
+				}
+			}
+			{
+				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.diffAmount);
+				if (!sx::zero(col.red - 1.0f) || !sx::zero(col.green - 1.0f) || !sx::zero(col.blue - 1.0f)) {
+					std::stringstream s;
+					s << "  \"color diffAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
+					m_WriteLine(s.str());
+				}
+			}
+			if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
+				std::stringstream s;
+				s << "  \"float coneangle\" [" << pxrAreaLightInfo.coneAngle << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.penumbraExponent)) {
+				std::stringstream s;
+				s << "  \"float penumbraexponent\" [" << pxrAreaLightInfo.penumbraExponent << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.penumbraAngle - 5.0f)) {
+				std::stringstream s;
+				s << "  \"float penumbraangle\" [" << pxrAreaLightInfo.penumbraAngle << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.profileRange - 180.0f)) {
+				std::stringstream s;
+				s << "  \"float profilerange\" [" << pxrAreaLightInfo.profileRange << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.cosinePower - 90.0f)) {
+				std::stringstream s;
+				s << "  \"float cosinepower\" [" << pxrAreaLightInfo.cosinePower << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.angularVisibility - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float angularVisibility\" [" << pxrAreaLightInfo.angularVisibility << "]";
+				m_WriteLine(s.str());
+			}
+			{
+				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.shadowColor);
+				if (!sx::zero(col.red) || !sx::zero(col.green) || !sx::zero(col.blue)) {
+					std::stringstream s;
+					s << "  \"color shadowColor\" [" << col.red << " " << col.green << " " << col.blue << "]";
+					m_WriteLine(s.str());
+				}
+			}
+			if (!sx::zero(pxrAreaLightInfo.traceShadows - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float traceShadows\" [" << pxrAreaLightInfo.traceShadows << "]";
+				m_WriteLine(s.str());
+			}
+			if (!sx::zero(pxrAreaLightInfo.adaptiveShadows - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float adaptiveShadows\" [" << pxrAreaLightInfo.adaptiveShadows << "]";
+				m_WriteLine(s.str());
+			}
 			m_WriteLine("Sides 1");
 
 			if (lightInfo.visible) {

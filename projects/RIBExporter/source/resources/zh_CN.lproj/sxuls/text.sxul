@@ -9,6 +9,7 @@
 	<string id="renderman_attribute_title" value="RenderMan Material" />
 
 	<string id="msg_select_master_surface" value="Plase select the master surface." />
+	<string id="msg_select_area_light" value="Plase select the area light." />
 
 	<string id="ris_material_diffuse" value="PxrDiffuse" />
 	<string id="ris_material_disney" value="PxrDisney" />
@@ -17,4 +18,5 @@
 	<string id="ris_material_skin" value="PxrSkin" />
 	<string id="ris_material_volume" value="PxrVolume" />
 
+	<string id="rib_attribute_title" value="RenderMan Attribute ..." />
 </strings>

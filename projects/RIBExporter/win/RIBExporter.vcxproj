@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\..\include\sx\core\com.cpp" />
     <ClCompile Include="..\..\..\include\sx\core\debug.cpp" />
     <ClCompile Include="..\..\..\include\sx\core\vectors.cpp" />
+    <ClCompile Include="..\source\AreaLightAttributeInterface.cpp" />
     <ClCompile Include="..\source\AttributeWindowInterface.cpp" />
     <ClCompile Include="..\source\BackgroundTexture.cpp" />
     <ClCompile Include="..\source\CameraCtrl.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="..\source\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\AreaLightAttributeInterface.h" />
     <ClInclude Include="..\source\AttributeWindowInterface.h" />
     <ClInclude Include="..\source\BackgroundTexture.h" />
     <ClInclude Include="..\source\CameraCtrl.h" />

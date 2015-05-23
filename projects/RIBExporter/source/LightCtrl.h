@@ -27,6 +27,8 @@ enum LIGHT_TYPE {
 class CLightInfo
 {
 public:
+	sxsdk::shape_class* shape;				// 対応する形状.
+
 	LIGHT_TYPE lightType;					// 光源の種類.
 	float intensity;						// 明るさ.
 	sxsdk::rgb_class color;					// 光源の色.
@@ -48,6 +50,39 @@ public:
 
 public:
 	CLightInfo ();
+
+	void Clear ();
+};
+
+//-------------------------------------------------------------------.
+// RenderMan用の光源情報.
+//-------------------------------------------------------------------.
+/**
+ * 面光源.
+ */
+class CPxrAreaLight
+{
+public:
+	float intensity;
+	sxsdk::rgb_class lightColor;
+	float areaNormalize;
+	sxsdk::rgb_class specAmount;
+	sxsdk::rgb_class diffAmount;
+	float coneAngle;
+	float penumbraAngle;
+	float penumbraExponent;
+	float profileRange;
+	float cosinePower;
+	float angularVisibility;
+
+	sxsdk::rgb_class shadowColor;
+	float traceShadows;
+	float adaptiveShadows;
+
+public:
+	CPxrAreaLight ();
+
+	void Clear ();
 };
 
 /**
@@ -88,5 +123,21 @@ public:
 	 */
 	CLightInfo GetLightInfo (const int index) { return m_lights[index]; }
 };
+
+//-------------------------------------------------------------------.
+// 光源情報を、 Shade 3D ==> RenderMan(RIS)でコンバート.
+//-------------------------------------------------------------------.
+namespace LightCtrl
+{
+	/**
+	 * Shade 3Dでの光源情報より、RIS向けにコンバート.
+	 */
+	void ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight);
+
+	/**
+	 * 指定の面光源情報を取得.
+	 */
+	CLightInfo GetAreaLightInfo (sxsdk::shape_class& shape);
+}
 
 #endif

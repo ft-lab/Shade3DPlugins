@@ -7,7 +7,56 @@
 
 CLightInfo::CLightInfo ()
 {
+	Clear();
 }
+
+void CLightInfo::Clear ()
+{
+	shape           = NULL;
+	lightType       = light_type_area;
+	intensity       = 100.0f;
+	color           = sxsdk::rgb_class(1, 1, 1);
+	direction       = sxsdk::vec3(0, -1, 0);
+	pos             = sxsdk::vec3(0, 0, 0);
+	ambient         = 0.0f;
+	attenuation     = sxsdk::enums::quadratic_attenuation;
+	shadowMap       = false;
+	shadowValue     = 1.0f;
+	spotConeAngle   = 50.0f;
+	spotSoftness    = 0.1f;
+	areaLightclosed = true;
+	visible         = false;
+	areaLightPos.clear();
+}
+
+//---------------------------------------------------.
+/**
+ * 面光源.
+ */
+CPxrAreaLight::CPxrAreaLight ()
+{
+	Clear();
+}
+
+void CPxrAreaLight::Clear ()
+{
+	intensity         = 1.0f;
+	lightColor        = sxsdk::rgb_class(1, 1, 1);
+	areaNormalize     = 0.0f;
+	specAmount        = sxsdk::rgb_class(1, 1, 1);
+	diffAmount        = sxsdk::rgb_class(1, 1, 1);
+	coneAngle         = 20.0f;
+	penumbraAngle     = 5.0f;
+	penumbraExponent  = 0.0f;
+	profileRange      = 180.0f;
+	cosinePower       = 90.0f;
+	angularVisibility = 1.0f;
+	shadowColor       = sxsdk::rgb_class(0, 0, 0);
+	traceShadows      = 1.0f;
+	adaptiveShadows   = 1.0f;
+}
+
+//---------------------------------------------------.
 
 CLightCtrl::CLightCtrl (sxsdk::shade_interface& shade) : shade(shade)
 {
@@ -70,6 +119,7 @@ void CLightCtrl::m_StoreObjectLight (sxsdk::scene_interface* scene, sxsdk::shape
 		// 環境光の場合は、point_lightでattenuationがsxsdk::enums::no_attenuationであらわす.
 		m_lights.push_back(CLightInfo());
 		CLightInfo& lightInfo = m_lights.back();
+		lightInfo.shape       = &shape;
 		lightInfo.ambient     = light.get_ambient();
 		lightInfo.color       = light.get_light_color();
 		lightInfo.direction   = -light.get_direction();
@@ -109,30 +159,8 @@ void CLightCtrl::m_StoreObjectLight (sxsdk::scene_interface* scene, sxsdk::shape
 
 	// 面光源、線光源.
 	if (shape.get_type() == sxsdk::enums::line) {
-		sxsdk::line_class& lineC = shape.get_line();
-		const float intensity = lineC.get_light_intensity();
-		if (!sx::zero(intensity)) {
-			const sxsdk::mat4 lwMat = shape.get_local_to_world_matrix();
-			m_lights.push_back(CLightInfo());
-			CLightInfo& lightInfo = m_lights.back();
-			lightInfo.lightType = lineC.get_closed() ? light_type_area : light_type_line;
-			lightInfo.intensity = intensity;
-			lightInfo.color     = lineC.get_light_color();
-			lightInfo.areaLightclosed = lineC.get_closed();
-			lightInfo.visible         = lineC.get_light_visible();
-
-			// ベジェの頂点をラインに変換.
-			std::vector<CPoint3D> bezierPos;
-			const int pCou = lineC.get_number_of_points();
-			for (int i = 0; i < pCou; i++) {
-				sxsdk::control_point_class& cp = lineC.control_point(i);
-				CPoint3D p;
-				p.point     = cp.get_position() * lwMat;
-				p.inHandle  = cp.get_in_handle() * lwMat;
-				p.outHandle = cp.get_out_handle() * lwMat;
-				bezierPos.push_back(p);
-			}
-			MathUtil::GetBezierToLines(bezierPos, lightInfo.areaLightPos, false);
+		if (!sx::zero(shape.get_line().get_light_intensity())) {
+			m_lights.push_back(LightCtrl::GetAreaLightInfo(shape));
 		}
 	}
 
@@ -145,4 +173,68 @@ void CLightCtrl::m_StoreObjectLight (sxsdk::scene_interface* scene, sxsdk::shape
 			m_StoreObjectLight(scene, *pS);
 		}
 	}
+}
+
+/**
+ * Shade 3Dでの光源情報より、RIS向けにコンバート.
+ */
+void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight)
+{
+	pxrAreaLight.Clear();
+
+	// 面光源の面積を計算.
+	const double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
+
+	// 明るさを面積単位で計算.
+	double intensity = (double)lightInfo.intensity;
+	if (!sx::zero(area)) {
+		intensity = (intensity * intensity) * sx::pi / area;
+	}
+
+	pxrAreaLight.intensity   = (float)intensity;
+	pxrAreaLight.lightColor  = lightInfo.color;
+	if (lightInfo.shadowValue < 1.0f && !sx::zero(lightInfo.shadowValue - 1.0f)) {
+		const float shadowVal = 1.0f - lightInfo.shadowValue;
+		pxrAreaLight.shadowColor = sxsdk::rgb_class(shadowVal, shadowVal, shadowVal);
+	}
+}
+
+/**
+ * 指定の面光源情報を取得.
+ */
+CLightInfo LightCtrl::GetAreaLightInfo (sxsdk::shape_class& shape)
+{
+	CLightInfo lightInfo;
+
+	if (shape.get_type() != sxsdk::enums::line) return lightInfo;
+
+	sxsdk::line_class& lineC = shape.get_line();
+	const float intensity = lineC.get_light_intensity();
+	if (sx::zero(intensity)) return lightInfo;
+
+	lightInfo.shape     = &shape;
+	lightInfo.lightType = lineC.get_closed() ? light_type_area : light_type_line;
+	lightInfo.intensity = intensity;
+	lightInfo.color     = lineC.get_light_color();
+	lightInfo.areaLightclosed = lineC.get_closed();
+	lightInfo.visible         = lineC.get_light_visible();
+	lightInfo.shadowValue     = lineC.get_shadow();
+
+	// ベジェの頂点をラインに変換.
+	{
+		const sxsdk::mat4 lwMat = shape.get_local_to_world_matrix();
+		std::vector<CPoint3D> bezierPos;
+		const int pCou = lineC.get_number_of_points();
+		for (int i = 0; i < pCou; i++) {
+			sxsdk::control_point_class& cp = lineC.control_point(i);
+			CPoint3D p;
+			p.point     = cp.get_position() * lwMat;
+			p.inHandle  = cp.get_in_handle() * lwMat;
+			p.outHandle = cp.get_out_handle() * lwMat;
+			bezierPos.push_back(p);
+		}
+		MathUtil::GetBezierToLines(bezierPos, lightInfo.areaLightPos, false);
+	}
+
+	return lightInfo;
 }

@@ -4,6 +4,7 @@
 
 #include "RIBExporterInterface.h"
 #include "AttributeWindowInterface.h"
+#include "AreaLightAttributeInterface.h"
 
 //**************************************************//
 //	グローバル関数									//
@@ -24,6 +25,11 @@ extern "C" void STDCALL create_interface (const IID &iid, int i, void **p, sxsdk
 			u = new CAttributeWindowInterface(*shade);
 		}
 	}
+	if (iid == attribute_iid) {
+		if (i == 0) {
+			u = new CAreaLightAttributeInterface(*shade);
+		}
+	}
 
 	if (u) {
 		u->AddRef();
@@ -37,6 +43,7 @@ extern "C" void STDCALL create_interface (const IID &iid, int i, void **p, sxsdk
 extern "C" int STDCALL has_interface (const IID &iid, sxsdk::shade_interface *shade) {
 	if (iid == exporter_iid) return 1;
 	if (iid == window_iid) return 1;
+	if (iid == attribute_iid) return 1;
 
 	return 0;
 }
@@ -54,6 +61,11 @@ extern "C" const char * STDCALL get_name (const IID &iid, int i, sxsdk::shade_in
 	if (iid == window_iid) {
 		if (i == 0) {
 			return CAttributeWindowInterface::name(shade);
+		}
+	}
+	if (iid == attribute_iid) {
+		if (i == 0) {
+			return CAreaLightAttributeInterface::name(shade);
 		}
 	}
 
@@ -74,6 +86,11 @@ extern "C" sx::uuid_class STDCALL get_uuid (const IID &iid, int i, void *) {
 			return RIB_ATTRIBUTE_WINDOW_ID;
 		}
 	}
+	if (iid == attribute_iid) {
+		if (i == 0) {
+			return RIB_AREA_LIGHT_ATTRIBUTE_ID;
+		}
+	}
 
 	return sx::uuid_class(0, 0, 0, 0);
 }
@@ -88,7 +105,7 @@ extern "C" void STDCALL get_info (sxsdk::shade_plugin_info &info, sxsdk::shade_i
 	info.major_version = 1;
 	info.minor_version = 0;
 	info.micro_version = 0;
-	info.build_number =  1;
+	info.build_number =  2;
 }
 
 /**

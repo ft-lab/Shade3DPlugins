@@ -66,6 +66,9 @@
     <ClCompile Include="..\source\ShapeStack.cpp">
       <Filter>mysources</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\AreaLightAttributeInterface.cpp">
+      <Filter>mysources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\GlobalHeader.h">
@@ -112,6 +115,9 @@
       <Filter>mysources</Filter>
     </ClInclude>
     <ClInclude Include="..\source\ShapeStack.h">
+      <Filter>mysources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\AreaLightAttributeInterface.h">
       <Filter>mysources</Filter>
     </ClInclude>
   </ItemGroup>

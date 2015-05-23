@@ -30,6 +30,7 @@ TEXT                    SXUL                    "..\\source\\resources\\ja.lproj
 STRINGS                 SXUL                    "..\\source\\resources\\ja.lproj\\sxuls\\strings.sxul"
 EXPORT_DLG              SXUL                    "..\\source\\resources\\ja.lproj\\sxuls\\export_dlg.sxul"
 MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\ja.lproj\\sxuls\\material_window.sxul"
+AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\ja.lproj\\sxuls\\area_light_dlg.sxul"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -37,8 +38,8 @@ MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\ja.lproj
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,0,0,2
+ PRODUCTVERSION 1,0,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -55,11 +56,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ft-lab"
             VALUE "FileDescription", "RIB Exporter"
-            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "FileVersion", "1, 0, 0, 2"
             VALUE "InternalName", "RIB Exporter"
             VALUE "LegalCopyright", "Copyright (C) 2015 ft-lab."
             VALUE "ProductName", "RIB Exporter"
-            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "ProductVersion", "1, 0, 0, 2"
         END
     END
     BLOCK "VarFileInfo"
@@ -116,6 +117,7 @@ TEXT                    SXUL                    "..\\source\\resources\\zh_CN.lp
 STRINGS                 SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\strings.sxul"
 EXPORT_DLG              SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\export_dlg.sxul"
 MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\material_window.sxul"
+AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\area_light_dlg.sxul"
 
 #endif    // íÜçëåÍ (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -139,6 +141,7 @@ TEXT                    SXUL                    "..\\source\\resources\\en.lproj
 STRINGS                 SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\strings.sxul"
 EXPORT_DLG              SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\export_dlg.sxul"
 MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\material_window.sxul"
+AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\area_light_dlg.sxul"
 
 #endif    // âpåÍ (ïƒçë) resources
 /////////////////////////////////////////////////////////////////////////////

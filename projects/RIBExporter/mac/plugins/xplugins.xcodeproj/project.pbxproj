@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		16F9E21B0546323A00F09F49 /* shdplugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16F9E21A0546323A00F09F49 /* shdplugin.icns */; };
+		9205AEFD1B10CCA500DCB33F /* AreaLightAttributeInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9205AEFB1B10CCA500DCB33F /* AreaLightAttributeInterface.cpp */; };
+		9205AEFE1B10CCA500DCB33F /* AreaLightAttributeInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 9205AEFC1B10CCA500DCB33F /* AreaLightAttributeInterface.h */; };
 		92957D8F1B04771E00AFB26E /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92957D8E1B04771E00AFB26E /* libtiff.a */; };
 		92957D911B04783A00AFB26E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92957D901B04783A00AFB26E /* libz.dylib */; };
 		92B45BF61B04696700E20428 /* RIBExporter.info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 92B45BF51B04696700E20428 /* RIBExporter.info.plist */; };
@@ -19,7 +21,6 @@
 		92B45C191B04698C00E20428 /* CameraCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B45BFC1B04698C00E20428 /* CameraCtrl.h */; };
 		92B45C1A1B04698C00E20428 /* LightCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92B45BFD1B04698C00E20428 /* LightCtrl.cpp */; };
 		92B45C1B1B04698C00E20428 /* LightCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B45BFE1B04698C00E20428 /* LightCtrl.h */; };
-		92B45C1C1B04698C00E20428 /* MainHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B45BFF1B04698C00E20428 /* MainHeader.h */; };
 		92B45C1D1B04698C00E20428 /* MaterialCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92B45C001B04698C00E20428 /* MaterialCtrl.cpp */; };
 		92B45C1E1B04698C00E20428 /* MaterialCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B45C011B04698C00E20428 /* MaterialCtrl.h */; };
 		92B45C1F1B04698C00E20428 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92B45C021B04698C00E20428 /* MathUtil.cpp */; };
@@ -54,6 +55,8 @@
 /* Begin PBXFileReference section */
 		16F9E21A0546323A00F09F49 /* shdplugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = shdplugin.icns; path = ../xshade/icns/shdplugin.icns; sourceTree = SOURCE_ROOT; };
 		32DBCF630370AF2F00C91783 /* xplugins_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xplugins_Prefix.pch; sourceTree = "<group>"; };
+		9205AEFB1B10CCA500DCB33F /* AreaLightAttributeInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AreaLightAttributeInterface.cpp; path = ../../source/AreaLightAttributeInterface.cpp; sourceTree = "<group>"; };
+		9205AEFC1B10CCA500DCB33F /* AreaLightAttributeInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AreaLightAttributeInterface.h; path = ../../source/AreaLightAttributeInterface.h; sourceTree = "<group>"; };
 		92957D8E1B04771E00AFB26E /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../../libtiff/lib/mac/libtiff.a; sourceTree = "<group>"; };
 		92957D901B04783A00AFB26E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = ../../../../../../../../../usr/lib/libz.dylib; sourceTree = "<group>"; };
 		92B45BF51B04696700E20428 /* RIBExporter.info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = RIBExporter.info.plist; path = plists/RIBExporter.info.plist; sourceTree = "<group>"; };
@@ -65,7 +68,6 @@
 		92B45BFC1B04698C00E20428 /* CameraCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CameraCtrl.h; path = ../../source/CameraCtrl.h; sourceTree = "<group>"; };
 		92B45BFD1B04698C00E20428 /* LightCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightCtrl.cpp; path = ../../source/LightCtrl.cpp; sourceTree = "<group>"; };
 		92B45BFE1B04698C00E20428 /* LightCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightCtrl.h; path = ../../source/LightCtrl.h; sourceTree = "<group>"; };
-		92B45BFF1B04698C00E20428 /* MainHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainHeader.h; path = ../../source/MainHeader.h; sourceTree = "<group>"; };
 		92B45C001B04698C00E20428 /* MaterialCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaterialCtrl.cpp; path = ../../source/MaterialCtrl.cpp; sourceTree = "<group>"; };
 		92B45C011B04698C00E20428 /* MaterialCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaterialCtrl.h; path = ../../source/MaterialCtrl.h; sourceTree = "<group>"; };
 		92B45C021B04698C00E20428 /* MathUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MathUtil.cpp; path = ../../source/MathUtil.cpp; sourceTree = "<group>"; };
@@ -180,6 +182,8 @@
 		4A3E5BC70B0029410006A4FF /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				9205AEFB1B10CCA500DCB33F /* AreaLightAttributeInterface.cpp */,
+				9205AEFC1B10CCA500DCB33F /* AreaLightAttributeInterface.h */,
 				92B45BF71B04698C00E20428 /* AttributeWindowInterface.cpp */,
 				92B45BF81B04698C00E20428 /* AttributeWindowInterface.h */,
 				92B45BF91B04698C00E20428 /* BackgroundTexture.cpp */,
@@ -188,7 +192,6 @@
 				92B45BFC1B04698C00E20428 /* CameraCtrl.h */,
 				92B45BFD1B04698C00E20428 /* LightCtrl.cpp */,
 				92B45BFE1B04698C00E20428 /* LightCtrl.h */,
-				92B45BFF1B04698C00E20428 /* MainHeader.h */,
 				92B45C001B04698C00E20428 /* MaterialCtrl.cpp */,
 				92B45C011B04698C00E20428 /* MaterialCtrl.h */,
 				92B45C021B04698C00E20428 /* MathUtil.cpp */,
@@ -236,10 +239,10 @@
 				92B45C221B04698C00E20428 /* PolygonMeshCtrl.h in Headers */,
 				92B45C1E1B04698C00E20428 /* MaterialCtrl.h in Headers */,
 				92B45C2C1B04698C00E20428 /* StreamCtrl.h in Headers */,
-				92B45C1C1B04698C00E20428 /* MainHeader.h in Headers */,
 				92B45C1B1B04698C00E20428 /* LightCtrl.h in Headers */,
 				92B45C191B04698C00E20428 /* CameraCtrl.h in Headers */,
 				92B45C281B04698C00E20428 /* SaveTiff.h in Headers */,
+				9205AEFE1B10CCA500DCB33F /* AreaLightAttributeInterface.h in Headers */,
 				92B45C301B04698C00E20428 /* Util.h in Headers */,
 				92FABBDE16AFC8300051953F /* GlobalHeader.h in Headers */,
 				92B45C151B04698C00E20428 /* AttributeWindowInterface.h in Headers */,
@@ -319,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9205AEFD1B10CCA500DCB33F /* AreaLightAttributeInterface.cpp in Sources */,
 				92B45C2B1B04698C00E20428 /* StreamCtrl.cpp in Sources */,
 				92B45C231B04698C00E20428 /* RIBExporterInterface.cpp in Sources */,
 				92B45C1D1B04698C00E20428 /* MaterialCtrl.cpp in Sources */,

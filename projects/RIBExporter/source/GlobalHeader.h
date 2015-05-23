@@ -11,19 +11,23 @@
 /**
  * RIB ExporterのプラグインID.
  */
-#define RIB_EXPORTER_ID           sx::uuid_class("4CA75EFA-BDF7-4B85-9E97-8427FB3451B3")		// ExporterのID.
-#define RIB_ATTRIBUTE_WINDOW_ID   sx::uuid_class("84CE7D1A-5EFB-4581-ABA7-9864A43DEC2F")		// Attributeを指定するWindow ID.
+#define RIB_EXPORTER_ID                      sx::uuid_class("4CA75EFA-BDF7-4B85-9E97-8427FB3451B3")		// ExporterのID.
+#define RIB_ATTRIBUTE_WINDOW_ID              sx::uuid_class("84CE7D1A-5EFB-4581-ABA7-9864A43DEC2F")		// Attributeを指定するWindow ID.
+#define RIB_AREA_LIGHT_ATTRIBUTE_ID	         sx::uuid_class("54B8005D-7361-4BA2-ACB5-2A88F01A92FB")		// 面光源のAttributeを指定するID.
 
 // TODO : バージョン上がるたびに、RIB_ATTRIBUTE_WINDOW_IDのuuidを変更してあげないと、.
 // CAttributeWindowInterfaceのthis->set_client_size(get_layout_bounds().size());でのウィンドウサイズが更新できない.
 
 #define RIB_MATERIAL_ID			sx::uuid_class("10B96B1E-93A5-402B-BFE4-BADA6B7F504B")			// マテリアルとしてマスターサーフェスに保持するためのID.
+#define RIB_AREA_LIGHT_ID		sx::uuid_class("FE518A69-B953-4C7F-B155-60AAD3C276DB")			// 面光源情報を保持するためのID.
 
 
 #define RIB_EXPORT_DLG_VERSION_100		0x100		// RIB Export Dialogのバージョン.
 #define RIB_EXPORT_DLG_VERSION			0x101		// ver.1.0.0.1 - .
 
-#define RIB_MATERIAL_VERSION		0x100		// Materialのバージョン.
+#define RIB_MATERIAL_VERSION			0x100		// Materialのバージョン.
+
+#define RIB_AREA_LIGHT_VERSION			0x100		// 面光源情報のバージョン.
 
 
 namespace RIBParam

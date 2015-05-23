@@ -362,3 +362,107 @@ CRISMaterialInfo StreamCtrl::LoadRIBMaterial (sxsdk::shape_class& shape)
 
 	return data;
 }
+
+
+/**
+ * RenderManの面光源のパラメータを持つか.
+ */
+bool StreamCtrl::HasRIBAreaLight (sxsdk::shape_class& shape)
+{
+	if (shape.get_type() != sxsdk::enums::line) return false;
+
+	try {
+		compointer<sxsdk::stream_interface> stream(shape.get_attribute_stream_interface_with_uuid(RIB_AREA_LIGHT_ID));
+		if (!stream) return false;
+
+		return true;
+	} catch (...) { }
+
+	return false;
+}
+
+/**
+ * 指定の面光源にRenderManのパラメータを保存.
+ */
+void StreamCtrl::SaveRIBAreaLight (sxsdk::shape_class& shape, const CPxrAreaLight& data)
+{
+	try {
+		compointer<sxsdk::stream_interface> stream(shape.create_attribute_stream_interface_with_uuid(RIB_AREA_LIGHT_ID));
+		if (!stream) return;
+
+		stream->set_pointer(0);
+		stream->set_size(0);
+
+		int version = RIB_AREA_LIGHT_VERSION;
+		stream->write_int(version);
+
+		stream->write_float(data.intensity);
+		stream->write_float(data.lightColor.red);
+		stream->write_float(data.lightColor.green);
+		stream->write_float(data.lightColor.blue);
+		stream->write_float(data.areaNormalize);
+		stream->write_float(data.specAmount.red);
+		stream->write_float(data.specAmount.green);
+		stream->write_float(data.specAmount.blue);
+		stream->write_float(data.diffAmount.red);
+		stream->write_float(data.diffAmount.green);
+		stream->write_float(data.diffAmount.blue);
+		stream->write_float(data.coneAngle);
+		stream->write_float(data.penumbraAngle);
+		stream->write_float(data.penumbraExponent);
+		stream->write_float(data.profileRange);
+		stream->write_float(data.cosinePower);
+		stream->write_float(data.angularVisibility);
+		stream->write_float(data.shadowColor.red);
+		stream->write_float(data.shadowColor.green);
+		stream->write_float(data.shadowColor.blue);
+		stream->write_float(data.traceShadows);
+		stream->write_float(data.adaptiveShadows);
+
+		stream->set_label("[PxrAreaLight]");
+
+	} catch (...) { }
+}
+
+/**
+ * 指定の面光源のRenderManのパラメータを取得.
+ */
+CPxrAreaLight StreamCtrl::LoadRIBAreaLight (sxsdk::shape_class& shape)
+{
+	CPxrAreaLight data;
+
+	try {
+		compointer<sxsdk::stream_interface> stream(shape.get_attribute_stream_interface_with_uuid(RIB_AREA_LIGHT_ID));
+		if (!stream) return data;
+
+		int version = 0;
+		stream->read_int(version);
+
+		stream->read_float(data.intensity);
+		stream->read_float(data.lightColor.red);
+		stream->read_float(data.lightColor.green);
+		stream->read_float(data.lightColor.blue);
+		stream->read_float(data.areaNormalize);
+		stream->read_float(data.specAmount.red);
+		stream->read_float(data.specAmount.green);
+		stream->read_float(data.specAmount.blue);
+		stream->read_float(data.diffAmount.red);
+		stream->read_float(data.diffAmount.green);
+		stream->read_float(data.diffAmount.blue);
+		stream->read_float(data.coneAngle);
+		stream->read_float(data.penumbraAngle);
+		stream->read_float(data.penumbraExponent);
+		stream->read_float(data.profileRange);
+		stream->read_float(data.cosinePower);
+		stream->read_float(data.angularVisibility);
+		stream->read_float(data.shadowColor.red);
+		stream->read_float(data.shadowColor.green);
+		stream->read_float(data.shadowColor.blue);
+		stream->read_float(data.traceShadows);
+		stream->read_float(data.adaptiveShadows);
+
+	} catch (...) { }
+
+	return data;
+}
+
