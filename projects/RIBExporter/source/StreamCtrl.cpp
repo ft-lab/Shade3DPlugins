@@ -110,7 +110,7 @@ RIBExportData StreamCtrl::LoadRIBExportDlg (sxsdk::scene_interface* scene)
 		data.lightDayLight = iDat ? true : false;
 
 		// ver.1.0.0.1 - .
-		if (version >= RIB_EXPORT_DLG_VERSION) {
+		if (version >= RIB_EXPORT_DLG_VERSION_101) {
 			stream->read_int(iDat);
 			data.statisticsEndOfFrame = iDat ? true : false;
 
@@ -226,6 +226,25 @@ void StreamCtrl::SaveRIBMaterial (sxsdk::shape_class& shape, const CRISMaterialI
 		stream->write_float(data.pxrConstant.emitColor.red);
 		stream->write_float(data.pxrConstant.emitColor.green);
 		stream->write_float(data.pxrConstant.emitColor.blue);
+
+		// ver.1.0.0.2 - .
+
+		// CPxrVolume.
+		stream->write_float(data.pxrVolume.diffuseColor.red);
+		stream->write_float(data.pxrVolume.diffuseColor.green);
+		stream->write_float(data.pxrVolume.diffuseColor.blue);
+		stream->write_float(data.pxrVolume.emitColor.red);
+		stream->write_float(data.pxrVolume.emitColor.green);
+		stream->write_float(data.pxrVolume.emitColor.blue);
+		stream->write_float(data.pxrVolume.densityColor.red);
+		stream->write_float(data.pxrVolume.densityColor.green);
+		stream->write_float(data.pxrVolume.densityColor.blue);
+		stream->write_float(data.pxrVolume.densityFloat);
+		stream->write_float(data.pxrVolume.densityScale);
+		stream->write_float(data.pxrVolume.anisotropy);
+		stream->write_float(data.pxrVolume.maxDensity);
+		iDat = (int)(data.pxrVolume.multiScatter ? 1 : 0);
+		stream->write_int(iDat);
 
 		// ラベルの指定.
 		if (!data.useCustom) {
@@ -357,6 +376,26 @@ CRISMaterialInfo StreamCtrl::LoadRIBMaterial (sxsdk::shape_class& shape)
 		stream->read_float(data.pxrConstant.emitColor.red);
 		stream->read_float(data.pxrConstant.emitColor.green);
 		stream->read_float(data.pxrConstant.emitColor.blue);
+
+		// ver.1.0.0.2 - 
+		if (version >= RIB_MATERIAL_VERSION_102) {
+			// CPxrVolume.
+			stream->read_float(data.pxrVolume.diffuseColor.red);
+			stream->read_float(data.pxrVolume.diffuseColor.green);
+			stream->read_float(data.pxrVolume.diffuseColor.blue);
+			stream->read_float(data.pxrVolume.emitColor.red);
+			stream->read_float(data.pxrVolume.emitColor.green);
+			stream->read_float(data.pxrVolume.emitColor.blue);
+			stream->read_float(data.pxrVolume.densityColor.red);
+			stream->read_float(data.pxrVolume.densityColor.green);
+			stream->read_float(data.pxrVolume.densityColor.blue);
+			stream->read_float(data.pxrVolume.densityFloat);
+			stream->read_float(data.pxrVolume.densityScale);
+			stream->read_float(data.pxrVolume.anisotropy);
+			stream->read_float(data.pxrVolume.maxDensity);
+			stream->read_int(iDat);
+			data.pxrVolume.multiScatter = iDat ? true : false;
+		}
 
 	} catch (...) { }
 

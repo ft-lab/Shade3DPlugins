@@ -114,6 +114,30 @@ public:
 };
 
 /**
+ * RenderManでのマテリアル情報 (PxrVolume).
+ */
+class CPxrMaterialVolume : public CPxrMaterialBase
+{
+public:
+	sxsdk::rgb_class diffuseColor;
+	sxsdk::rgb_class emitColor;
+	sxsdk::rgb_class densityColor;
+	float densityFloat;
+	float densityScale;
+	float anisotropy;
+	float maxDensity;
+	bool multiScatter;
+
+public:
+	CPxrMaterialVolume ();
+
+	/**
+	 * 情報のクリア.
+	 */
+	virtual void Clear ();
+};
+
+/**
  * フローティングウィンドウとして保持するRIS用のマテリアル情報.
  */
 class CRISMaterialInfo
@@ -135,6 +159,7 @@ public:
 	CPxrMaterialDisney pxrDisney;
 	CPxrMaterialGlass pxrGlass;
 	CPxrMaterialConstant pxrConstant;
+	CPxrMaterialVolume pxrVolume;
 
 public:
 	CRISMaterialInfo ();

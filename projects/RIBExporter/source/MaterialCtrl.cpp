@@ -92,10 +92,33 @@ void CPxrMaterialConstant::Clear ()
 	emitColor = sxsdk::rgb_class(1, 1, 1);
 }
 
+/**
+ * RenderManでのマテリアル情報 (PxrVolume).
+ */
+CPxrMaterialVolume::CPxrMaterialVolume ()
+{
+	name = "pxrVolume";
+	Clear();
+}
+
+void CPxrMaterialVolume::Clear ()
+{
+	diffuseColor = sxsdk::rgb_class(1, 1, 1);
+	emitColor    = sxsdk::rgb_class(0, 0, 0);
+	densityColor = sxsdk::rgb_class(1, 1, 1);
+	densityFloat = 1.0f;
+	densityScale = 1.0f;
+	anisotropy   = 0.0f;
+	maxDensity   = 1.0f;
+	multiScatter = false;
+}
+
+//--------------------------------------------------------.
 CRISMaterialInfo::CRISMaterialInfo ()
 {
 	Clear();
 }
+
 
 /**
  * すべての情報をクリアする（初期値を入れる）.
@@ -109,6 +132,7 @@ void CRISMaterialInfo::Clear ()
 	pxrDisney.Clear();
 	pxrGlass.Clear();
 	pxrConstant.Clear();
+	pxrVolume.Clear();
 
 	visibilityDiffuse  = true;
 	visibilitySpecular = true;
@@ -305,6 +329,10 @@ void MaterialCtrl::ConvShade3DToRIS (CMaterialInfo& materialInfo, CRISMaterialIn
 	risMaterialInfo.pxrGlass.transmissionColor = diffuseCol;
 	risMaterialInfo.pxrDisney.baseColor        = diffuseCol;
 	risMaterialInfo.pxrDiffuse.diffuseColor    = diffuseCol;
+	risMaterialInfo.pxrVolume.diffuseColor     = diffuseCol;
+
+	risMaterialInfo.pxrDisney.anisotropic = materialInfo.anisotropic;
+	risMaterialInfo.pxrVolume.anisotropy  = materialInfo.anisotropic;
 
 	const float fMin = 0.01;
 	if (materialInfo.transparent > fMin) {

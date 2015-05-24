@@ -23,9 +23,12 @@
 
 
 #define RIB_EXPORT_DLG_VERSION_100		0x100		// RIB Export Dialogのバージョン.
-#define RIB_EXPORT_DLG_VERSION			0x101		// ver.1.0.0.1 - .
+#define RIB_EXPORT_DLG_VERSION_101		0x101		// ver.1.0.0.1 - .
+#define RIB_EXPORT_DLG_VERSION			0x101		// current (ver.1.0.0.1 - ).
 
-#define RIB_MATERIAL_VERSION			0x100		// Materialのバージョン.
+#define RIB_MATERIAL_VERSION_100		0x100		// Materialのバージョン.
+#define RIB_MATERIAL_VERSION_102		0x102		// ver.1.0.0.2 - 
+#define RIB_MATERIAL_VERSION			0x102		// current (ver.1.0.0.2 -).
 
 #define RIB_AREA_LIGHT_VERSION			0x100		// 面光源情報のバージョン.
 
@@ -66,8 +69,8 @@ namespace RIBParam
 		pxrDisney,
 		pxrGlass,
 		pxrConstant,
-		pxrSkin,
 		pxrVolume,
+		pxrSkin,
 	};
 
 	/**

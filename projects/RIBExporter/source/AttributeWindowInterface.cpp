@@ -118,6 +118,12 @@ bool CAttributeWindowInterface::setup_checkbox (sxsdk::window_interface::checkbo
 		checkbox.set_value(m_materialInfo.visibilityIndirect);
 		return true;
 	}
+
+	if (strcmp(checkbox.get_control_idname(), "volume_multiScatter") == 0) {
+		checkbox.set_value(m_materialInfo.pxrVolume.multiScatter);
+		return true;
+	}
+
 	return false;
 }
 
@@ -188,6 +194,20 @@ bool CAttributeWindowInterface::setup_color_box (sxsdk::window_interface::color_
 		color_box.set_value(m_materialInfo.pxrConstant.emitColor);
 		return true;
 	}
+
+	if (strcmp(color_box.get_control_idname(), "volume_diffuseColor") == 0) {
+		color_box.set_value(m_materialInfo.pxrVolume.diffuseColor);
+		return true;
+	}
+	if (strcmp(color_box.get_control_idname(), "volume_emitColor") == 0) {
+		color_box.set_value(m_materialInfo.pxrVolume.emitColor);
+		return true;
+	}
+	if (strcmp(color_box.get_control_idname(), "volume_densityColor") == 0) {
+		color_box.set_value(m_materialInfo.pxrVolume.densityColor);
+		return true;
+	}
+
 	return false;
 }
 
@@ -277,6 +297,23 @@ bool CAttributeWindowInterface::setup_number (sxsdk::window_interface::number_cl
 
 	if (strcmp(number.get_control_idname(), "glass_absorptionGain") == 0) {
 		number.set_value(m_materialInfo.pxrGlass.absorptionGain);
+		return true;
+	}
+
+	if (strcmp(number.get_control_idname(), "volume_densityFloat") == 0) {
+		number.set_value(m_materialInfo.pxrVolume.densityFloat);
+		return true;
+	}
+	if (strcmp(number.get_control_idname(), "volume_densityScale") == 0) {
+		number.set_value(m_materialInfo.pxrVolume.densityScale);
+		return true;
+	}
+	if (strcmp(number.get_control_idname(), "volume_anisotropy") == 0) {
+		number.set_value(m_materialInfo.pxrVolume.anisotropy);
+		return true;
+	}
+	if (strcmp(number.get_control_idname(), "volume_maxDensity") == 0) {
+		number.set_value(m_materialInfo.pxrVolume.maxDensity);
 		return true;
 	}
 
@@ -397,6 +434,19 @@ void CAttributeWindowInterface::color_box_value_changed (sxsdk::window_interface
 		m_materialInfo.pxrConstant.emitColor = color_box.get_value();
 		return;
 	}
+
+	if (strcmp(color_box.get_control_idname(), "volume_diffuseColor") == 0) {
+		m_materialInfo.pxrVolume.diffuseColor = color_box.get_value();
+		return;
+	}
+	if (strcmp(color_box.get_control_idname(), "volume_emitColor") == 0) {
+		m_materialInfo.pxrVolume.emitColor = color_box.get_value();
+		return;
+	}
+	if (strcmp(color_box.get_control_idname(), "volume_densityColor") == 0) {
+		m_materialInfo.pxrVolume.densityColor = color_box.get_value();
+		return;
+	}
 }
 
 void CAttributeWindowInterface::number_value_changed (sxsdk::window_interface::number_class &number, void *aux)
@@ -480,6 +530,23 @@ void CAttributeWindowInterface::number_value_changed (sxsdk::window_interface::n
 		m_materialInfo.pxrGlass.absorptionGain = number.get_value();
 		return;
 	}
+
+	if (strcmp(number.get_control_idname(), "volume_densityFloat") == 0) {
+		m_materialInfo.pxrVolume.densityFloat = number.get_value();
+		return;
+	}
+	if (strcmp(number.get_control_idname(), "volume_densityScale") == 0) {
+		m_materialInfo.pxrVolume.densityScale = number.get_value();
+		return;
+	}
+	if (strcmp(number.get_control_idname(), "volume_anisotropy") == 0) {
+		m_materialInfo.pxrVolume.anisotropy = number.get_value();
+		return;
+	}
+	if (strcmp(number.get_control_idname(), "volume_maxDensity") == 0) {
+		m_materialInfo.pxrVolume.maxDensity = number.get_value();
+		return;
+	}
 }
 
 void CAttributeWindowInterface::checkbox_value_changed (sxsdk::window_interface::checkbox_class &checkbox, void *aux)
@@ -522,6 +589,10 @@ void CAttributeWindowInterface::checkbox_value_changed (sxsdk::window_interface:
 		return;
 	}
 
+	if (strcmp(checkbox.get_control_idname(), "volume_multiScatter") == 0) {
+		m_materialInfo.pxrVolume.multiScatter = checkbox.get_value();
+		return;
+	}
 }
 
 //------------------------------------------.

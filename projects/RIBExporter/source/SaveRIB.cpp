@@ -20,6 +20,18 @@
 
 #define BACKGROUND_TEXTURE_NAME "background_panorama"		// 背景画像の名前.
 
+namespace {
+	// sxsdk::rgb_classの色が(0, 0, 0)であるか判定.
+	bool CheckColorBlack (const sxsdk::rgb_class& col) {
+		return (sx::zero(col.red) && sx::zero(col.green) && sx::zero(col.blue));
+	}
+
+	// sxsdk::rgb_classの色が(1, 1, 1)であるか判定.
+	bool CheckColorWhite (const sxsdk::rgb_class& col) {
+		return (sx::zero(col.red - 1.0f) && sx::zero(col.green - 1.0f) && sx::zero(col.blue - 1.0f));
+	}
+}
+
 /*
 	RenderManは、左手系のZ-up.
 */
@@ -689,7 +701,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (!sx::zero(transmissionCol.red) || !sx::zero(transmissionCol.green) || !sx::zero(transmissionCol.blue)) {
+			if (!::CheckColorBlack(transmissionCol)) {
 				std::stringstream s;
 				s << "  \"color transmissionColor\" [" << transmissionCol.red << " " << transmissionCol.green << " " << transmissionCol.blue << "]";
 				m_WriteLine(s.str().c_str());
@@ -730,7 +742,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (!sx::zero(emitCol.red) || !sx::zero(emitCol.green) || !sx::zero(emitCol.blue)) {
+			if (!::CheckColorBlack(emitCol)) {
 				std::stringstream s;
 				s << "  \"color emitColor\" [" << emitCol.red << " " << emitCol.green << " " << emitCol.blue << "]";
 				m_WriteLine(s.str().c_str());
@@ -766,7 +778,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				s << "  \"float subsurface\" [" << risMaterialInfo.pxrDisney.subsurface << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			if (!sx::zero(risMaterialInfo.pxrDisney.subsurfaceColor.red) || !sx::zero(risMaterialInfo.pxrDisney.subsurfaceColor.green) || !sx::zero(risMaterialInfo.pxrDisney.subsurfaceColor.blue)) {
+			if (!::CheckColorBlack(risMaterialInfo.pxrDisney.subsurfaceColor)) {
 				std::stringstream s;
 				const sxsdk::rgb_class subsurfaceCol = m_CalcLinearColor(risMaterialInfo.pxrDisney.subsurfaceColor);
 				s << "  \"color subsurfaceColor\" [" << subsurfaceCol.red << " " << subsurfaceCol.green << " " << subsurfaceCol.blue << "]";
@@ -832,7 +844,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (!sx::zero(absorptionCol.red - 1.0f) || !sx::zero(absorptionCol.green - 1.0f) || !sx::zero(absorptionCol.blue - 1.0f)) {
+			if (!::CheckColorWhite(absorptionCol)) {
 				std::stringstream s;
 				s << "  \"color absorptionColor\" [" << absorptionCol.red << " " << absorptionCol.green << " " << absorptionCol.blue << "]";
 				m_WriteLine(s.str().c_str());
@@ -862,11 +874,67 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 		}
 		break;
 
+	case RIBParam::pxrVolume:
+		{
+			const sxsdk::rgb_class diffuseCol  = m_CalcLinearColor(risMaterialInfo.pxrVolume.diffuseColor);
+			const sxsdk::rgb_class emitCol     = m_CalcLinearColor(risMaterialInfo.pxrVolume.emitColor);
+			const sxsdk::rgb_class densityCol  = m_CalcLinearColor(risMaterialInfo.pxrVolume.densityColor);
+
+			if (diffuseTexName2.size() > 0) {
+				std::stringstream s;
+				s << "Bxdf \"PxrVolume\" \"" << materialName << "\" \"reference color diffuseColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				m_WriteLine(s.str().c_str());
+			} else {
+				std::stringstream s;
+				s << "Bxdf \"PxrVolume\" \"" << materialName << "\" \"color diffuseColor\" [" << diffuseCol.red << " " << diffuseCol.green << " " << diffuseCol.blue << "]";
+				m_WriteLine(s.str().c_str());
+			}
+
+			if (!::CheckColorBlack(emitCol)) {
+				std::stringstream s;
+				s << "  \"color emitColor\" [" << emitCol.red << " " << emitCol.green << " " << emitCol.blue << "]";
+				m_WriteLine(s.str().c_str());
+			}
+			if (!::CheckColorWhite(densityCol)) {
+				std::stringstream s;
+				s << "  \"color densityColor\" [" << densityCol.red << " " << densityCol.green << " " << densityCol.blue << "]";
+				m_WriteLine(s.str().c_str());
+			}
+
+			if (!sx::zero(risMaterialInfo.pxrVolume.densityFloat - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float densityFloat\" [" << risMaterialInfo.pxrVolume.densityFloat << "]";
+				m_WriteLine(s.str().c_str());
+			}
+			if (!sx::zero(risMaterialInfo.pxrVolume.densityScale - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float densityScale\" [" << risMaterialInfo.pxrVolume.densityScale << "]";
+				m_WriteLine(s.str().c_str());
+			}
+			if (!sx::zero(risMaterialInfo.pxrVolume.anisotropy)) {
+				std::stringstream s;
+				s << "  \"float anisotropy\" [" << risMaterialInfo.pxrVolume.anisotropy << "]";
+				m_WriteLine(s.str().c_str());
+			}
+			if (!sx::zero(risMaterialInfo.pxrVolume.maxDensity - 1.0f)) {
+				std::stringstream s;
+				s << "  \"float maxDensity\" [" << risMaterialInfo.pxrVolume.maxDensity << "]";
+				m_WriteLine(s.str().c_str());
+			}
+
+			if (risMaterialInfo.pxrVolume.multiScatter) {
+				std::stringstream s;
+				s << "  \"int multiScatter\" [" << 1 << "]";
+				m_WriteLine(s.str().c_str());
+			}
+		}
+
+		break;
+
 	case RIBParam::pxrSkin:
 		break;
 
-	case RIBParam::pxrVolume:
-		break;
+
 	}
 }
 
@@ -1243,7 +1311,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 			{
 				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.specAmount);
-				if (!sx::zero(col.red - 1.0f) || !sx::zero(col.green - 1.0f) || !sx::zero(col.blue - 1.0f)) {
+				if (!::CheckColorWhite(col)) {
 					std::stringstream s;
 					s << "  \"color specAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
 					m_WriteLine(s.str());
@@ -1251,7 +1319,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 			{
 				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.diffAmount);
-				if (!sx::zero(col.red - 1.0f) || !sx::zero(col.green - 1.0f) || !sx::zero(col.blue - 1.0f)) {
+				if (!::CheckColorWhite(col)) {
 					std::stringstream s;
 					s << "  \"color diffAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
 					m_WriteLine(s.str());
@@ -1289,7 +1357,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 			{
 				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.shadowColor);
-				if (!sx::zero(col.red) || !sx::zero(col.green) || !sx::zero(col.blue)) {
+				if (!::CheckColorBlack(col)) {
 					std::stringstream s;
 					s << "  \"color shadowColor\" [" << col.red << " " << col.green << " " << col.blue << "]";
 					m_WriteLine(s.str());

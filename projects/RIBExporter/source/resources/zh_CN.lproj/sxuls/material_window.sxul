@@ -34,8 +34,8 @@
 			<item id="popup_item_1" label="PxrDisney"/>
 			<item id="popup_item_2" label="PxrGlass"/>
 			<item id="popup_item_3" label="PxrConstant"/>
-<!--			<item id="popup_item_4" label="PxrSkin"/> -->
-<!--			<item id="popup_item_5" label="PxrVolume"/> -->
+			<item id="popup_item_4" label="PxrVolume"/>
+<!--			<item id="popup_item_5" label="PxrSkin"/> -->
 		</popup-menu>
 		<control size='400 8'/>
 
@@ -145,11 +145,42 @@
 					<color-box id="constsnt_emitColor" label="emitColor" size="64" />
 				</hbox>
 			</group>
-<!--
-			<group id="tab_skin" label="PxrSkin">
-			</group>
 
 			<group id="tab_volume" label="PxrVolume">
+				<hbox>
+					<static-text id="volume_diffuseColor_text" label="diffuseColor" size="100" />
+					<color-box id="volume_diffuseColor" label="diffuseColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_emitColor_text" label="emitColor" size="100" />
+					<color-box id="volume_emitColor" label="emitColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_densityColor_text" label="densityColor" size="100" />
+					<color-box id="volume_densityColor" label="densityColor" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_densityFloat_text" label="densityFloat" size="100" />
+					<number id="volume_densityFloat" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_densityScale_text" label="densityScale" size="100" />
+					<number id="volume_densityScale" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_anisotropy_text" label="anisotropy" size="100" />
+					<number id="volume_anisotropy" label="" type="real" size="64" />
+				</hbox>
+				<hbox>
+					<static-text id="volume_maxDensity_text" label="maxDensity" size="100" />
+					<number id="volume_maxDensity" label="" type="real" size="64" />
+				</hbox>
+
+				<checkbox id="volume_multiScatter" label="multiScatter" />
+			</group>
+
+<!--
+			<group id="tab_skin" label="PxrSkin">
 			</group>
 -->
 		</tab>
