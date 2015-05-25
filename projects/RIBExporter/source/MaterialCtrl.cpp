@@ -106,8 +106,8 @@ void CPxrMaterialVolume::Clear ()
 	diffuseColor = sxsdk::rgb_class(1, 1, 1);
 	emitColor    = sxsdk::rgb_class(0, 0, 0);
 	densityColor = sxsdk::rgb_class(1, 1, 1);
-	densityFloat = 1.0f;
-	densityScale = 1.0f;
+	densityFloat = 0.05f;
+	densityScale = 0.05f;
 	anisotropy   = 0.0f;
 	maxDensity   = 1.0f;
 	multiScatter = false;
@@ -191,6 +191,7 @@ void CMaterialInfo::Clear ()
 
 	noShading = false;
 	noShadow  = false;
+	volumeRendering = false;
 
 	mappingLayerCount = 0;
 
@@ -256,6 +257,7 @@ void CMaterialInfo::m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface
 	glowColor     = surface->get_glow_color();
 
 	transparentAlpha = false;
+	volumeRendering = (surface->get_volume_type() == sxsdk::enums::volume_method);
 
 	mappingLayerCount = surface->get_number_of_mapping_layers();
 
@@ -335,7 +337,13 @@ void MaterialCtrl::ConvShade3DToRIS (CMaterialInfo& materialInfo, CRISMaterialIn
 	risMaterialInfo.pxrVolume.anisotropy  = materialInfo.anisotropic;
 
 	const float fMin = 0.01;
-	if (materialInfo.transparent > fMin) {
+	if (materialInfo.volumeRendering) {
+		//----------------------------------------------------------.
+		// ボリューム表現の場合.
+		//----------------------------------------------------------.
+		risMaterialInfo.type = RIBParam::pxrVolume;
+
+	} else if (materialInfo.transparent > fMin) {
 		//----------------------------------------------------------.
 		// 透過がある場合.
 		//----------------------------------------------------------.

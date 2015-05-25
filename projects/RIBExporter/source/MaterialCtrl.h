@@ -221,6 +221,8 @@ public:
 
 	bool transparentAlpha;				// アルファ透明.
 
+	bool volumeRendering;				// ボリュームレンダリング.
+
 	CMaterialMappingLayerInfo diffuseLayer;		// Diffuse Mapのレイヤ情報.
 	CMaterialMappingLayerInfo normalLayer;		// Normal Mapのレイヤ情報.
 	CMaterialMappingLayerInfo trimLayer;		// Trim Mapのレイヤ情報.
