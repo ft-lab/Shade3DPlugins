@@ -123,16 +123,255 @@ RIBExportData StreamCtrl::LoadRIBExportDlg (sxsdk::scene_interface* scene)
 	return data;
 }
 
+namespace {
+	/**
+	 * 指定のstreamにRenderManのパラメータを保持.
+	 */
+	void m_SaveRIBMaterial (sxsdk::stream_interface* stream, const CRISMaterialInfo& data) {
+		try {
+			stream->set_pointer(0);
+			stream->set_size(0);
+
+			int version = RIB_MATERIAL_VERSION;
+			stream->write_int(version);
+
+			int iDat;
+			iDat = data.useCustom ? 1 : 0;
+			stream->write_int(iDat);
+
+			iDat = (int)data.type;
+			stream->write_int(iDat);
+
+			iDat = (int)data.useDepth ? 1 : 0;
+			stream->write_int(iDat);
+
+			iDat = (int)data.visibilityDiffuse ? 1 : 0;
+			stream->write_int(iDat);
+
+			iDat = (int)data.visibilitySpecular ? 1 : 0;
+			stream->write_int(iDat);
+
+			iDat = (int)data.visibilityIndirect ? 1 : 0;
+			stream->write_int(iDat);
+
+			iDat = (int)data.visibilityCamera ? 1 : 0;
+			stream->write_int(iDat);
+
+			stream->write_int(data.maxdiffusedepth);
+			stream->write_int(data.maxspeculardepth);
+
+			// CPxrMaterialDiffuse.
+			stream->write_float(data.pxrDiffuse.diffuseColor.red);
+			stream->write_float(data.pxrDiffuse.diffuseColor.green);
+			stream->write_float(data.pxrDiffuse.diffuseColor.blue);
+			stream->write_float(data.pxrDiffuse.transmissionColor.red);
+			stream->write_float(data.pxrDiffuse.transmissionColor.green);
+			stream->write_float(data.pxrDiffuse.transmissionColor.blue);
+			stream->write_float(data.pxrDiffuse.presence);
+
+			// CPxrMaterialDisney.
+			stream->write_float(data.pxrDisney.baseColor.red);
+			stream->write_float(data.pxrDisney.baseColor.green);
+			stream->write_float(data.pxrDisney.baseColor.blue);
+			stream->write_float(data.pxrDisney.emitColor.red);
+			stream->write_float(data.pxrDisney.emitColor.green);
+			stream->write_float(data.pxrDisney.emitColor.blue);
+			stream->write_float(data.pxrDisney.subsurface);
+			stream->write_float(data.pxrDisney.subsurfaceColor.red);
+			stream->write_float(data.pxrDisney.subsurfaceColor.green);
+			stream->write_float(data.pxrDisney.subsurfaceColor.blue);
+			stream->write_float(data.pxrDisney.metallic);
+			stream->write_float(data.pxrDisney.specular);
+			stream->write_float(data.pxrDisney.specularTint);
+			stream->write_float(data.pxrDisney.roughness);
+			stream->write_float(data.pxrDisney.anisotropic);
+			stream->write_float(data.pxrDisney.sheen);
+			stream->write_float(data.pxrDisney.sheenTint);
+
+			// CPxrMaterialGlass.
+			stream->write_float(data.pxrGlass.ior);
+			stream->write_float(data.pxrGlass.roughness);
+			stream->write_float(data.pxrGlass.reflectionColor.red);
+			stream->write_float(data.pxrGlass.reflectionColor.green);
+			stream->write_float(data.pxrGlass.reflectionColor.blue);
+			stream->write_float(data.pxrGlass.reflectionGain);
+			stream->write_float(data.pxrGlass.transmissionColor.red);
+			stream->write_float(data.pxrGlass.transmissionColor.green);
+			stream->write_float(data.pxrGlass.transmissionColor.blue);
+			stream->write_float(data.pxrGlass.transmissionGain);
+			stream->write_float(data.pxrGlass.absorptionGain);
+			stream->write_float(data.pxrGlass.absorptionColor.red);
+			stream->write_float(data.pxrGlass.absorptionColor.green);
+			stream->write_float(data.pxrGlass.absorptionColor.blue);
+
+			// CPxrMaterialConstant.
+			stream->write_float(data.pxrConstant.emitColor.red);
+			stream->write_float(data.pxrConstant.emitColor.green);
+			stream->write_float(data.pxrConstant.emitColor.blue);
+
+			// ver.1.0.0.2 - .
+
+			// CPxrVolume.
+			stream->write_float(data.pxrVolume.diffuseColor.red);
+			stream->write_float(data.pxrVolume.diffuseColor.green);
+			stream->write_float(data.pxrVolume.diffuseColor.blue);
+			stream->write_float(data.pxrVolume.emitColor.red);
+			stream->write_float(data.pxrVolume.emitColor.green);
+			stream->write_float(data.pxrVolume.emitColor.blue);
+			stream->write_float(data.pxrVolume.densityColor.red);
+			stream->write_float(data.pxrVolume.densityColor.green);
+			stream->write_float(data.pxrVolume.densityColor.blue);
+			stream->write_float(data.pxrVolume.densityFloat);
+			stream->write_float(data.pxrVolume.densityScale);
+			stream->write_float(data.pxrVolume.anisotropy);
+			stream->write_float(data.pxrVolume.maxDensity);
+			iDat = (int)(data.pxrVolume.multiScatter ? 1 : 0);
+			stream->write_int(iDat);
+		} catch (...) { }
+	}
+
+	/**
+	 * 指定のstreamからRenderManのパラメータを取得.
+	 */
+	bool m_LoadRIBMaterial (sxsdk::stream_interface* stream, CRISMaterialInfo& data) {
+		try {
+			stream->set_pointer(0);
+
+			int version = 0;
+			stream->read_int(version);
+
+			int iDat;
+
+			stream->read_int(iDat);
+			data.useCustom = iDat ? true : false;
+
+			stream->read_int(iDat);
+			data.type = (RIBParam::MATERIAL_TYPE)iDat;
+
+			stream->read_int(iDat);
+			data.useDepth = iDat ? true : false;
+
+			stream->read_int(iDat);
+			data.visibilityDiffuse = iDat ? true : false;
+
+			stream->read_int(iDat);
+			data.visibilitySpecular = iDat ? true : false;
+
+			stream->read_int(iDat);
+			data.visibilityIndirect = iDat ? true : false;
+
+			stream->read_int(iDat);
+			data.visibilityCamera = iDat ? true : false;
+
+			stream->read_int(data.maxdiffusedepth);
+			stream->read_int(data.maxspeculardepth);
+
+			// CPxrMaterialDiffuse.
+			stream->read_float(data.pxrDiffuse.diffuseColor.red);
+			stream->read_float(data.pxrDiffuse.diffuseColor.green);
+			stream->read_float(data.pxrDiffuse.diffuseColor.blue);
+			stream->read_float(data.pxrDiffuse.transmissionColor.red);
+			stream->read_float(data.pxrDiffuse.transmissionColor.green);
+			stream->read_float(data.pxrDiffuse.transmissionColor.blue);
+			stream->read_float(data.pxrDiffuse.presence);
+
+			// CPxrMaterialDisney.
+			stream->read_float(data.pxrDisney.baseColor.red);
+			stream->read_float(data.pxrDisney.baseColor.green);
+			stream->read_float(data.pxrDisney.baseColor.blue);
+			stream->read_float(data.pxrDisney.emitColor.red);
+			stream->read_float(data.pxrDisney.emitColor.green);
+			stream->read_float(data.pxrDisney.emitColor.blue);
+			stream->read_float(data.pxrDisney.subsurface);
+			stream->read_float(data.pxrDisney.subsurfaceColor.red);
+			stream->read_float(data.pxrDisney.subsurfaceColor.green);
+			stream->read_float(data.pxrDisney.subsurfaceColor.blue);
+			stream->read_float(data.pxrDisney.metallic);
+			stream->read_float(data.pxrDisney.specular);
+			stream->read_float(data.pxrDisney.specularTint);
+			stream->read_float(data.pxrDisney.roughness);
+			stream->read_float(data.pxrDisney.anisotropic);
+			stream->read_float(data.pxrDisney.sheen);
+			stream->read_float(data.pxrDisney.sheenTint);
+
+			// CPxrMaterialGlass.
+			stream->read_float(data.pxrGlass.ior);
+			stream->read_float(data.pxrGlass.roughness);
+			stream->read_float(data.pxrGlass.reflectionColor.red);
+			stream->read_float(data.pxrGlass.reflectionColor.green);
+			stream->read_float(data.pxrGlass.reflectionColor.blue);
+			stream->read_float(data.pxrGlass.reflectionGain);
+			stream->read_float(data.pxrGlass.transmissionColor.red);
+			stream->read_float(data.pxrGlass.transmissionColor.green);
+			stream->read_float(data.pxrGlass.transmissionColor.blue);
+			stream->read_float(data.pxrGlass.transmissionGain);
+			stream->read_float(data.pxrGlass.absorptionGain);
+			stream->read_float(data.pxrGlass.absorptionColor.red);
+			stream->read_float(data.pxrGlass.absorptionColor.green);
+			stream->read_float(data.pxrGlass.absorptionColor.blue);
+
+			// CPxrMaterialConstant.
+			stream->read_float(data.pxrConstant.emitColor.red);
+			stream->read_float(data.pxrConstant.emitColor.green);
+			stream->read_float(data.pxrConstant.emitColor.blue);
+
+			// ver.1.0.0.2 - 
+			if (version >= RIB_MATERIAL_VERSION_102) {
+				// CPxrVolume.
+				stream->read_float(data.pxrVolume.diffuseColor.red);
+				stream->read_float(data.pxrVolume.diffuseColor.green);
+				stream->read_float(data.pxrVolume.diffuseColor.blue);
+				stream->read_float(data.pxrVolume.emitColor.red);
+				stream->read_float(data.pxrVolume.emitColor.green);
+				stream->read_float(data.pxrVolume.emitColor.blue);
+				stream->read_float(data.pxrVolume.densityColor.red);
+				stream->read_float(data.pxrVolume.densityColor.green);
+				stream->read_float(data.pxrVolume.densityColor.blue);
+				stream->read_float(data.pxrVolume.densityFloat);
+				stream->read_float(data.pxrVolume.densityScale);
+				stream->read_float(data.pxrVolume.anisotropy);
+				stream->read_float(data.pxrVolume.maxDensity);
+				stream->read_int(iDat);
+				data.pxrVolume.multiScatter = iDat ? true : false;
+			}
+
+			return true;
+		} catch (...) { }
+
+		return false;
+	}
+}
+
+
 /**
  * RenderManのマテリアルパラメータを持つか.
  */
 bool StreamCtrl::HasRIBMaterial (sxsdk::shape_class& shape)
 {
+	// 表面材質に情報が存在するか.
+	if (shape.get_has_surface_attributes()) {
+		try {
+			sxsdk::surface_class* surface = shape.get_surface();
+			if (surface) {
+				compointer<sxsdk::stream_interface> stream(surface->get_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
+				if (stream) {
+					return true;
+				}
+			}
+		} catch (...) { }
+	}
+
 	try {
 		compointer<sxsdk::stream_interface> stream(shape.get_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
 		if (!stream) return false;
 
+		// 形状に情報が割り当てられている場合は、表面材質に移し変え.
+		CRISMaterialInfo data;
+		if (::m_LoadRIBMaterial(stream, data)) {
+			::m_SaveRIBMaterial(stream, data);
+		}
 		return true;
+
 	} catch (...) { }
 
 	return false;
@@ -143,108 +382,30 @@ bool StreamCtrl::HasRIBMaterial (sxsdk::shape_class& shape)
  */
 void StreamCtrl::SaveRIBMaterial (sxsdk::shape_class& shape, const CRISMaterialInfo& data)
 {
+	// マテリアルの属性として情報を保持.
+	// こうしないと、表面材質の保存よりshdsfcで保存できないため.
+	if (shape.get_has_surface_attributes()) {
+		try {
+			sxsdk::surface_class* surface = shape.get_surface();
+			if (surface) {
+				compointer<sxsdk::stream_interface> stream(surface->create_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
+				if (stream) {
+					::m_SaveRIBMaterial(stream, data);
+				}
+			}
+		} catch (...) { }
+	}
+
 	try {
 		compointer<sxsdk::stream_interface> stream(shape.create_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
 		if (!stream) return;
 
+		// 形状にはダミーデータだけ入れる.
 		stream->set_pointer(0);
 		stream->set_size(0);
 
 		int version = RIB_MATERIAL_VERSION;
 		stream->write_int(version);
-
-		int iDat;
-		iDat = data.useCustom ? 1 : 0;
-		stream->write_int(iDat);
-
-		iDat = (int)data.type;
-		stream->write_int(iDat);
-
-		iDat = (int)data.useDepth ? 1 : 0;
-		stream->write_int(iDat);
-
-		iDat = (int)data.visibilityDiffuse ? 1 : 0;
-		stream->write_int(iDat);
-
-		iDat = (int)data.visibilitySpecular ? 1 : 0;
-		stream->write_int(iDat);
-
-		iDat = (int)data.visibilityIndirect ? 1 : 0;
-		stream->write_int(iDat);
-
-		iDat = (int)data.visibilityCamera ? 1 : 0;
-		stream->write_int(iDat);
-
-		stream->write_int(data.maxdiffusedepth);
-		stream->write_int(data.maxspeculardepth);
-
-		// CPxrMaterialDiffuse.
-		stream->write_float(data.pxrDiffuse.diffuseColor.red);
-		stream->write_float(data.pxrDiffuse.diffuseColor.green);
-		stream->write_float(data.pxrDiffuse.diffuseColor.blue);
-		stream->write_float(data.pxrDiffuse.transmissionColor.red);
-		stream->write_float(data.pxrDiffuse.transmissionColor.green);
-		stream->write_float(data.pxrDiffuse.transmissionColor.blue);
-		stream->write_float(data.pxrDiffuse.presence);
-
-		// CPxrMaterialDisney.
-		stream->write_float(data.pxrDisney.baseColor.red);
-		stream->write_float(data.pxrDisney.baseColor.green);
-		stream->write_float(data.pxrDisney.baseColor.blue);
-		stream->write_float(data.pxrDisney.emitColor.red);
-		stream->write_float(data.pxrDisney.emitColor.green);
-		stream->write_float(data.pxrDisney.emitColor.blue);
-		stream->write_float(data.pxrDisney.subsurface);
-		stream->write_float(data.pxrDisney.subsurfaceColor.red);
-		stream->write_float(data.pxrDisney.subsurfaceColor.green);
-		stream->write_float(data.pxrDisney.subsurfaceColor.blue);
-		stream->write_float(data.pxrDisney.metallic);
-		stream->write_float(data.pxrDisney.specular);
-		stream->write_float(data.pxrDisney.specularTint);
-		stream->write_float(data.pxrDisney.roughness);
-		stream->write_float(data.pxrDisney.anisotropic);
-		stream->write_float(data.pxrDisney.sheen);
-		stream->write_float(data.pxrDisney.sheenTint);
-
-		// CPxrMaterialGlass.
-		stream->write_float(data.pxrGlass.ior);
-		stream->write_float(data.pxrGlass.roughness);
-		stream->write_float(data.pxrGlass.reflectionColor.red);
-		stream->write_float(data.pxrGlass.reflectionColor.green);
-		stream->write_float(data.pxrGlass.reflectionColor.blue);
-		stream->write_float(data.pxrGlass.reflectionGain);
-		stream->write_float(data.pxrGlass.transmissionColor.red);
-		stream->write_float(data.pxrGlass.transmissionColor.green);
-		stream->write_float(data.pxrGlass.transmissionColor.blue);
-		stream->write_float(data.pxrGlass.transmissionGain);
-		stream->write_float(data.pxrGlass.absorptionGain);
-		stream->write_float(data.pxrGlass.absorptionColor.red);
-		stream->write_float(data.pxrGlass.absorptionColor.green);
-		stream->write_float(data.pxrGlass.absorptionColor.blue);
-
-		// CPxrMaterialConstant.
-		stream->write_float(data.pxrConstant.emitColor.red);
-		stream->write_float(data.pxrConstant.emitColor.green);
-		stream->write_float(data.pxrConstant.emitColor.blue);
-
-		// ver.1.0.0.2 - .
-
-		// CPxrVolume.
-		stream->write_float(data.pxrVolume.diffuseColor.red);
-		stream->write_float(data.pxrVolume.diffuseColor.green);
-		stream->write_float(data.pxrVolume.diffuseColor.blue);
-		stream->write_float(data.pxrVolume.emitColor.red);
-		stream->write_float(data.pxrVolume.emitColor.green);
-		stream->write_float(data.pxrVolume.emitColor.blue);
-		stream->write_float(data.pxrVolume.densityColor.red);
-		stream->write_float(data.pxrVolume.densityColor.green);
-		stream->write_float(data.pxrVolume.densityColor.blue);
-		stream->write_float(data.pxrVolume.densityFloat);
-		stream->write_float(data.pxrVolume.densityScale);
-		stream->write_float(data.pxrVolume.anisotropy);
-		stream->write_float(data.pxrVolume.maxDensity);
-		iDat = (int)(data.pxrVolume.multiScatter ? 1 : 0);
-		stream->write_int(iDat);
 
 		// ラベルの指定.
 		if (!data.useCustom) {
@@ -293,110 +454,25 @@ CRISMaterialInfo StreamCtrl::LoadRIBMaterial (sxsdk::shape_class& shape)
 {
 	CRISMaterialInfo data;
 
+	// マテリアルの属性として情報を取得.
+	// こうしないと、表面材質の保存よりshdsfcで保存できないため.
+	if (shape.get_has_surface_attributes()) {
+		try {
+			sxsdk::surface_class* surface = shape.get_surface();
+			if (surface) {
+				compointer<sxsdk::stream_interface> stream(surface->get_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
+				if (stream) {
+					if (::m_LoadRIBMaterial(stream, data)) return data;
+				}
+			}
+		} catch (...) { }
+	}
+
+	// 形状のstreamから情報を読み込み.
 	try {
 		compointer<sxsdk::stream_interface> stream(shape.get_attribute_stream_interface_with_uuid(RIB_MATERIAL_ID));
 		if (!stream) return data;
-
-		stream->set_pointer(0);
-
-		int version = 0;
-		stream->read_int(version);
-
-		int iDat;
-
-		stream->read_int(iDat);
-		data.useCustom = iDat ? true : false;
-
-		stream->read_int(iDat);
-		data.type = (RIBParam::MATERIAL_TYPE)iDat;
-
-		stream->read_int(iDat);
-		data.useDepth = iDat ? true : false;
-
-		stream->read_int(iDat);
-		data.visibilityDiffuse = iDat ? true : false;
-
-		stream->read_int(iDat);
-		data.visibilitySpecular = iDat ? true : false;
-
-		stream->read_int(iDat);
-		data.visibilityIndirect = iDat ? true : false;
-
-		stream->read_int(iDat);
-		data.visibilityCamera = iDat ? true : false;
-
-		stream->read_int(data.maxdiffusedepth);
-		stream->read_int(data.maxspeculardepth);
-
-		// CPxrMaterialDiffuse.
-		stream->read_float(data.pxrDiffuse.diffuseColor.red);
-		stream->read_float(data.pxrDiffuse.diffuseColor.green);
-		stream->read_float(data.pxrDiffuse.diffuseColor.blue);
-		stream->read_float(data.pxrDiffuse.transmissionColor.red);
-		stream->read_float(data.pxrDiffuse.transmissionColor.green);
-		stream->read_float(data.pxrDiffuse.transmissionColor.blue);
-		stream->read_float(data.pxrDiffuse.presence);
-
-		// CPxrMaterialDisney.
-		stream->read_float(data.pxrDisney.baseColor.red);
-		stream->read_float(data.pxrDisney.baseColor.green);
-		stream->read_float(data.pxrDisney.baseColor.blue);
-		stream->read_float(data.pxrDisney.emitColor.red);
-		stream->read_float(data.pxrDisney.emitColor.green);
-		stream->read_float(data.pxrDisney.emitColor.blue);
-		stream->read_float(data.pxrDisney.subsurface);
-		stream->read_float(data.pxrDisney.subsurfaceColor.red);
-		stream->read_float(data.pxrDisney.subsurfaceColor.green);
-		stream->read_float(data.pxrDisney.subsurfaceColor.blue);
-		stream->read_float(data.pxrDisney.metallic);
-		stream->read_float(data.pxrDisney.specular);
-		stream->read_float(data.pxrDisney.specularTint);
-		stream->read_float(data.pxrDisney.roughness);
-		stream->read_float(data.pxrDisney.anisotropic);
-		stream->read_float(data.pxrDisney.sheen);
-		stream->read_float(data.pxrDisney.sheenTint);
-
-		// CPxrMaterialGlass.
-		stream->read_float(data.pxrGlass.ior);
-		stream->read_float(data.pxrGlass.roughness);
-		stream->read_float(data.pxrGlass.reflectionColor.red);
-		stream->read_float(data.pxrGlass.reflectionColor.green);
-		stream->read_float(data.pxrGlass.reflectionColor.blue);
-		stream->read_float(data.pxrGlass.reflectionGain);
-		stream->read_float(data.pxrGlass.transmissionColor.red);
-		stream->read_float(data.pxrGlass.transmissionColor.green);
-		stream->read_float(data.pxrGlass.transmissionColor.blue);
-		stream->read_float(data.pxrGlass.transmissionGain);
-		stream->read_float(data.pxrGlass.absorptionGain);
-		stream->read_float(data.pxrGlass.absorptionColor.red);
-		stream->read_float(data.pxrGlass.absorptionColor.green);
-		stream->read_float(data.pxrGlass.absorptionColor.blue);
-
-		// CPxrMaterialConstant.
-		stream->read_float(data.pxrConstant.emitColor.red);
-		stream->read_float(data.pxrConstant.emitColor.green);
-		stream->read_float(data.pxrConstant.emitColor.blue);
-
-		// ver.1.0.0.2 - 
-		if (version >= RIB_MATERIAL_VERSION_102) {
-			// CPxrVolume.
-			stream->read_float(data.pxrVolume.diffuseColor.red);
-			stream->read_float(data.pxrVolume.diffuseColor.green);
-			stream->read_float(data.pxrVolume.diffuseColor.blue);
-			stream->read_float(data.pxrVolume.emitColor.red);
-			stream->read_float(data.pxrVolume.emitColor.green);
-			stream->read_float(data.pxrVolume.emitColor.blue);
-			stream->read_float(data.pxrVolume.densityColor.red);
-			stream->read_float(data.pxrVolume.densityColor.green);
-			stream->read_float(data.pxrVolume.densityColor.blue);
-			stream->read_float(data.pxrVolume.densityFloat);
-			stream->read_float(data.pxrVolume.densityScale);
-			stream->read_float(data.pxrVolume.anisotropy);
-			stream->read_float(data.pxrVolume.maxDensity);
-			stream->read_int(iDat);
-			data.pxrVolume.multiScatter = iDat ? true : false;
-		}
-
+		::m_LoadRIBMaterial(stream, data);
 	} catch (...) { }
 
 	return data;

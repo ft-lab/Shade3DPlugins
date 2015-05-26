@@ -119,7 +119,6 @@ CRISMaterialInfo::CRISMaterialInfo ()
 	Clear();
 }
 
-
 /**
  * すべての情報をクリアする（初期値を入れる）.
  */
