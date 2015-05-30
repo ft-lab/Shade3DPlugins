@@ -400,6 +400,9 @@ void CSaveRIB::BeginExport (sxsdk::scene_interface* scene)
 	// テクスチャの参照を出力.
 	m_WriteTextures();
 
+	// マスターサーフェスとしてのマテリアル情報を出力.
+	m_WriteMasterSurfaceMaterials(scene);
+
 	// カメラの変換を出力.
 	m_WriteCamera();
 
@@ -531,6 +534,84 @@ std::string CSaveRIB::m_GetTextureName (const int textureIndex, const bool fileF
 	return textureName;
 }
 
+/**
+ * マスターサーフェスとしてのマテリアル情報を出力.
+ */
+void CSaveRIB::m_WriteMasterSurfaceMaterials (sxsdk::scene_interface* scene)
+{
+	m_MaterialList.clear();
+
+	// master surfaceパートを取得.
+	sxsdk::shape_class& rootShape = scene->get_shape();
+	if (!rootShape.has_son()) return;
+
+	sxsdk::shape_class* pMasterSurfacePart = NULL;
+	sxsdk::shape_class* pS = rootShape.get_son();
+	while (pS->has_bro()) {
+		pS = pS->get_bro();
+		if (!pS) break;
+		if (pS->get_type() == sxsdk::enums::part) {
+			if (pS->get_part().get_part_type() == sxsdk::enums::master_surface_part) {
+				pMasterSurfacePart = pS;
+				break;
+			}
+		}
+	}
+	if (!pMasterSurfacePart) return;
+	if (!pMasterSurfacePart->has_son()) return;
+
+	// master surfaceのマテリアル情報を取得.
+	pS = pMasterSurfacePart->get_son();
+	while (pS->has_bro()) {
+		pS = pS->get_bro();
+		if (!pS) break;
+		if (pS->get_type() == sxsdk::enums::master_surface) {
+			sxsdk::master_surface_class* pMasterSurface = pS->get_master_surface();
+			m_MaterialList.push_back(CMaterialInfo());
+			CMaterialInfo& material = m_MaterialList.back();
+			material.SetMaterial(scene, *pMasterSurface);
+		}
+	}
+	if (m_MaterialList.size() == 0) return;
+
+	m_WriteLine("");
+	m_WriteLine("# Material patterns --------");
+	for (int i = 0; i < m_MaterialList.size(); i++) {
+		CMaterialInfo& material = m_MaterialList[i];
+		if (material.mappingLayerCount == 0) continue;
+
+		// master surfaceにRenderMan用の属性が格納されている場合は格納.
+		CRISMaterialInfo risMaterialInfo;
+		if (StreamCtrl::HasRIBMaterial(*material.masterSurface)) {
+			risMaterialInfo = StreamCtrl::LoadRIBMaterial(*material.masterSurface);
+		}
+
+		// カスタム情報を使用しない場合は、表面材質からのパラメータを格納.
+		if (!risMaterialInfo.useCustom) {
+			MaterialCtrl::ConvShade3DToRIS(material, risMaterialInfo);
+		}
+
+		{
+			std::stringstream s;
+			s << "# " << material.name;
+			m_WriteLine(s.str());
+		}
+
+		// マテリアルのPattern情報を出力し、最終的なPatern名を保持.
+		std::string diffuseFirst = "";
+		material.ribDiffusePatternName = m_WriteMaterialRGB(material.name, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
+		material.ribNormalPatternName  = m_WriteMaterialNormal(material.name, "normal", material.normalLayer);
+
+		// 「アルファ透明」も加味した透明度データ.
+		std::string alphaTransTexName = "";
+		if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
+		material.ribTrimPatternName = m_WriteMaterialTrim(material.name, "trim", material.trimLayer, alphaTransTexName);
+
+		m_WriteLine("");
+	}
+
+	m_WriteLine("");
+}
 
 /**
  * マテリアルの出力開始.
@@ -633,14 +714,30 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 	const std::string materialName = material.name;
 
 	// テクスチャの繰り返しや色反転が存在する場合は、パターンを再度出力.
-	// TODO : これについては各マスターサーフェスに1回指定すればよい.
-	std::string diffuseFirst = "";
-	const std::string diffuseTexName2 = m_WriteMaterialRGB(materialName, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
-	const std::string normalTexName2  = m_WriteMaterialNormal(materialName, "bump", material.normalLayer);
+	std::string diffusePatternName = "";
+	std::string normalPatternName  = "";
+	std::string trimPatternName    = "";
 
-	std::string alphaTransTexName = "";
-	if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
-	const std::string trimTexName2    = m_WriteMaterialTrim(materialName, "trim", material.trimLayer, alphaTransTexName);
+	if (pCurrentMasterSurface) {
+		// すでに出力したmaster surface情報から参照.
+		for (int i = 0; i < m_MaterialList.size(); i++) {
+			CMaterialInfo& material = m_MaterialList[i];
+			if (material.masterSurface == pCurrentMasterSurface) {
+				diffusePatternName = material.ribDiffusePatternName;
+				normalPatternName  = material.ribNormalPatternName;
+				trimPatternName    = material.ribTrimPatternName;
+				break;
+			}
+		}
+	} else {
+		std::string diffuseFirst = "";
+		diffusePatternName = m_WriteMaterialRGB(materialName, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
+		normalPatternName  = m_WriteMaterialNormal(materialName, "normal", material.normalLayer);
+
+		std::string alphaTransTexName = "";
+		if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
+		trimPatternName    = m_WriteMaterialTrim(materialName, "trim", material.trimLayer, alphaTransTexName);
+	}
 
 	switch (risMaterialInfo.type) {
 	case RIBParam::pxrDiffuse:
@@ -648,9 +745,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			const sxsdk::rgb_class diffuseCol       = m_CalcLinearColor(risMaterialInfo.pxrDiffuse.diffuseColor);
 			const sxsdk::rgb_class transmissionCol  = m_CalcLinearColor(risMaterialInfo.pxrDiffuse.transmissionColor);
 
-			if (diffuseTexName2.size() > 0) {
+			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrDiffuse\" \"" << materialName << "\" \"reference color diffuseColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				s << "Bxdf \"PxrDiffuse\" \"" << materialName << "\" \"reference color diffuseColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
@@ -658,9 +755,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (trimTexName2.size() > 0) {
+			if (trimPatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"reference float presence\" [\"" << trimTexName2 << ":resultR\"]";
+				s << "  \"reference float presence\" [\"" << trimPatternName << ":resultR\"]";
 				m_WriteLine(s.str().c_str());
 			}
 
@@ -670,9 +767,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (normalTexName2.size() > 0) {
+			if (normalPatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"reference normal bumpNormal\" [\"" << normalTexName2 << ":resultN\"]";
+				s << "  \"reference normal bumpNormal\" [\"" << normalPatternName << ":resultN\"]";
 				m_WriteLine(s.str().c_str());
 			}
 		}
@@ -683,9 +780,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			const sxsdk::rgb_class baseCol   = m_CalcLinearColor(risMaterialInfo.pxrDisney.baseColor);
 			const sxsdk::rgb_class emitCol   = m_CalcLinearColor(risMaterialInfo.pxrDisney.emitColor);
 
-			if (diffuseTexName2.size() > 0) {
+			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrDisney\" \"" << materialName << "\" \"reference color baseColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				s << "Bxdf \"PxrDisney\" \"" << materialName << "\" \"reference color baseColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
@@ -694,9 +791,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			}
 
 			// アルファ透明使用時は、Alpha値を参照.
-			if (trimTexName2.size() > 0) {
+			if (trimPatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"reference float presence\" [\"" << trimTexName2 << ":resultR\"]";
+				s << "  \"reference float presence\" [\"" << trimPatternName << ":resultR\"]";
 				m_WriteLine(s.str().c_str());
 			}
 
@@ -743,9 +840,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (normalTexName2.size() > 0) {
+			if (normalPatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"reference normal bumpNormal\" [\"" << normalTexName2 << ":resultN\"]";
+				s << "  \"reference normal bumpNormal\" [\"" << normalPatternName << ":resultN\"]";
 				m_WriteLine(s.str().c_str());
 			}
 		}
@@ -757,9 +854,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			const sxsdk::rgb_class transCol        = m_CalcLinearColor(risMaterialInfo.pxrGlass.transmissionColor);
 			const sxsdk::rgb_class absorptionCol   = m_CalcLinearColor(risMaterialInfo.pxrGlass.absorptionColor);
 
-			if (diffuseTexName2.size() > 0) {
+			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrGlass\" \"" << materialName << "\" \"reference color reflectionColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				s << "Bxdf \"PxrGlass\" \"" << materialName << "\" \"reference color reflectionColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
@@ -807,9 +904,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				s << "  \"color absorptionColor\" [" << absorptionCol.red << " " << absorptionCol.green << " " << absorptionCol.blue << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			if (normalTexName2.size() > 0) {
+			if (normalPatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"reference normal bumpNormal\" [\"" << normalTexName2 << ":resultN\"]";
+				s << "  \"reference normal bumpNormal\" [\"" << normalPatternName << ":resultN\"]";
 				m_WriteLine(s.str().c_str());
 			}
 		}
@@ -820,9 +917,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 		{
 			const sxsdk::rgb_class emitCol = m_CalcLinearColor(risMaterialInfo.pxrConstant.emitColor);
 
-			if (diffuseTexName2.size() > 0) {
+			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrConstant\" \"" << materialName << "\" \"reference color emitColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				s << "Bxdf \"PxrConstant\" \"" << materialName << "\" \"reference color emitColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
@@ -838,9 +935,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			const sxsdk::rgb_class emitCol     = m_CalcLinearColor(risMaterialInfo.pxrVolume.emitColor);
 			const sxsdk::rgb_class densityCol  = m_CalcLinearColor(risMaterialInfo.pxrVolume.densityColor);
 
-			if (diffuseTexName2.size() > 0) {
+			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrVolume\" \"" << materialName << "\" \"reference color diffuseColor\" [\"" << diffuseTexName2 << ":resultRGB\"]";
+				s << "Bxdf \"PxrVolume\" \"" << materialName << "\" \"reference color diffuseColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
@@ -891,8 +988,6 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 
 	case RIBParam::pxrSkin:
 		break;
-
-
 	}
 }
 

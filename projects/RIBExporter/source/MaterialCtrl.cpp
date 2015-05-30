@@ -204,6 +204,10 @@ void CMaterialInfo::Clear ()
 	diffuseLayer.clear();
 	normalLayer.clear();
 	trimLayer.clear();
+
+	ribDiffusePatternName = "";
+	ribNormalPatternName  = "";
+	ribTrimPatternName    = "";
 }
 
 /**

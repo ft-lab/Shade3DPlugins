@@ -235,6 +235,10 @@ public:
 	std::vector<CMaterialMappingLayerInfo> normalLayer;			// Normal Mapのレイヤ情報.
 	std::vector<CMaterialMappingLayerInfo> trimLayer;			// Trim Mapのレイヤ情報.
 
+	std::string ribDiffusePatternName;			// 最終的なRIB出力時のDiffuseパターン名.
+	std::string ribNormalPatternName;			// 最終的なRIB出力時のNormalパターン名.
+	std::string ribTrimPatternName;				// 最終的なRIB出力時のTrimパターン名.
+
 	void m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface_class* surface);
 
 public:
@@ -247,7 +251,6 @@ public:
 	 */
 	void SetMaterial (sxsdk::scene_interface* scene, sxsdk::shape_class& shape);
 	void SetMaterial (sxsdk::scene_interface* scene, sxsdk::master_surface_class& masterSurface);
-
 };
 
 //-------------------------------------------------------------------.

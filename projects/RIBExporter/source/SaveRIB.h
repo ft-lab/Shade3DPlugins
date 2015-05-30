@@ -156,6 +156,11 @@ private:
 	std::string m_GetTextureName (const int textureIndex, const bool fileF = true);
 
 	/**
+	 * マスターサーフェスとしてのマテリアル情報を出力.
+	 */
+	void m_WriteMasterSurfaceMaterials (sxsdk::scene_interface* scene);
+
+	/**
 	 * 逆ガンマ補正を行ったリニアな色を返す.
 	 */
 	sxsdk::rgb_class m_CalcLinearColor (const sxsdk::rgb_class& col);
