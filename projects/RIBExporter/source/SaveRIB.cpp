@@ -1281,7 +1281,12 @@ std::string CSaveRIB::m_WriteMaterialNormal (const std::string& materialName, co
 		if (layerInfo.patternType == sxsdk::enums::image_pattern && layerInfo.textureIndex >= 0) {
 			// イメージテクスチャの場合.
 			texName  = m_WriteMaterialTexture(materialName, typeName, mappingLayer, i, true);
-			texName2 = texName + "_bump";
+			texName2 = texName + "_normal";
+			if (texName2.find("images/") == 0) {
+				std::stringstream s;
+				s << patternName << "_" << i << "_normal";
+				texName2 = s.str();
+			}
 
 			if (!layerInfo.normalMap) {
 				// bump mapの場合.
@@ -1294,7 +1299,7 @@ std::string CSaveRIB::m_WriteMaterialNormal (const std::string& materialName, co
 				// normal mapの場合.
 				const float scale = 1.0f * layerInfo.weight;
 				std::stringstream s;
-				s << "Pattern \"PxrNormalMap\" \"" << texName2 << "\" \"color inputRGB\" [\"" << texName << ":resultRGB\"] \"float scale\" [" << scale << "]";
+				s << "Pattern \"PxrNormalMap\" \"" << texName2 << "\" \"reference color inputRGB\" [\"" << texName << ":resultRGB\"] \"float bumpScale\" [" << scale << "]";
 				m_WriteLine(s.str());
 			}
 			
@@ -1302,8 +1307,13 @@ std::string CSaveRIB::m_WriteMaterialNormal (const std::string& materialName, co
 			// spot/cloudのProcedual Textureの場合.
 			texName  = m_WriteMaterialFractal(materialName, typeName, mappingLayer, i, sxsdk::rgb_class(1, 1, 1), "", true);
 			if (texName.size() == 0) continue;
+			texName2 = texName + "_normal";
+			if (texName2.find("images/") == 0) {
+				std::stringstream s;
+				s << patternName << "_" << i << "_normal";
+				texName2 = s.str();
+			}
 
-			texName2 = texName + "_bump";
 			{
 				const float scale = 10.0f * layerInfo.weight;
 				std::stringstream s;
