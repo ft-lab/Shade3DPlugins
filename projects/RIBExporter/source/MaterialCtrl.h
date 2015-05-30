@@ -234,10 +234,12 @@ public:
 	std::vector<CMaterialMappingLayerInfo> diffuseLayer;		// Diffuse Mapのレイヤ情報.
 	std::vector<CMaterialMappingLayerInfo> normalLayer;			// Normal Mapのレイヤ情報.
 	std::vector<CMaterialMappingLayerInfo> trimLayer;			// Trim Mapのレイヤ情報.
+	std::vector<CMaterialMappingLayerInfo> volumeDistanceLayer;	// ボリュームの減衰距離レイヤ情報.
 
 	std::string ribDiffusePatternName;			// 最終的なRIB出力時のDiffuseパターン名.
 	std::string ribNormalPatternName;			// 最終的なRIB出力時のNormalパターン名.
 	std::string ribTrimPatternName;				// 最終的なRIB出力時のTrimパターン名.
+	std::string ribVolumeDistancePatternName;	// 最終的なRIB出力時のボリュームの減衰距離パターン名.
 
 	void m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface_class* surface);
 

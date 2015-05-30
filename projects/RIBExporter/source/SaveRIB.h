@@ -202,6 +202,11 @@ private:
 	 */
 	std::string m_WriteMaterialNormal (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer);
 
+	/**
+	 * マルチレイヤに対応したマテリアルの出力（VolumeDistance）.
+	 */
+	std::string m_WriteMaterialVolumeDistance (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer);
+
 public:
 	CSaveRIB (sxsdk::shade_interface& shade, sxsdk::stream_interface* stream, sxsdk::text_stream_interface* text_stream, const RIBExportData& dlgData);
 

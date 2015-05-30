@@ -601,6 +601,7 @@ void CSaveRIB::m_WriteMasterSurfaceMaterials (sxsdk::scene_interface* scene)
 		std::string diffuseFirst = "";
 		material.ribDiffusePatternName = m_WriteMaterialRGB(material.name, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
 		material.ribNormalPatternName  = m_WriteMaterialNormal(material.name, "normal", material.normalLayer);
+		material.ribVolumeDistancePatternName = m_WriteMaterialVolumeDistance(material.name, "volumeDistance", material.volumeDistanceLayer);
 
 		// 「アルファ透明」も加味した透明度データ.
 		std::string alphaTransTexName = "";
@@ -714,26 +715,28 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 	const std::string materialName = material.name;
 
 	// テクスチャの繰り返しや色反転が存在する場合は、パターンを再度出力.
-	std::string diffusePatternName = "";
-	std::string normalPatternName  = "";
-	std::string trimPatternName    = "";
+	std::string diffusePatternName        = "";
+	std::string normalPatternName         = "";
+	std::string trimPatternName           = "";
+	std::string volumeDistancePatternName = "";
 
 	if (pCurrentMasterSurface) {
 		// すでに出力したmaster surface情報から参照.
 		for (int i = 0; i < m_MaterialList.size(); i++) {
 			CMaterialInfo& material = m_MaterialList[i];
 			if (material.masterSurface == pCurrentMasterSurface) {
-				diffusePatternName = material.ribDiffusePatternName;
-				normalPatternName  = material.ribNormalPatternName;
-				trimPatternName    = material.ribTrimPatternName;
+				diffusePatternName        = material.ribDiffusePatternName;
+				normalPatternName         = material.ribNormalPatternName;
+				trimPatternName           = material.ribTrimPatternName;
+				volumeDistancePatternName = material.ribVolumeDistancePatternName;
 				break;
 			}
 		}
 	} else {
 		std::string diffuseFirst = "";
-		diffusePatternName = m_WriteMaterialRGB(materialName, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
-		normalPatternName  = m_WriteMaterialNormal(materialName, "normal", material.normalLayer);
-
+		diffusePatternName        = m_WriteMaterialRGB(materialName, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
+		normalPatternName         = m_WriteMaterialNormal(materialName, "normal", material.normalLayer);
+		volumeDistancePatternName = m_WriteMaterialVolumeDistance(materialName, "volumeDistance", material.volumeDistanceLayer);
 		std::string alphaTransTexName = "";
 		if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
 		trimPatternName    = m_WriteMaterialTrim(materialName, "trim", material.trimLayer, alphaTransTexName);
@@ -956,10 +959,16 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			if (!sx::zero(risMaterialInfo.pxrVolume.densityFloat - 1.0f)) {
+			if (volumeDistancePatternName.size() > 0) {
 				std::stringstream s;
-				s << "  \"float densityFloat\" [" << risMaterialInfo.pxrVolume.densityFloat << "]";
+				s << "  \"reference float densityFloat\" [\"" << volumeDistancePatternName << ":resultR\"]";
 				m_WriteLine(s.str().c_str());
+			} else {
+				if (!sx::zero(risMaterialInfo.pxrVolume.densityFloat - 1.0f)) {
+					std::stringstream s;
+					s << "  \"float densityFloat\" [" << risMaterialInfo.pxrVolume.densityFloat << "]";
+					m_WriteLine(s.str().c_str());
+				}
 			}
 			if (!sx::zero(risMaterialInfo.pxrVolume.densityScale - 1.0f)) {
 				std::stringstream s;
@@ -1100,19 +1109,30 @@ std::string CSaveRIB::m_WriteMaterialFractal (const std::string& materialName, c
 		m_WriteLine(s.str());
 	}
 
-	if (baseTexName.size() == 0) {
-		std::stringstream s;
-		s << "Pattern \"PxrMix\" \"" << retMixName << "\" \"color color1\" [" << baseColor.red << " " << baseColor.green << " " << baseColor.blue << "]";
-		m_WriteLine(s.str());
-	} else {
+	sxsdk::rgb_class col1 = baseColor;
+	sxsdk::rgb_class col2 = layerInfo.color;
+	if (layerInfo.flipColor) {		// 色反転の場合は、フラクタル色を逆にする.
+		col1 = layerInfo.color;
+		col2 = baseColor;
+	}
+
+	if (baseTexName.size() > 0 && !layerInfo.flipColor) {
 		std::stringstream s;
 		s << "Pattern \"PxrMix\" \"" << retMixName << "\" \"reference color color1\" [\"" << baseTexName << ":resultRGB\"]";
 		m_WriteLine(s.str());
+	} else {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << retMixName << "\" \"color color1\" [" << col1.red << " " << col1.green << " " << col1.blue << "]";
+		m_WriteLine(s.str());
 	}
 
-	{
+	if (baseTexName.size() > 0 && layerInfo.flipColor) {
 		std::stringstream s;
-		s << "  \"color color2\" [" << layerInfo.color.red << " " << layerInfo.color.green << " " << layerInfo.color.blue << "]";
+		s << "  \"reference color color2\" [\"" << baseTexName << ":resultRGB\"]";
+		m_WriteLine(s.str());
+	} else {
+		std::stringstream s;
+		s << "  \"color color2\" [" << col2.red << " " << col2.green << " " << col2.blue << "]";
 		m_WriteLine(s.str());
 	}
 	{
@@ -1131,13 +1151,13 @@ std::string CSaveRIB::m_WriteMaterialFractal (const std::string& materialName, c
 		mixName2 = s.str();
 	}
 
-	if (baseTexName.size() == 0) {
+	if (baseTexName.size() > 0 && !layerInfo.flipColor) {
 		std::stringstream s;
-		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"color color1\" [" << baseColor.red << " " << baseColor.green << " " << baseColor.blue << "]";
+		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"reference color color1\" [\"" << baseTexName << ":resultRGB\"]";
 		m_WriteLine(s.str());
 	} else {
 		std::stringstream s;
-		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"reference color color1\" [\"" << baseTexName << ":resultRGB\"]";
+		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"color color1\" [" << col1.red << " " << col1.green << " " << col1.blue << "]";
 		m_WriteLine(s.str());
 	}
 	{
@@ -1260,6 +1280,19 @@ std::string CSaveRIB::m_WriteMaterialTrim (const std::string& materialName, cons
 	}
 
 	return trimName;
+}
+
+/**
+ * マルチレイヤに対応したマテリアルの出力（VolumeDistance）.
+ */
+std::string CSaveRIB::m_WriteMaterialVolumeDistance (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	std::string diffuseFirst;
+	std::string retName = m_WriteMaterialRGB(materialName, typeName, mappingLayer, sxsdk::rgb_class(1, 1, 1), diffuseFirst);
+
+	return retName;
 }
 
 /**
