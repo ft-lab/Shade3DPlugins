@@ -181,6 +181,14 @@ public:
 	int repeatX, repeatY;			// 繰り返し数.
 	bool flipColor;					// 反転.
 
+	sxsdk::enums::pattern_type patternType;		// イメージ/スポットなどの種類 (procedural textureのものはRenderManのパターンとして渡す).
+	sxsdk::rgb_class color;						// レイヤの色.
+	float weight;								// ウエイト値.
+	float softness;								// ソフトネス.
+	float size;									// サイズ.
+
+	bool normalMap;								// 法線マップの場合true/falseの場合はバンプマップ.
+
 public:
 	CMaterialMappingLayerInfo ();
 
@@ -223,9 +231,9 @@ public:
 
 	bool volumeRendering;				// ボリュームレンダリング.
 
-	CMaterialMappingLayerInfo diffuseLayer;		// Diffuse Mapのレイヤ情報.
-	CMaterialMappingLayerInfo normalLayer;		// Normal Mapのレイヤ情報.
-	CMaterialMappingLayerInfo trimLayer;		// Trim Mapのレイヤ情報.
+	std::vector<CMaterialMappingLayerInfo> diffuseLayer;		// Diffuse Mapのレイヤ情報.
+	std::vector<CMaterialMappingLayerInfo> normalLayer;			// Normal Mapのレイヤ情報.
+	std::vector<CMaterialMappingLayerInfo> trimLayer;			// Trim Mapのレイヤ情報.
 
 	void m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface_class* surface);
 

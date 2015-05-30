@@ -153,7 +153,7 @@ private:
 	/**
 	 * テクスチャ番号に対応するテクスチャ名を取得.
 	 */
-	std::string m_GetTextureName (const int textureIndex, const bool isNormalBump = false, const bool fileF = true);
+	std::string m_GetTextureName (const int textureIndex, const bool fileF = true);
 
 	/**
 	 * 逆ガンマ補正を行ったリニアな色を返す.
@@ -162,8 +162,40 @@ private:
 
 	/**
 	 * マテリアル出力時に、テクスチャの繰り返しや色反転などが存在する場合のPxrManifold2D出力.
+	 * @param[in]  materialName  マスターサーフェス名.
+	 * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim）.
+	 * @param[in]  mappingLayer  マテリアルのマッピングレイヤリスト.
+	 * @param[in]  layerIndex    マテリアルのマッピングレイヤ番号.
+     * @return RGBを持つパターン名.
 	 */
-	std::string m_WriteMaterialManifold2D (const CMaterialMappingLayerInfo& mappingLayer, const std::string& textureName, const bool isNormalMap);
+	std::string m_WriteMaterialTexture (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const int layerIndex, const bool isBumpNormal = false);
+
+	/**
+	 * マテリアル出力時に、フラクタルノイズの情報を出力.
+	 * @param[in]  materialName  マスターサーフェス名.
+	 * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim）.
+	 * @param[in]  mappingLayer  マテリアルのマッピングレイヤリスト.
+	 * @param[in]  layerIndex    マテリアルのマッピングレイヤ番号.
+	 * @param[in]  baseColor     表面材質としての基本色 (baseTexNameの指定がない場合).
+	 * @param[in]  baseTexName   ベースのテクスチャ名.
+     * @return RGBを持つパターン名.
+	 */
+	std::string m_WriteMaterialFractal (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const int layerIndex, const sxsdk::rgb_class baseColor, const std::string baseTexName, const bool isBumpNormal = false);
+
+	/**
+	 * マルチレイヤに対応したマテリアルの出力（Diffuse/Trim）.
+	 */
+	std::string m_WriteMaterialRGB (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const sxsdk::rgb_class baseColor, std::string& retDiffuseFirst);
+
+	/**
+	 * マルチレイヤに対応したマテリアルの出力（Trim）.
+	 */
+	std::string m_WriteMaterialTrim (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const std::string diffuseTextureName);
+
+	/**
+	 * マルチレイヤに対応したマテリアルの出力（Bump or Normal）.
+	 */
+	std::string m_WriteMaterialNormal (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer);
 
 public:
 	CSaveRIB (sxsdk::shade_interface& shade, sxsdk::stream_interface* stream, sxsdk::text_stream_interface* text_stream, const RIBExportData& dlgData);

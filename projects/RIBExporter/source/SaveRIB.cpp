@@ -304,29 +304,13 @@ void CSaveRIB::m_WriteTextures ()
 		// "int linearize" [1] で、画像のsRGBをgamma 2.2の逆数で補正してリニアにする.
 		// "int invertT" [0] で、テクスチャの垂直方向の反転を行わない.
 		if (!textureInfo.isBumpMap && !textureInfo.isNormalMap) {
-			{
-				std::stringstream s;
-				s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [" << linearize << "] \"int invertT\" [0]";
-				m_WriteLine(s.str());
-			}
-
-		} else if (textureInfo.isBumpMap) {
-			// バンプマップの場合.
-			{
-				std::stringstream s;
-				s << "Pattern \"PxrTexture\" \"" << texName << "_bump\" \"string filename\" [\"" << texFileName << "\"] \"int invertT\" [0]";
-				m_WriteLine(s.str());
-			}
-			{
-				const float scale = 10.0f;
-				std::stringstream s;
-				s << "Pattern \"PxrBump\" \"" << texName << "\" \"reference float inputBump\" [\"" << texName << "_bump:resultR\"] \"float scale\" [" << scale << "] \"int invertT\" [0]"; 
-				m_WriteLine(s.str());
-			}
-		} else if (textureInfo.isNormalMap) {
-			// 法線マップの場合.
 			std::stringstream s;
-			s << "Pattern \"PxrNormalMap\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int invertT\" [0]";
+			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [" << linearize << "] \"int invertT\" [0]";
+			m_WriteLine(s.str());
+
+		} else {
+			std::stringstream s;
+			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [0] \"int invertT\" [0]";
 			m_WriteLine(s.str());
 		}
 	}
@@ -524,15 +508,13 @@ void CSaveRIB::m_WriteMatrix(const sxsdk::mat4& m, const bool outScale)
 /**
  * テクスチャ番号に対応するテクスチャ名を取得.
  */
-std::string CSaveRIB::m_GetTextureName (const int textureIndex, const bool isNormalBump, const bool fileF)
+std::string CSaveRIB::m_GetTextureName (const int textureIndex, const bool fileF)
 {
 	std::string textureName = "";
 
 	for (int i = 0; i < m_RIBInfo.textureList.size(); i++) {
 		CTextureInfo& textureInfo = m_RIBInfo.textureList[i];
 		if (textureInfo.index == textureIndex) {
-			if (!isNormalBump && (textureInfo.isBumpMap || textureInfo.isNormalMap)) break;
-			if (isNormalBump && (!textureInfo.isBumpMap && !textureInfo.isNormalMap)) break;
 			textureName = textureInfo.fileName;
 			break;
 		}
@@ -601,24 +583,6 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 		MaterialCtrl::ConvShade3DToRIS(material, risMaterialInfo);
 	}
 
-	// Diffuseテクスチャ名を取得.
-	std::string diffuseTexName = "";
-	if (material.diffuseLayer.textureIndex >= 0) {
-		diffuseTexName = m_GetTextureName(material.diffuseLayer.textureIndex, false, false);
-	}
-
-	// Normalテクスチャ名を取得.
-	std::string normalTexName = "";
-	if (material.normalLayer.textureIndex >= 0) {
-		normalTexName = m_GetTextureName(material.normalLayer.textureIndex, true, false);
-	}
-
-	// トリムテクスチャ名を取得.
-	std::string trimTexName = "";
-	if (material.trimLayer.textureIndex >= 0) {
-		trimTexName = m_GetTextureName(material.trimLayer.textureIndex, false, false);
-	}
-
 	//-------------------------------------------------.
 	// RISとしてマテリアル情報を出力.
 	//-------------------------------------------------.
@@ -669,9 +633,14 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 	const std::string materialName = material.name;
 
 	// テクスチャの繰り返しや色反転が存在する場合は、パターンを再度出力.
-	const std::string diffuseTexName2 = m_WriteMaterialManifold2D(material.diffuseLayer, diffuseTexName, false);
-	const std::string normalTexName2  = m_WriteMaterialManifold2D(material.normalLayer, normalTexName, true);
-	const std::string trimTexName2    = m_WriteMaterialManifold2D(material.trimLayer, trimTexName, false);
+	// TODO : これについては各マスターサーフェスに1回指定すればよい.
+	std::string diffuseFirst = "";
+	const std::string diffuseTexName2 = m_WriteMaterialRGB(materialName, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
+	const std::string normalTexName2  = m_WriteMaterialNormal(materialName, "bump", material.normalLayer);
+
+	std::string alphaTransTexName = "";
+	if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
+	const std::string trimTexName2    = m_WriteMaterialTrim(materialName, "trim", material.trimLayer, alphaTransTexName);
 
 	switch (risMaterialInfo.type) {
 	case RIBParam::pxrDiffuse:
@@ -689,13 +658,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				m_WriteLine(s.str().c_str());
 			}
 
-			// アルファ透明使用時は、Alpha値を参照.
-			if (diffuseTexName2.size() > 0 && material.transparentAlpha) {
-				std::stringstream s;
-				s << "  \"reference float presence\" [\"" << diffuseTexName2 << ":resultA\"]";
-				m_WriteLine(s.str().c_str());
-
-			} else if (trimTexName2.size() > 0) {
+			if (trimTexName2.size() > 0) {
 				std::stringstream s;
 				s << "  \"reference float presence\" [\"" << trimTexName2 << ":resultR\"]";
 				m_WriteLine(s.str().c_str());
@@ -731,12 +694,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			}
 
 			// アルファ透明使用時は、Alpha値を参照.
-			if (diffuseTexName2.size() > 0 && material.transparentAlpha) {
-				std::stringstream s;
-				s << "  \"reference float presence\" [\"" << diffuseTexName2 << ":resultA\"]";
-				m_WriteLine(s.str().c_str());
-
-			} else if (trimTexName2.size() > 0) {
+			if (trimTexName2.size() > 0) {
 				std::stringstream s;
 				s << "  \"reference float presence\" [\"" << trimTexName2 << ":resultR\"]";
 				m_WriteLine(s.str().c_str());
@@ -940,40 +898,46 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 
 /**
  * マテリアル出力時に、テクスチャの繰り返しや色反転などが存在する場合のPxrManifold2D出力.
+ * @param[in]  materialName  マスターサーフェス名.
+ * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim）.
+ * @param[in]  mappingLayer  マテリアルのマッピングレイヤリスト.
+ * @param[in]  layerIndex    マテリアルのマッピングレイヤ番号.
+ * @return RGBを持つパターン名.
  */
-std::string CSaveRIB::m_WriteMaterialManifold2D (const CMaterialMappingLayerInfo& mappingLayer, const std::string& textureName, const bool isNormalMap)
+std::string CSaveRIB::m_WriteMaterialTexture (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const int layerIndex, const bool isBumpNormal)
 {
+	if (mappingLayer.size() == 0) return "";
+	const CMaterialMappingLayerInfo& layerInfo = mappingLayer[layerIndex];
+	if (layerInfo.textureIndex < 0) return "";
+
+	// テクスチャファイル名からテクスチャ名を取得（ファイル拡張子はカット）.
+	const std::string textureName = m_GetTextureName(layerInfo.textureIndex, false);
+
 	std::string retName = textureName;
-	if (mappingLayer.textureIndex < 0) return retName;
-	if (mappingLayer.repeatX == 1 && mappingLayer.repeatY == 1) return retName;
+	if (layerInfo.repeatX == 1 && layerInfo.repeatY == 1 && !layerInfo.flipColor) return retName;
+
+	const std::string patternName = materialName + std::string("_") + typeName;
 
 	std::string manifoldName = "";
 	{
 		std::stringstream s;
-		s << "manifold_" << mappingLayer.textureIndex << "_" << mappingLayer.repeatX << "x" << mappingLayer.repeatY;
+		s << patternName << "_" << layerIndex << "_manifold";
 		manifoldName = s.str();
 	}
 	{
 		std::stringstream s;
-		s << textureName << "_" << mappingLayer.textureIndex << "_" << mappingLayer.repeatX << "x" << mappingLayer.repeatY;
+		s << patternName << "_" << layerIndex << "_texture";
 		retName = s.str();
 	}
 
 	{
 		std::stringstream s;
-		s << "Pattern \"PxrManifold2D\" \"" << manifoldName << "\" \"float scaleS\" [" << mappingLayer.repeatX << "] \"float scaleT\" [" << mappingLayer.repeatY << "]";
+		s << "Pattern \"PxrManifold2D\" \"" << manifoldName << "\" \"float scaleS\" [" << layerInfo.repeatX << "] \"float scaleT\" [" << layerInfo.repeatY << "]";
 		s << " \"int invertT\" [0]";
 		m_WriteLine(s.str().c_str());
 	}
 
-	if (isNormalMap) {
-		std::stringstream s;
-		s << "Pattern \"PxrNormalMap\" \"" << retName << "\" \"string filename\" [\"" << textureName << ".tiff\"]";
-		s << " \"int invertT\" [0]";
-		s << " \"reference struct manifold\" [\"" << manifoldName << ":result" << "\"]";
-		m_WriteLine(s.str());
-
-	} else {
+	{
 		std::stringstream s;
 		s << "Pattern \"PxrTexture\" \"" << retName << "\" \"string filename\" [\"" << textureName << ".tiff\"] \"int linearize\" [1]";
 		s << " \"int invertT\" [0]";
@@ -981,7 +945,298 @@ std::string CSaveRIB::m_WriteMaterialManifold2D (const CMaterialMappingLayerInfo
 		m_WriteLine(s.str());
 	}
 
-	return retName;
+	if (!layerInfo.flipColor) return retName;
+
+	// 色反転.
+	const std::string invertName = retName + std::string("_invert");
+	{
+		std::stringstream s;
+		s << "Pattern \"PxrInvert\" \"" << invertName << "\" \"reference color inputRGB\" [\"" << retName << ":resultRGB\"]";
+		m_WriteLine(s.str().c_str());
+	}
+
+	return invertName;
+}
+
+
+/**
+ * マテリアル出力時に、フラクタルノイズの情報を出力.
+ * @param[in]  materialName  マスターサーフェス名.
+ * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim）.
+ * @param[in]  mappingLayer  マテリアルのマッピングレイヤリスト.
+ * @param[in]  layerIndex    マテリアルのマッピングレイヤ番号.
+ * @param[in]  baseColor     表面材質としての基本色 (baseTexNameの指定がない場合).
+ * @param[in]  baseTexName   ベースのテクスチャ名.
+ * @return RGBを持つパターン名.
+ */
+std::string CSaveRIB::m_WriteMaterialFractal (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const int layerIndex, const sxsdk::rgb_class baseColor, const std::string baseTexName, const bool isBumpNormal)
+{
+	const CMaterialMappingLayerInfo& layerInfo = mappingLayer[layerIndex];
+	std::string retMixName = "";
+	std::string fractalName = "";
+	std::string bumpName = "";
+
+	const std::string patternName = materialName + std::string("_") + typeName;
+
+	const float defaultF   = 0.008f;		// 値が大きいほど細かい.
+	const float size       = std::max(0.00001f, layerInfo.size);
+	const float frequency  = defaultF / size;
+	sxsdk::rgb_class col   = layerInfo.color;
+
+	{
+		std::stringstream s;
+		s << patternName << "_" << layerIndex << "_fractal";
+		fractalName = s.str();
+	}
+	{
+		std::stringstream s;
+		s << patternName << "_" << layerIndex << "_mix";
+		retMixName = s.str();
+	}
+
+	{
+		std::stringstream s;
+		s << "Pattern \"PxrFractal\" \"" << fractalName << "\" \"float frequency\" [" << frequency << "]";
+		m_WriteLine(s.str());
+	}
+	if (layerInfo.patternType == sxsdk::enums::spotted_pattern) {
+		std::stringstream s;
+		s << "  \"int layers\" [" << 3 << "]";
+		m_WriteLine(s.str());
+	}
+
+	if (baseTexName.size() == 0) {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << retMixName << "\" \"color color1\" [" << baseColor.red << " " << baseColor.green << " " << baseColor.blue << "]";
+		m_WriteLine(s.str());
+	} else {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << retMixName << "\" \"reference color color1\" [\"" << baseTexName << ":resultRGB\"]";
+		m_WriteLine(s.str());
+	}
+
+	{
+		std::stringstream s;
+		s << "  \"color color2\" [" << layerInfo.color.red << " " << layerInfo.color.green << " " << layerInfo.color.blue << "]";
+		m_WriteLine(s.str());
+	}
+	{
+		std::stringstream s;
+		s << "  \"reference float mix\" [\"" << fractalName << ":resultF\"]";
+		m_WriteLine(s.str());
+	}
+
+	if (isBumpNormal || sx::zero(layerInfo.weight - 1.0f)) return retMixName;
+
+	// layerInfo.weightが1.0ではない場合.
+	std::string mixName2 = "";
+	{
+		std::stringstream s;
+		s << patternName << "_" << layerIndex << "_mix2";
+		mixName2 = s.str();
+	}
+
+	if (baseTexName.size() == 0) {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"color color1\" [" << baseColor.red << " " << baseColor.green << " " << baseColor.blue << "]";
+		m_WriteLine(s.str());
+	} else {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << mixName2 << "\" \"reference color color1\" [\"" << baseTexName << ":resultRGB\"]";
+		m_WriteLine(s.str());
+	}
+	{
+		std::stringstream s;
+		s << "  \"reference color color2\" [\"" << retMixName << ":resultRGB\"]";
+		m_WriteLine(s.str());
+	}
+	{
+		std::stringstream s;
+		s << "  \"float mix\" [" << layerInfo.weight << "]";
+		m_WriteLine(s.str());
+	}
+
+	return mixName2;
+}
+
+/**
+ * マルチレイヤに対応したマテリアルの出力（Diffuse/Trim）.
+ */
+std::string CSaveRIB::m_WriteMaterialRGB (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const sxsdk::rgb_class baseColor, std::string& retDiffuseFirst)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	retDiffuseFirst = "";
+
+	const int layerCou = mappingLayer.size();
+	std::vector<std::string> textureList;
+	int mixCount = 0;
+	for (int i = 0; i < layerCou; i++) {
+		const CMaterialMappingLayerInfo& layerInfo = mappingLayer[i];
+
+		// Pattern情報として出力.
+		std::string texName = "";
+		if (layerInfo.patternType == sxsdk::enums::image_pattern && layerInfo.textureIndex >= 0) {
+			// イメージテクスチャの場合.
+			texName = m_WriteMaterialTexture(materialName, typeName, mappingLayer, i);
+			if (textureList.size() == 0) {
+				textureList.push_back(texName);
+				if (retDiffuseFirst.size() == 0) retDiffuseFirst = texName;
+				continue;
+			}
+
+		} else if (layerInfo.patternType == sxsdk::enums::spotted_pattern || layerInfo.patternType == sxsdk::enums::cloud_pattern) {
+			// spot/cloudのProcedual Textureの場合.
+			std::string baseTexName = (textureList.size() > 0) ? textureList[0] : "";
+			texName = m_WriteMaterialFractal(materialName, typeName, mappingLayer, i, baseColor, baseTexName);
+			textureList.clear();
+			textureList.push_back(texName);
+			continue;
+		}
+
+		if (texName.size() > 0 && textureList.size() >= 1) {
+			// テクスチャを合成.
+			{
+				std::string mixName = "";
+				{
+					std::stringstream s;
+					s << patternName << "_mix_" << mixCount;
+					mixName = s.str();
+				}
+
+				{
+					std::stringstream s;
+					s << "Pattern \"PxrMix\" \"" << mixName << "\" \"reference color color1\" [\"" << textureList[0] << ":resultRGB\"]";
+					m_WriteLine(s.str());
+				}
+				{
+					std::stringstream s;
+					s << "  \"reference color color2\" [\"" << texName << ":resultRGB\"]";
+					m_WriteLine(s.str());
+				}
+				{
+					std::stringstream s;
+					s << "  \"float mix\" [" << layerInfo.weight << "]";
+					m_WriteLine(s.str());
+				}
+				textureList.clear();
+				textureList.push_back(mixName);
+
+				mixCount++;
+			}
+		}
+	}
+
+	return (textureList.size() == 0) ? "" : textureList[0];
+}
+
+/**
+ * マルチレイヤに対応したマテリアルの出力（Trim）.
+ */
+std::string CSaveRIB::m_WriteMaterialTrim (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer, const std::string diffuseTextureName)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	// トリムとしてのアルファ情報を取得.
+	std::string diffuseFirst;
+	std::string retName = m_WriteMaterialRGB(materialName, typeName, mappingLayer, sxsdk::rgb_class(1, 1, 1), diffuseFirst);
+	if (diffuseTextureName.size() == 0) return retName;
+
+	const std::string trimName = patternName + "_" + "mix_alpha";
+
+	if (retName.size() == 0) {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << trimName << "\" \"color color1\" [0 0 0]";
+		m_WriteLine(s.str());
+	} else {
+		std::stringstream s;
+		s << "Pattern \"PxrMix\" \"" << trimName << "\" \"reference color color1\" [\"" << retName << ":resultRGB\"]";
+		m_WriteLine(s.str());
+	}
+	{
+		std::stringstream s;
+		s << "  \"color color2\" [1 1 1]";
+		m_WriteLine(s.str());
+	}
+	{
+		std::stringstream s;
+		s << "  \"reference float mix\" [\"" << diffuseTextureName << ":resultA\"]";
+		m_WriteLine(s.str());
+	}
+
+	return trimName;
+}
+
+/**
+ * マルチレイヤに対応したマテリアルの出力（Bump or Normal）.
+ */
+std::string CSaveRIB::m_WriteMaterialNormal (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	const int layerCou = mappingLayer.size();
+	std::vector<std::string> textureList;
+	int crossCount = 0;
+	for (int i = 0; i < layerCou; i++) {
+		const CMaterialMappingLayerInfo& layerInfo = mappingLayer[i];
+
+		// Pattern情報として出力.
+		std::string texName  = "";
+		std::string texName2 = "";
+		if (layerInfo.patternType == sxsdk::enums::image_pattern && layerInfo.textureIndex >= 0) {
+			// イメージテクスチャの場合.
+			texName  = m_WriteMaterialTexture(materialName, typeName, mappingLayer, i, true);
+			texName2 = texName + "_bump";
+
+			if (!layerInfo.normalMap) {
+				// bump mapの場合.
+				const float scale = 10.0f * layerInfo.weight;
+				std::stringstream s;
+				s << "Pattern \"PxrBump\" \"" << texName2 << "\" \"reference float inputBump\" [\"" << texName << ":resultR\"] \"float scale\" [" << scale << "] \"int invertT\" [0]"; 
+				m_WriteLine(s.str());
+
+			} else {
+				// normal mapの場合.
+				const float scale = 1.0f * layerInfo.weight;
+				std::stringstream s;
+				s << "Pattern \"PxrNormalMap\" \"" << texName2 << "\" \"color inputRGB\" [\"" << texName << ":resultRGB\"] \"float scale\" [" << scale << "]";
+				m_WriteLine(s.str());
+			}
+			
+		} else if (layerInfo.patternType == sxsdk::enums::spotted_pattern || layerInfo.patternType == sxsdk::enums::cloud_pattern) {
+			// spot/cloudのProcedual Textureの場合.
+			texName  = m_WriteMaterialFractal(materialName, typeName, mappingLayer, i, sxsdk::rgb_class(1, 1, 1), "", true);
+			if (texName.size() == 0) continue;
+
+			texName2 = texName + "_bump";
+			{
+				const float scale = 10.0f * layerInfo.weight;
+				std::stringstream s;
+				s << "Pattern \"PxrBump\" \"" << texName2 << "\" \"reference float inputBump\" [\"" << texName << ":resultR\"] \"float scale\" [" << scale << "] \"int invertT\" [0]"; 
+				m_WriteLine(s.str());
+			}
+		}
+
+		if (texName2.size() > 0) {
+			// 法線の合成.
+			const std::string prevTexName = (textureList.size() == 0) ? "" : textureList[0];
+			if (prevTexName.size() > 0) {
+				if (layerInfo.normalMap) {
+					std::stringstream s;
+					s << "  \"reference normal bumpOverlay\" [\"" << prevTexName << ":resultN\"]"; 
+					m_WriteLine(s.str());
+				} else {
+					std::stringstream s;
+					s << "  \"reference normal inputN\" [\"" << prevTexName << ":resultN\"]"; 
+					m_WriteLine(s.str());
+				}
+			}
+
+			textureList.clear();
+			textureList.push_back(texName2);
+		}
+	}
+	return (textureList.size() == 0) ? "" : textureList[0];
 }
 
 /**

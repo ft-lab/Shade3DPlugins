@@ -155,7 +155,14 @@ void CMaterialMappingLayerInfo::Clear ()
 {
 	textureIndex = -1;
 	repeatX = repeatY = 1;
-	flipColor = false;
+	flipColor   = false;
+	patternType = sxsdk::enums::no_pattern;
+
+	color    = sxsdk::rgb_class(0, 0, 0);
+	weight   = 1.0f;
+	softness = 1.0f;
+	size     = 1.0f;
+	normalMap = false;
 }
 
 /**
@@ -194,9 +201,9 @@ void CMaterialInfo::Clear ()
 
 	mappingLayerCount = 0;
 
-	diffuseLayer.Clear();
-	normalLayer.Clear();
-	trimLayer.Clear();
+	diffuseLayer.clear();
+	normalLayer.clear();
+	trimLayer.clear();
 }
 
 /**
@@ -210,7 +217,7 @@ void CMaterialInfo::SetMaterial (sxsdk::scene_interface* scene, sxsdk::shape_cla
 	name = std::string(shape.get_name()) + std::string("_material");
 
 	masterSurface = shape.get_master_surface();
-	if (masterSurface) name = std::string(masterSurface->get_name()) + std::string("_material");
+	if (masterSurface) name = std::string(masterSurface->get_name());
 
 	sxsdk::surface_class* surface = shape.get_surface();
 	if (!surface) return;
@@ -223,7 +230,7 @@ void CMaterialInfo::SetMaterial (sxsdk::scene_interface* scene, sxsdk::master_su
 	Clear();
 	this->masterSurface = &masterSurface;
 
-	name = std::string(masterSurface.get_name()) + std::string("_material");
+	name = std::string(masterSurface.get_name());
 
 	sxsdk::surface_class* surface = masterSurface.get_surface();
 	if (!surface) return;
@@ -260,39 +267,84 @@ void CMaterialInfo::m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface
 
 	mappingLayerCount = surface->get_number_of_mapping_layers();
 
-	diffuseLayer.Clear();
-	normalLayer.Clear();
-	trimLayer.Clear();
+	diffuseLayer.clear();
+	normalLayer.clear();
+	trimLayer.clear();
 
 	if (mappingLayerCount > 0) {
+		bool chkTransparentAlpha = false;
 		// マッピングレイヤのテクスチャに対応するインデックスを取得.
 		for (int i = 0; i < mappingLayerCount; i++) {
 			sxsdk::mapping_layer_class& mappingLayer = surface->mapping_layer(i);
-			if (mappingLayer.get_pattern() != sxsdk::enums::image_pattern) continue;
-				
+			const sxsdk::enums::pattern_type pattern = (sxsdk::enums::pattern_type)mappingLayer.get_pattern();
+			const sxsdk::enums::mapping_type type    = (sxsdk::enums::mapping_type)mappingLayer.get_type();
+
+			// procedural textureの場合.
+			// サポートはスポット/雲.
+			if (pattern == sxsdk::enums::spotted_pattern || pattern == sxsdk::enums::cloud_pattern) {
+				CMaterialMappingLayerInfo* layerInfo = NULL;
+				if (type == sxsdk::enums::diffuse_mapping) {
+					diffuseLayer.push_back(CMaterialMappingLayerInfo());
+					layerInfo = &(diffuseLayer.back());
+				} else if (type == sxsdk::enums::normal_mapping || type == sxsdk::enums::bump_mapping) {
+					normalLayer.push_back(CMaterialMappingLayerInfo());
+					layerInfo = &(normalLayer.back());
+				} else if (type == sxsdk::enums::trim_mapping) {
+					trimLayer.push_back(CMaterialMappingLayerInfo());
+					layerInfo = &(trimLayer.back());
+				}
+				if (layerInfo) {
+					layerInfo->patternType  = pattern;
+					layerInfo->color        = mappingLayer.get_mapping_color();
+					layerInfo->weight       = mappingLayer.get_weight();
+					layerInfo->softness     = mappingLayer.get_softness();
+					layerInfo->size         = mappingLayer.get_mapping_size();
+					layerInfo->flipColor    = mappingLayer.get_flip_color();
+					layerInfo->normalMap    = (type == sxsdk::enums::normal_mapping);
+				}
+				continue;
+			}
+
+			if (pattern != sxsdk::enums::image_pattern) continue;
 			compointer<sxsdk::image_interface> image(mappingLayer.get_image_interface());
 			if (!image || !(image->has_image())) continue;
-				
-			if (diffuseLayer.textureIndex < 0 && mappingLayer.get_type() == sxsdk::enums::diffuse_mapping) {
-				transparentAlpha          = (mappingLayer.get_channel_mix() == sxsdk::enums::mapping_transparent_alpha_mode);
-				diffuseLayer.textureIndex = Util::GetMasterImageIndex(scene, image);
-				diffuseLayer.repeatX      = mappingLayer.get_repetition_X();
-				diffuseLayer.repeatY      = mappingLayer.get_repetition_Y();
-				diffuseLayer.flipColor    = mappingLayer.get_flip_color();
+			
+			if (type == sxsdk::enums::diffuse_mapping) {
+				diffuseLayer.push_back(CMaterialMappingLayerInfo());
+				CMaterialMappingLayerInfo& layerInfo = diffuseLayer.back();
+				if (!chkTransparentAlpha) {
+					chkTransparentAlpha = true;
+					transparentAlpha    = (mappingLayer.get_channel_mix() == sxsdk::enums::mapping_transparent_alpha_mode);
+				}
+				layerInfo.patternType  = sxsdk::enums::image_pattern;
+				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
+				layerInfo.repeatX      = mappingLayer.get_repetition_X();
+				layerInfo.repeatY      = mappingLayer.get_repetition_Y();
+				layerInfo.flipColor    = mappingLayer.get_flip_color();
+				layerInfo.weight       = mappingLayer.get_weight();
 			}
 
-			if (normalLayer.textureIndex < 0 && (mappingLayer.get_type() == sxsdk::enums::normal_mapping || mappingLayer.get_type() == sxsdk::enums::bump_mapping)) {
-				normalLayer.textureIndex = Util::GetMasterImageIndex(scene, image);
-				normalLayer.repeatX      = mappingLayer.get_repetition_X();
-				normalLayer.repeatY      = mappingLayer.get_repetition_Y();
-				normalLayer.flipColor    = mappingLayer.get_flip_color();
+			if (type == sxsdk::enums::normal_mapping || type == sxsdk::enums::bump_mapping) {
+				normalLayer.push_back(CMaterialMappingLayerInfo());
+				CMaterialMappingLayerInfo& layerInfo = normalLayer.back();
+				layerInfo.patternType  = sxsdk::enums::image_pattern;
+				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
+				layerInfo.repeatX      = mappingLayer.get_repetition_X();
+				layerInfo.repeatY      = mappingLayer.get_repetition_Y();
+				layerInfo.flipColor    = mappingLayer.get_flip_color();
+				layerInfo.weight       = mappingLayer.get_weight();
+				layerInfo.normalMap    = (type == sxsdk::enums::normal_mapping);
 			}
 
-			if (normalLayer.textureIndex < 0 && mappingLayer.get_type() == sxsdk::enums::trim_mapping) {
-				trimLayer.textureIndex = Util::GetMasterImageIndex(scene, image);
-				trimLayer.repeatX      = mappingLayer.get_repetition_X();
-				trimLayer.repeatY      = mappingLayer.get_repetition_Y();
-				trimLayer.flipColor    = mappingLayer.get_flip_color();
+			if (type == sxsdk::enums::trim_mapping) {
+				trimLayer.push_back(CMaterialMappingLayerInfo());
+				CMaterialMappingLayerInfo& layerInfo = trimLayer.back();
+				layerInfo.patternType  = sxsdk::enums::image_pattern;
+				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
+				layerInfo.repeatX      = mappingLayer.get_repetition_X();
+				layerInfo.repeatY      = mappingLayer.get_repetition_Y();
+				layerInfo.flipColor    = mappingLayer.get_flip_color();
+				layerInfo.weight       = mappingLayer.get_weight();
 			}
 		}
 	}
