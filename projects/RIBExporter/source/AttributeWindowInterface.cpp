@@ -229,11 +229,6 @@ bool CAttributeWindowInterface::setup_number (sxsdk::window_interface::number_cl
 		return true;
 	}
 
-	if (strcmp(number.get_control_idname(), "diffuse_presence") == 0) {
-		number.set_value(m_materialInfo.pxrDiffuse.presence);
-		return true;
-	}
-
 	if (strcmp(number.get_control_idname(), "disney_subsurface") == 0) {
 		number.set_value(m_materialInfo.pxrDisney.subsurface);
 		return true;
@@ -461,11 +456,6 @@ void CAttributeWindowInterface::number_value_changed (sxsdk::window_interface::n
 		return;
 	}
 	
-	if (strcmp(number.get_control_idname(), "diffuse_presence") == 0) {
-		m_materialInfo.pxrDiffuse.presence = number.get_value();
-		return;
-	}
-
 	if (strcmp(number.get_control_idname(), "disney_subsurface") == 0) {
 		m_materialInfo.pxrDisney.subsurface = number.get_value();
 		return;

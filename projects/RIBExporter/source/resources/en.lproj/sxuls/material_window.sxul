@@ -49,10 +49,6 @@
 					<static-text id="diffuse_transmissionColor_text" label="transmissionColor" size="100" />
 					<color-box id="diffuse_transmissionColor" label="transmissionColor" size="64" />
 				</hbox>
-				<hbox>
-					<static-text id="diffuse_presence_text" label="presence" size="100" />
-					<number id="diffuse_presence" label="" type="real" size="64" />
-				</hbox>
 			</group>
 
 			<group id="tab_disney" label="PxrDisney">

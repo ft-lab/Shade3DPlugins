@@ -34,7 +34,7 @@ class CPxrMaterialDiffuse : public CPxrMaterialBase
 public:
 	sxsdk::rgb_class diffuseColor;
 	sxsdk::rgb_class transmissionColor;
-	float presence;
+	float presence;			// 未使用（これはテクスチャのアルファ透過やトリムと同様でテクスチャでのマスキング）.
 
 public:
 	CPxrMaterialDiffuse ();
