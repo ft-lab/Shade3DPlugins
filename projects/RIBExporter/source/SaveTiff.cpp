@@ -162,7 +162,8 @@ bool CSaveTiff::SavePRManImage (sxsdk::image_interface* image, const std::string
 	// mipmapとして複数テクスチャを格納していく.
 	int width  = srcWidth;
 	int height = srcHeight;
-	while (width >= 2 && height >= 2) {
+	while (width >= 32 && height >= 32) {
+
 		sx::vec<int,2> size(width, height);
 		compointer<sxsdk::image_interface> image2(m_DuplicateImage(tempImage, size, useAlpha));
 
@@ -295,7 +296,7 @@ bool CSaveTiff::m_SavePRManImageFloat (sxsdk::image_interface* image, const std:
 	// mipmapとして複数テクスチャを格納していく.
 	int width  = srcWidth;
 	int height = srcHeight;
-	while (width >= 2 && height >= 2) {
+	while (width >= 32 && height >= 32) {
 		sx::vec<int,2> size(width, height);
 		compointer<sxsdk::image_interface> image2(tempImage->duplicate_image(&size, true, depth));
 
@@ -422,7 +423,7 @@ bool CSaveTiff::SavePRManImageGrayScale (sxsdk::image_interface* image, const st
 	// mipmapとして複数テクスチャを格納していく.
 	int width  = srcWidth;
 	int height = srcHeight;
-	while (width >= 2 && height >= 2) {
+	while (width >= 32 && height >= 32) {
 		sx::vec<int,2> size(width, height);
 		compointer<sxsdk::image_interface> image2(tempImage->duplicate_image(&size));
 

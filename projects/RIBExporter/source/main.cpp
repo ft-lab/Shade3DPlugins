@@ -105,7 +105,7 @@ extern "C" void STDCALL get_info (sxsdk::shade_plugin_info &info, sxsdk::shade_i
 	info.major_version = 1;
 	info.minor_version = 0;
 	info.micro_version = 0;
-	info.build_number =  2;
+	info.build_number =  3;
 }
 
 /**

@@ -303,14 +303,15 @@ void CSaveRIB::m_WriteTextures ()
 
 		// "int linearize" [1] で、画像のsRGBをgamma 2.2の逆数で補正してリニアにする.
 		// "int invertT" [0] で、テクスチャの垂直方向の反転を行わない.
+		// "int filter" [7]で、Lagrangianのfilter.mipmapは32x32くらいを最小としてLagrangianフィルタにすることで速度と
 		if (!textureInfo.isBumpMap && !textureInfo.isNormalMap) {
 			std::stringstream s;
-			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [" << linearize << "] \"int invertT\" [0]";
+			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [" << linearize << "] \"int invertT\" [0]" <<  " \"int filter\" [7]";
 			m_WriteLine(s.str());
 
 		} else {
 			std::stringstream s;
-			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [0] \"int invertT\" [0]";
+			s << "Pattern \"PxrTexture\" \"" << texName << "\" \"string filename\" [\"" << texFileName << "\"] \"int linearize\" [0] \"int invertT\" [0]" << " \"int filter\" [7]";
 			m_WriteLine(s.str());
 		}
 	}
@@ -318,7 +319,7 @@ void CSaveRIB::m_WriteTextures ()
 	// 背景のための画像.
 	if (m_backgroundTextureName.size() > 0) {
 		std::stringstream s;
-		s << "Pattern \"PxrTexture\" \"" << m_backgroundTextureName << "\" \"string filename\" [\"" << m_backgroundTextureName << ".tiff\"] \"int linearize\" [0] \"int invertT\" [0]";
+		s << "Pattern \"PxrTexture\" \"" << m_backgroundTextureName << "\" \"string filename\" [\"" << m_backgroundTextureName << ".tiff\"] \"int linearize\" [0] \"int invertT\" [0]" << " \"int filter\" [7]";
 		m_WriteLine(s.str());
 	}
 
