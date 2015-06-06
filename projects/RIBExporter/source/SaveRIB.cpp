@@ -2034,7 +2034,11 @@ void CSaveRIB::EndPolygonMesh ()
 		} else {
 			if (pmesh) {
 				sxsdk::master_surface_class* masterSurface = pmesh->get_face_group_surface(faceGroupIndexList[loop]);
-				m_BeginWriteMaterial(m_pScene, *masterSurface);
+				if (masterSurface) {
+					m_BeginWriteMaterial(m_pScene, *masterSurface);
+				} else {
+					m_BeginWriteMaterial(m_pScene, *m_pCurrentShape);
+				}
 			}
 		}
 
