@@ -31,7 +31,7 @@ CAreaLightAttributeInterface::CAreaLightAttributeInterface (sxsdk::shade_interfa
 // カスタム情報が選択された.
 bool CAreaLightAttributeInterface::ask_shape (sxsdk::shape_class &shape, void *)
 {
-	if (shape.get_type() != sxsdk::enums::line || sx::zero(shape.get_line().get_light_intensity())) {
+	if ((shape.get_type() != sxsdk::enums::line || sx::zero(shape.get_line().get_light_intensity())) && shape.get_type() != sxsdk::enums::light) {
 		shade.show_message_box(shade.gettext("msg_select_area_light"), false);
 		return false;
 	}
@@ -65,7 +65,6 @@ void CAreaLightAttributeInterface::m_InitAreaLightData (sxsdk::shape_class &shap
 		m_data = StreamCtrl::LoadRIBAreaLight(shape);
 	}
 }
-
 
 //--------------------------------------------------//
 //	ダイアログのイベント処理用						//

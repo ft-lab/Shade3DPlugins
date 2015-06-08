@@ -1541,10 +1541,10 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("AttributeEnd");
 		}
 
-		// 面光源以外はスキップ.
-		if (lightInfo.lightType != light_type_area) continue;
+		// 面光源/スポットライト以外はスキップ.
+		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot) continue;
 
-		// PxrAreaLightとしての面光源情報を取得 (streamに情報が保持されている).
+		// PxrAreaLightとしての光源情報を取得 (streamに情報が保持されている).
 		CPxrAreaLight pxrAreaLightInfo;
 		if (lightInfo.shape) {
 			CLightInfo tmpLInfo = LightCtrl::GetAreaLightInfo(*lightInfo.shape);			// 光源情報を取得.
@@ -1554,8 +1554,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 		}
 
-		// 面光源の場合は、AttributeBegin - AttributeEndで囲む必要あり.
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line) {
+		// 面光源/スポットライトの場合は、AttributeBegin - AttributeEndで囲む必要あり.
+		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
 			m_WriteLine("AttributeBegin");
 			m_indent++;
 
@@ -1597,33 +1597,26 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			s << "\" " << index << " \"from\" [" << lightInfo.pos.x << " " << lightInfo.pos.y << " " << -lightInfo.pos.z << "]";
 			m_WriteLine(s.str());
 			intensity = std::pow(intensity, 2.0) * sx::pi;
-
-		} else if (lightInfo.lightType == light_type_spot) {
-			std::stringstream s;
-
-			s << "LightSource \"";
-			if (sx::zero(lightInfo.shadowValue)) s << "spotlight";
-			else s << "shadowspot";
-			s << "\" " << index;
-
-			const sxsdk::vec3 targetV = lightInfo.pos - lightInfo.direction * (float)intensity;
-			s << " \"from\" [" << lightInfo.pos.x << " " << lightInfo.pos.y << " " << -lightInfo.pos.z << "]";
-			s << " \"to\" [" << targetV.x << " " << targetV.y << " " << -targetV.z << "]";
-
-			m_WriteLine(s.str());
-			intensity = std::pow(intensity, 2.0) * sx::pi;
-		
-		} else if (lightInfo.lightType == light_type_area) {
-			std::stringstream s;
+	
+		} else if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_spot) {
+			{
+				std::stringstream s;
 #if USE_PRMAN_RIS
-			s << "AreaLightSource \"PxrAreaLight\" \"mylighthandle\"";
+				s << "AreaLightSource \"PxrAreaLight\" \"mylighthandle\"";
 #else
-			s << "AreaLightSource \"plausibleArealight\" \"mylighthandle\"";
+				s << "AreaLightSource \"plausibleArealight\" \"mylighthandle\"";
 #endif
-			m_WriteLine(s.str());
+				m_WriteLine(s.str());
+			}
+
+			if (lightInfo.lightType == light_type_spot) {
+				std::stringstream s;
+				s << "  \"string shape\" [\"spot\"]";
+				m_WriteLine(s.str());
+			}
 		}
 
-		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_line) {
+		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_line && lightInfo.lightType != light_type_spot) {
 			if (!sx::zero(lightInfo.shadowValue)) {
 				if (lightInfo.lightType == light_type_distant || lightInfo.lightType == light_type_directional || lightInfo.lightType == light_type_spot) {
 					std::stringstream s;
@@ -1674,30 +1667,13 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			s << "  \"color lightcolor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
 			m_WriteLine(s.str());
 		}
-
-		if (lightInfo.lightType == light_type_spot) {
-			// スポットライトの角度は、ラジアン表現.
-			const  float angle      = (lightInfo.spotConeAngle * 0.5f) * sx::pi / 180.0f;
-			const  float deltaAngle = (sx::pi - angle) * lightInfo.spotSoftness;
-			{
-				std::stringstream s;
-				s << "  \"coneangle\" [" << angle + deltaAngle << "]";
-				m_WriteLine(s.str());
-			}
-			{
-				std::stringstream s;
-				s << "  \"conedeltaangle\" [" << deltaAngle << "]";
-				m_WriteLine(s.str());
-			}
-		}
-
 		if (ambient > 0.0f) {
 			std::stringstream s;
 			s << "LightSource \"ambientlight\" " << index << " \"intensity\" [" << ambient << "]";
 			m_WriteLine(s.str());
 		}
 
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line) {
+		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
 			if (!sx::zero(pxrAreaLightInfo.areaNormalize)) {
 					std::stringstream s;
 					s << "  \"float areaNormalize\" [" << pxrAreaLightInfo.areaNormalize << "]";
@@ -1767,14 +1743,30 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				s << "  \"float adaptiveShadows\" [" << pxrAreaLightInfo.adaptiveShadows << "]";
 				m_WriteLine(s.str());
 			}
-			m_WriteLine("Sides 1");
 
-			if (lightInfo.visible) {
-				std::stringstream s;
-				s << "Bxdf \"PxrConstant\" \"area_light\" \"color emitColor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
-				m_WriteLine(s.str());
+			m_WriteLine("TransformBegin");
+			m_indent++;
+
+			if (lightInfo.lightType == light_type_spot) {
+				// +Z方向がデフォルトのスポットライトの向き.
+				const sxsdk::vec3 defaultDir(0, 0, 1);
+				sxsdk::mat4 m = sxsdk::mat4::rotate(lightInfo.direction, defaultDir);
+
+				m[3][0] = lightInfo.pos.x;
+				m[3][1] = lightInfo.pos.y;
+				m[3][2] = lightInfo.pos.z;
+				m_WriteMatrix(m, false);
 			}
 
+			if (lightInfo.lightType == light_type_area) {
+				m_WriteLine("Sides 1");
+
+				if (lightInfo.visible) {
+					std::stringstream s;
+					s << "Bxdf \"PxrConstant\" \"area_light\" \"color emitColor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
+					m_WriteLine(s.str());
+				}
+			}
 			{
 				std::stringstream s;
 				s << "Polygon \"P\" [";
@@ -1787,9 +1779,12 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				s << "]";
 				m_WriteLine(s.str());
 			}
+
+			m_indent--;
+			m_WriteLine("TransformEnd");
 		}
 
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line) {
+		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
 			m_indent--;
 			m_WriteLine("AttributeEnd");
 		}
