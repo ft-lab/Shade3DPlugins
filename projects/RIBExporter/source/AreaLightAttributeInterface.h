@@ -1,5 +1,5 @@
 ﻿/**
- * 面光源の情報を設定する.
+ * 光源の情報を設定する.
  */
 
 #ifndef _AREALIGHT_ATTRIBUTE_INTERFACE_H
@@ -12,7 +12,8 @@ class CAreaLightAttributeInterface : public sxsdk::attribute_interface
 {
 private:
 	sxsdk::shade_interface& shade;
-	CPxrAreaLight m_data;				// 面光源情報.
+	CPxrAreaLight m_data;				// PxrAreaLightとしての光源情報.
+	CLightInfo m_lightInfo;				// 光源情報.
 
 	virtual int get_shade_version () const { return SHADE_BUILD_NUMBER; }
 	virtual sx::uuid_class get_uuid (void * = 0) { return RIB_AREA_LIGHT_ATTRIBUTE_ID; }
@@ -24,9 +25,9 @@ private:
 	virtual bool ask_shape (sxsdk::shape_class &shape, void * = 0);
 
 	/**
-	 * 面光源情報よりm_dataを初期化.
+	 * 光源情報よりm_dataを初期化.
 	 */
-	void m_InitAreaLightData (sxsdk::shape_class &shape, const bool loadStream);
+	void m_InitLightData (sxsdk::shape_class &shape, const bool loadStream);
 
 	//--------------------------------------------------//
 	//	ダイアログのイベント処理用						//

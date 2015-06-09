@@ -2,6 +2,13 @@
  * 光源情報を一時的に保持するクラス.
  */
 
+/*
+  面光源、点光源、スポットライト、平行光源に対応.
+   - 点光源の場合は、半径10.0の球から放射されるとする.
+   - スポットライトの場合は、 面積 10x10の平面から放射されるとする.
+
+*/
+
 #include "LightCtrl.h"
 #include "MathUtil.h"
 
@@ -26,6 +33,8 @@ void CLightInfo::Clear ()
 	spotSoftness    = 0.1f;
 	areaLightclosed = true;
 	visible         = false;
+	pointSphereRadius = 10.0f;
+
 	areaLightPos.clear();
 }
 
@@ -144,10 +153,15 @@ void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLight
 	pxrAreaLight.Clear();
 
 	// 面光源の面積を計算.
-	const double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
+	double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
 
 	// 明るさを面積単位で計算.
 	double intensity = (double)lightInfo.intensity;
+	if (lightInfo.lightType == light_type_point) {
+		// 点光源の場合は、半径10.0の球としたときの表面積を計算.
+		const double r = (double)lightInfo.pointSphereRadius;
+		area = 4.0 * sx::pi * (r * r);
+	}
 	if (!sx::zero(area)) {
 		intensity = (intensity * intensity) * sx::pi / area;
 	}

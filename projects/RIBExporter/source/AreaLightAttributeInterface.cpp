@@ -1,5 +1,5 @@
 ﻿/**
- * 面光源の情報を設定する.
+ * 光源の情報を設定する.
  */
 
 #include "AreaLightAttributeInterface.h"
@@ -42,7 +42,7 @@ bool CAreaLightAttributeInterface::ask_shape (sxsdk::shape_class &shape, void *)
 	this->AddRef();			// set_responder()に合わせて、参照カウンタを増やす。 .
 
 	// パラメータを取得.
-	m_InitAreaLightData(shape, true);
+	m_InitLightData(shape, true);
 
 	// ダイアログの表示.
 	if (dlg->ask()) {
@@ -54,13 +54,13 @@ bool CAreaLightAttributeInterface::ask_shape (sxsdk::shape_class &shape, void *)
 }
 
 /**
- * 面光源情報よりm_dataを初期化.
+ * 光源情報よりm_dataを初期化.
  */
-void CAreaLightAttributeInterface::m_InitAreaLightData (sxsdk::shape_class &shape, const bool loadStream)
+void CAreaLightAttributeInterface::m_InitLightData (sxsdk::shape_class &shape, const bool loadStream)
 {
 	// shape形状から、RenderMan向けの面光源情報を取得.
-	CLightInfo lightInfo = LightCtrl::GetAreaLightInfo(shape);			// 光源情報を取得.
-	LightCtrl::ConvAreaLightShade3DToRIS(shade, lightInfo, m_data);		// RenderMan向けのパラメータに変換.
+	m_lightInfo = LightCtrl::GetAreaLightInfo(shape);						// 光源情報を取得.
+	LightCtrl::ConvAreaLightShade3DToRIS(shade, m_lightInfo, m_data);		// RenderMan向けのパラメータに変換.
 	if (loadStream && StreamCtrl::HasRIBAreaLight(shape)) {
 		m_data = StreamCtrl::LoadRIBAreaLight(shape);
 	}
@@ -83,7 +83,7 @@ bool CAreaLightAttributeInterface::respond (sxsdk::dialog_interface &d, sxsdk::d
 		// パラメータを初期化.
 		compointer<sxsdk::scene_interface> scene(shade.get_scene_interface());
 		sxsdk::shape_class& activeShape = scene->active_shape();
-		m_InitAreaLightData(activeShape, false);
+		m_InitLightData(activeShape, false);
 
 		// ダイアログのパラメータを更新.
 		load_dialog_data(d);
@@ -184,16 +184,19 @@ void CAreaLightAttributeInterface::load_dialog_data (sxsdk::dialog_interface &d,
 		sxsdk::dialog_item_class* item;
 		item = &(d.get_dialog_item(dlg_cone_angle_id));
 		item->set_float(m_data.coneAngle);
+		item->set_enabled(m_lightInfo.lightType == light_type_spot);
 	}
 	{
 		sxsdk::dialog_item_class* item;
 		item = &(d.get_dialog_item(dlg_penumbra_angle_id));
 		item->set_float(m_data.penumbraAngle);
+		item->set_enabled(m_lightInfo.lightType == light_type_spot);
 	}
 	{
 		sxsdk::dialog_item_class* item;
 		item = &(d.get_dialog_item(dlg_penumbra_exponent_id));
 		item->set_float(m_data.penumbraExponent);
+		item->set_enabled(m_lightInfo.lightType == light_type_spot);
 	}
 	{
 		sxsdk::dialog_item_class* item;

@@ -1541,8 +1541,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("AttributeEnd");
 		}
 
-		// 面光源/スポットライト以外はスキップ.
-		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot) continue;
+		// 面光源/スポットライト/点光源以外はスキップ.
+		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot && lightInfo.lightType != light_type_point) continue;
 
 		// PxrAreaLightとしての光源情報を取得 (streamに情報が保持されている).
 		CPxrAreaLight pxrAreaLightInfo;
@@ -1554,10 +1554,16 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 		}
 
-		// 面光源/スポットライトの場合は、AttributeBegin - AttributeEndで囲む必要あり.
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
+		// AttributeBegin - AttributeEndで囲む必要あり.
+		{
 			m_WriteLine("AttributeBegin");
 			m_indent++;
+
+			if (lightInfo.shape) {
+				std::stringstream s;
+				s << "Attribute \"identifier\" \"name\" [\"" << lightInfo.shape->get_name() << "\"]";
+				m_WriteLine(s.str());
+			}
 
 			{
 				std::stringstream s;
@@ -1588,24 +1594,10 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			intensity = intensity * sx::pi;
 			ambient *= intensity;
 
-		} else if (lightInfo.lightType == light_type_point) {
-			std::stringstream s;
-
-			s << "LightSource \"";
-			if (sx::zero(lightInfo.shadowValue)) s << "pointlight";
-			else s << "shadowpoint";
-			s << "\" " << index << " \"from\" [" << lightInfo.pos.x << " " << lightInfo.pos.y << " " << -lightInfo.pos.z << "]";
-			m_WriteLine(s.str());
-			intensity = std::pow(intensity, 2.0) * sx::pi;
-	
-		} else if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_spot) {
+		} else {
 			{
 				std::stringstream s;
-#if USE_PRMAN_RIS
 				s << "AreaLightSource \"PxrAreaLight\" \"mylighthandle\"";
-#else
-				s << "AreaLightSource \"plausibleArealight\" \"mylighthandle\"";
-#endif
 				m_WriteLine(s.str());
 			}
 
@@ -1613,47 +1605,16 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				std::stringstream s;
 				s << "  \"string shape\" [\"spot\"]";
 				m_WriteLine(s.str());
-			}
-		}
 
-		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_line && lightInfo.lightType != light_type_spot) {
-			if (!sx::zero(lightInfo.shadowValue)) {
-				if (lightInfo.lightType == light_type_distant || lightInfo.lightType == light_type_directional || lightInfo.lightType == light_type_spot) {
-					std::stringstream s;
-					s << "  \"string shadowname\" [\"raytrace\"]";
-					m_WriteLine(s.str());
-				} else {
-					std::stringstream s;
-					s << "  \"string sfpx\" [\"raytrace\"]\r\n";
-					s << "  \"string sfpy\" [\"raytrace\"]\r\n";
-					s << "  \"string sfpz\" [\"raytrace\"]\r\n";
-					s << "  \"string sfnx\" [\"raytrace\"]\r\n";
-					s << "  \"string sfny\" [\"raytrace\"]\r\n";
-					s << "  \"string sfnz\" [\"raytrace\"]";
-					m_WriteLine(s.str());
-				}
-			}
-
-			// サンプリング数は速度に影響（デフォルトは16.0）.
-			{
+			} else if (lightInfo.lightType == light_type_point) {
 				std::stringstream s;
-				s << "  \"float samples\" [" << 1.0 << "]";
+				s << "  \"string shape\" [\"sphere\"]";
 				m_WriteLine(s.str());
 			}
-
-		} else {
-#if !USE_PRMAN_RIS
-			std::stringstream s;
-			s << "  \"float maxSamples\" [" << 4.0 << "]";
-			m_WriteLine(s.str());
-#endif
-			// 面光源の面積を計算.
-			//const double area = MathUtil::CalcPolygonArea(shade, lightInfo.areaLightPos);
-			//intensity = (intensity * intensity) * sx::pi / area;
-
-			intensity       = pxrAreaLightInfo.intensity;
-			lightInfo.color = pxrAreaLightInfo.lightColor;
 		}
+
+		intensity        = pxrAreaLightInfo.intensity;
+		lightInfo.color  = pxrAreaLightInfo.lightColor;
 
 		const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
 
@@ -1667,13 +1628,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			s << "  \"color lightcolor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
 			m_WriteLine(s.str());
 		}
-		if (ambient > 0.0f) {
-			std::stringstream s;
-			s << "LightSource \"ambientlight\" " << index << " \"intensity\" [" << ambient << "]";
-			m_WriteLine(s.str());
-		}
 
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
+		{
 			if (!sx::zero(pxrAreaLightInfo.areaNormalize)) {
 					std::stringstream s;
 					s << "  \"float areaNormalize\" [" << pxrAreaLightInfo.areaNormalize << "]";
@@ -1695,20 +1651,23 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					m_WriteLine(s.str());
 				}
 			}
-			if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
-				std::stringstream s;
-				s << "  \"float coneangle\" [" << pxrAreaLightInfo.coneAngle << "]";
-				m_WriteLine(s.str());
-			}
-			if (!sx::zero(pxrAreaLightInfo.penumbraExponent)) {
-				std::stringstream s;
-				s << "  \"float penumbraexponent\" [" << pxrAreaLightInfo.penumbraExponent << "]";
-				m_WriteLine(s.str());
-			}
-			if (!sx::zero(pxrAreaLightInfo.penumbraAngle - 5.0f)) {
-				std::stringstream s;
-				s << "  \"float penumbraangle\" [" << pxrAreaLightInfo.penumbraAngle << "]";
-				m_WriteLine(s.str());
+
+			if (lightInfo.lightType == light_type_spot) {
+				if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
+					std::stringstream s;
+					s << "  \"float coneangle\" [" << pxrAreaLightInfo.coneAngle << "]";
+					m_WriteLine(s.str());
+				}
+				if (!sx::zero(pxrAreaLightInfo.penumbraExponent)) {
+					std::stringstream s;
+					s << "  \"float penumbraexponent\" [" << pxrAreaLightInfo.penumbraExponent << "]";
+					m_WriteLine(s.str());
+				}
+				if (!sx::zero(pxrAreaLightInfo.penumbraAngle - 5.0f)) {
+					std::stringstream s;
+					s << "  \"float penumbraangle\" [" << pxrAreaLightInfo.penumbraAngle << "]";
+					m_WriteLine(s.str());
+				}
 			}
 			if (!sx::zero(pxrAreaLightInfo.profileRange - 180.0f)) {
 				std::stringstream s;
@@ -1756,6 +1715,10 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				m[3][1] = lightInfo.pos.y;
 				m[3][2] = lightInfo.pos.z;
 				m_WriteMatrix(m, false);
+
+			} else if (lightInfo.lightType == light_type_point) {
+				sxsdk::mat4 m = sxsdk::mat4::translate(lightInfo.pos);
+				m_WriteMatrix(m, false);
 			}
 
 			if (lightInfo.lightType == light_type_area) {
@@ -1767,7 +1730,13 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					m_WriteLine(s.str());
 				}
 			}
-			{
+			if (lightInfo.lightType == light_type_point) {
+				const float r = lightInfo.pointSphereRadius;
+				std::stringstream s;
+				s << "Sphere " << r << " " << (-r) << " " << r << " 360";		// 半径10.0の球.
+				m_WriteLine(s.str());
+
+			} else {
 				std::stringstream s;
 				s << "Polygon \"P\" [";
 
@@ -1784,10 +1753,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("TransformEnd");
 		}
 
-		if (lightInfo.lightType == light_type_area || lightInfo.lightType == light_type_line || lightInfo.lightType == light_type_spot) {
-			m_indent--;
-			m_WriteLine("AttributeEnd");
-		}
+		m_indent--;
+		m_WriteLine("AttributeEnd");
 	}
 	m_WriteLine("");
 
