@@ -291,6 +291,8 @@ double MathUtil::CalcTriangleArea (const sxsdk::vec3& v1, const sxsdk::vec3& v2,
  */
 double MathUtil::CalcPolygonArea (sxsdk::shade_interface& shade, std::vector<sxsdk::vec3>& polygon)
 {
+	if (polygon.size() == 0) return 0.0;
+
 	// 三角形分割を行う.
 	::m_triangleIndex.clear();
 	::CDivideTrianglesOutput divC;
