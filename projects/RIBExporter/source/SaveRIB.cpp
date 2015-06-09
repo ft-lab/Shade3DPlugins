@@ -1541,8 +1541,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("AttributeEnd");
 		}
 
-		// 面光源/スポットライト/点光源以外はスキップ.
-		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot && lightInfo.lightType != light_type_point) continue;
+		// 面光源/スポットライト/点光源/平行光源以外はスキップ.
+		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot && lightInfo.lightType != light_type_point && lightInfo.lightType != light_type_directional) continue;
 
 		// PxrAreaLightとしての光源情報を取得 (streamに情報が保持されている).
 		CPxrAreaLight pxrAreaLightInfo;
@@ -1609,6 +1609,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			} else if (lightInfo.lightType == light_type_point) {
 				std::stringstream s;
 				s << "  \"string shape\" [\"sphere\"]";
+				m_WriteLine(s.str());
+
+			} else if (lightInfo.lightType == light_type_directional) {
+				std::stringstream s;
+				s << "  \"string shape\" [\"disk\"]";
 				m_WriteLine(s.str());
 			}
 		}
@@ -1706,8 +1711,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("TransformBegin");
 			m_indent++;
 
-			if (lightInfo.lightType == light_type_spot) {
-				// +Z方向がデフォルトのスポットライトの向き.
+			if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
+				// +Z方向がデフォルトのスポットライト/平行光源の向き.
 				const sxsdk::vec3 defaultDir(0, 0, 1);
 				sxsdk::mat4 m = sxsdk::mat4::rotate(lightInfo.direction, defaultDir);
 
@@ -1734,6 +1739,22 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				const float r = lightInfo.pointSphereRadius;
 				std::stringstream s;
 				s << "Sphere " << r << " " << (-r) << " " << r << " 360";		// 半径10.0の球.
+				m_WriteLine(s.str());
+
+			} else if (lightInfo.lightType == light_type_spot) {
+				m_WriteLine("Sides 1");
+
+				const float r = lightInfo.diskRadius;
+				std::stringstream s;
+				s << "Disk 1 " << r << " 360";		// 半径10.0の円.
+				m_WriteLine(s.str());
+
+			} else if (lightInfo.lightType == light_type_directional) {
+				m_WriteLine("Sides 1");
+
+				const float r = lightInfo.diskRadius;
+				std::stringstream s;
+				s << "Disk 1 " << r << " 360";
 				m_WriteLine(s.str());
 
 			} else {

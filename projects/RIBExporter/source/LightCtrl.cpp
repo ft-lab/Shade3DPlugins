@@ -5,7 +5,7 @@
 /*
   面光源、点光源、スポットライト、平行光源に対応.
    - 点光源の場合は、半径10.0の球から放射されるとする.
-   - スポットライトの場合は、 面積 10x10の平面から放射されるとする.
+   - スポットライトの場合は、 半径10.0の円(disk)から放射されるとする.
 
 */
 
@@ -34,6 +34,7 @@ void CLightInfo::Clear ()
 	areaLightclosed = true;
 	visible         = false;
 	pointSphereRadius = 10.0f;
+	diskRadius        = 10.0f;
 
 	areaLightPos.clear();
 }
@@ -157,11 +158,19 @@ void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLight
 
 	// 明るさを面積単位で計算.
 	double intensity = (double)lightInfo.intensity;
+
 	if (lightInfo.lightType == light_type_point) {
 		// 点光源の場合は、半径10.0の球としたときの表面積を計算.
 		const double r = (double)lightInfo.pointSphereRadius;
 		area = 4.0 * sx::pi * (r * r);
+
+	} else if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
+		// スポットライトの場合は、半径10.0の円としたときの表面積を計算.
+		// 平行光源の場合は、円の表面積を計算.
+		const double r = (double)lightInfo.diskRadius;
+		area = sx::pi * (r * r);
 	}
+
 	if (!sx::zero(area)) {
 		intensity = (intensity * intensity) * sx::pi / area;
 	}
@@ -172,6 +181,13 @@ void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLight
 		const  float deltaAngle = (90.0f - angle) * lightInfo.spotSoftness;
 		pxrAreaLight.coneAngle     = angle;
 		pxrAreaLight.penumbraAngle = deltaAngle;
+	}
+
+	// 平行光源の場合は分散の角度を狭くする。また、明るさもそれにあわせて小さくする.
+	if (lightInfo.lightType == light_type_directional) {
+		pxrAreaLight.cosinePower = 10.0f;
+		const double scale = 90.0f / 10.0f;
+		intensity /= scale;
 	}
 
 	pxrAreaLight.intensity   = (float)intensity;
@@ -259,22 +275,13 @@ CLightInfo LightCtrl::GetAreaLightInfo (sxsdk::shape_class& shape)
 			break;
 
 		case sxsdk::enums::directional_light:
-			lightInfo.lightType = light_type_directional;
+			lightInfo.lightType  = light_type_directional;
+			lightInfo.diskRadius = light.get_cylinder_radius();
 			break;
 		}
 
 		sxsdk::vec4 dirV = sxsdk::vec4(lightInfo.direction.x, lightInfo.direction.y, lightInfo.direction.z, 0.0f) * lwMat;
 		lightInfo.direction = normalize(sxsdk::vec3(dirV.x, dirV.y, dirV.z));
-
-		// スポットライト時もPxrAreaLightで表現する.
-		if (lightInfo.lightType == light_type_spot) {
-			// +Z方向を向く面がデフォルト.
-			lightInfo.areaLightPos.resize(4);
-			lightInfo.areaLightPos[0] = sxsdk::vec3(-5,  5, 0);
-			lightInfo.areaLightPos[1] = sxsdk::vec3( 5,  5, 0);
-			lightInfo.areaLightPos[2] = sxsdk::vec3( 5, -5, 0);
-			lightInfo.areaLightPos[3] = sxsdk::vec3(-5, -5, 0);
-		}
 	}
 
 	return lightInfo;

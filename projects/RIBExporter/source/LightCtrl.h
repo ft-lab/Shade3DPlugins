@@ -43,6 +43,7 @@ public:
 	float spotConeAngle;					// スポットライトの角度.
 	float spotSoftness;						// スポットライトのソフトネス値.
 	float pointSphereRadius;				// 点光源のときの球の半径.
+	float diskRadius;						// スポット/平行光源時のdiskの半径.
 
 	std::vector<sxsdk::vec3> areaLightPos;		// 光源を構成する頂点座標.
 	bool areaLightclosed;						// 面光源が閉じた線形状か.
