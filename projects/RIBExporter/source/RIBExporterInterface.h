@@ -110,8 +110,9 @@ private:
 
 	/**
 	 * ポリゴンメッシュの面を分割するか.
+	 * ここをfalseにしget_max_vertices_per_faceが4の場合は、極力4角形は保つ。5角形以上は4角形と3角形に分割される.
 	 */
-	virtual bool must_divide_polymesh (void *aux=0) { return true; }
+	virtual bool must_divide_polymesh (void *aux=0) { return false; }
 
 	/**
 	 * バイナリで出力.
@@ -121,6 +122,11 @@ private:
 
 	virtual bool cannot_select_eol (void *aux=0) { return true; }
 	virtual bool can_select_filter_objects (void *aux=0) { return false; }
+
+	/**
+	 * 面をサブディビジョンするか.
+	 */
+	virtual bool must_round_polymesh (void *aux=0) { return m_data.doSubdivision; }
 
 	/********************************************************************/
 	/* エクスポートのコールバックとして呼ばれる							*/

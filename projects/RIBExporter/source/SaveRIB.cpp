@@ -1976,8 +1976,19 @@ std::string CSaveRIB::m_OutputTexture (sxsdk::scene_interface* scene, sxsdk::sha
  */
 void CSaveRIB::BeginPolygonMesh (sxsdk::shape_class* shape)
 {
-	m_polygonMeshCtrl.BeginStore(shape->get_name());
+	// Subdivision処理をRenderManに任せる場合は、法線で頂点を増やさない.
+	bool separeteNormal = (m_dlgData.doSubdivision || m_currentSubdivisionType == 0);
+
+	// TODO : UVも連続している必要があるので、separeteNormalでUV/法線での頂点を増やす作業を無効化している.
+	m_polygonMeshCtrl.BeginStore(shape->get_name(), separeteNormal, separeteNormal);
 	m_pCurrentShape = shape;
+
+	// Subdivison情報を保持.
+	m_currentSubdivisionType = 0;
+	if (shape->get_type() == sxsdk::enums::polygon_mesh) {
+		sxsdk::polygon_mesh_class& pmesh = shape->get_polygon_mesh();
+		m_currentSubdivisionType = pmesh.get_roundness_type();
+	}
 }
 
 /**
@@ -2042,7 +2053,12 @@ void CSaveRIB::EndPolygonMesh ()
 			m_WriteLine(s.str());
 		}
 
-		m_WriteLine("PointsPolygons");
+		if (!m_dlgData.doSubdivision && m_currentSubdivisionType > 0) {
+			// catmull-clark での滑らかな曲線.
+			m_WriteLine("SubdivisionMesh \"catmull-clark\"");
+		} else {
+			m_WriteLine("PointsPolygons");
+		}
 		m_indent++;
 
 		// 面の頂点数を格納.
@@ -2077,6 +2093,11 @@ void CSaveRIB::EndPolygonMesh ()
 			m_WriteLine(s.str());
 		}
 
+		if (!m_dlgData.doSubdivision && m_currentSubdivisionType > 0) {
+			// catmull-clark 時に、エッジはSubdivisionせずに保持.
+			m_WriteLine("[\"interpolateboundary\"] [0 0] [] []");
+		}
+
 		// 頂点座標の格納.
 		{
 			std::stringstream s;
@@ -2089,7 +2110,7 @@ void CSaveRIB::EndPolygonMesh ()
 		}
 
 		// 法線の格納.
-		{
+		if (m_dlgData.doSubdivision || m_currentSubdivisionType == 0) {
 			std::stringstream s;
 			s << "\"N\" [ ";
 			for (int i = 0; i < verCou; i++) {

@@ -20,6 +20,7 @@
 				<bool id="231" label="endofframe" />
 				<bool id="232" label="xml file" />
 			</group>
+			<bool id="240" label="Subdivision" />
 		</vbox>
 
 		<vbox id="500" label="Light">

@@ -87,6 +87,8 @@ private:
 
 	std::string m_backgroundTextureName;		// 背景テクスチャの名前.
 
+	int m_currentSubdivisionType;				// ポリゴンメッシュのSubdivisionの種類 (sxsdk::polygon_mesh_classs::get_roundness_type() の値).
+
 	/**
 	 * ヘッダの出力.
 	 */

@@ -26,9 +26,12 @@ void CPolygonMeshCtrl::Clear ()
 /**
  * 格納開始.
  */
-void CPolygonMeshCtrl::BeginStore (const std::string name)
+void CPolygonMeshCtrl::BeginStore (const std::string name, const bool separateUV, const bool separateNormal)
 {
 	Clear();
+	m_separateUV     = separateUV;
+	m_separateNormal = separateNormal;
+
 	m_name = name;
 }
 
@@ -163,7 +166,7 @@ void CPolygonMeshCtrl::m_AdjustmentPoints (const int faceGroupIndex)
 
 				for (int j = 0; j < cou; j++) {
 					const int index2 = newVerticesRef[index][j];
-					if (sx::zero(outputMeshInfo.vertices[index2] - v) && sx::zero(outputMeshInfo.normals[index2] - n) && sx::zero(outputMeshInfo.uvs[index2] - uv)) {
+					if (sx::zero(outputMeshInfo.vertices[index2] - v) && (!m_separateNormal || sx::zero(outputMeshInfo.normals[index2] - n)) && (!m_separateUV || sx::zero(outputMeshInfo.uvs[index2] - uv))) {
 						searchIndex = index2;
 						break;
 					}
@@ -269,3 +272,5 @@ bool CPolygonMeshCtrl::GetOutputUVs (const int meshIndex, std::vector<sxsdk::vec
 	for (int i = 0; i < meshInfo.uvs.size(); i++)  retUVs[i] = meshInfo.uvs[i];
 	return true;
 }
+
+

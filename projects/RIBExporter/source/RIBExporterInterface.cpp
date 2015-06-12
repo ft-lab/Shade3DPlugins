@@ -32,6 +32,8 @@ enum
 
 	dlg_statistics_end_of_frame_id = 231,			// 経過時間を表示.
 	dlg_statistics_xml_file_id = 232,				// XMLファイル出力.
+
+	dlg_subdivision_id = 240,						// Subdivision.
 };
 
 CRIBExporterInterface::CRIBExporterInterface (sxsdk::shade_interface& shade) : shade(shade)
@@ -412,6 +414,11 @@ void CRIBExporterInterface::load_dialog_data (sxsdk::dialog_interface &d, void *
 		item = &(d.get_dialog_item(dlg_statistics_xml_file_id));
 		item->set_bool(m_data.statisticsXMLFile);
 	}
+	{
+		sxsdk::dialog_item_class* item;
+		item = &(d.get_dialog_item(dlg_subdivision_id));
+		item->set_bool(m_data.doSubdivision);
+	}
 }
 
 void CRIBExporterInterface::save_dialog_data (sxsdk::dialog_interface &dialog,void *)
@@ -526,6 +533,10 @@ bool CRIBExporterInterface::respond (sxsdk::dialog_interface &dialog, sxsdk::dia
 	}
 	if (id == dlg_statistics_xml_file_id) {
 		m_data.statisticsXMLFile = item.get_bool();
+		return true;
+	}
+	if (id == dlg_subdivision_id) {
+		m_data.doSubdivision = item.get_bool();
 		return true;
 	}
 

@@ -63,6 +63,9 @@ private:
 	int m_currentFaceGroupIndex;						// 格納中のfaceGroup番号.
 	int m_faceGroupCount;								// faceGroupの数.
 
+	bool m_separateUV;									// UVが異なる場合に頂点を増やして面を分けるか.
+	bool m_separateNormal;								// 法線が異なる場合に頂点を増やして面を分けるか.
+
 	/**
 	 * faceGroupごとに分離.
 	 */
@@ -84,7 +87,7 @@ public:
 	/**
 	 * 格納開始.
 	 */
-	void BeginStore (const std::string name);
+	void BeginStore (const std::string name, const bool separateUV, const bool separateNormal);
 
 	/**
 	 * 格納終了.
