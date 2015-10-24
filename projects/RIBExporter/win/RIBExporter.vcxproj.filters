@@ -12,15 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\include\sx\core\com.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\include\sx\core\debug.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\include\sx\core\vectors.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\main.cpp">
       <Filter>mysources</Filter>
     </ClCompile>
@@ -68,6 +59,15 @@
     </ClCompile>
     <ClCompile Include="..\source\AreaLightAttributeInterface.cpp">
       <Filter>mysources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\include\sxcore\com.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\include\sxcore\debug.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\include\sxcore\vectors.cpp">
+      <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="RIBExporter|Win32">
       <Configuration>RIBExporter</Configuration>
@@ -19,11 +19,13 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RIBExporter|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -66,8 +68,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>../source;../../../boost_1_43_0;../../../include;../../../include/openexr-1.6.1;../../../include/opengl;../libtiff/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SXWINDOWS;SXWIN32;DEMO_PLUGIN=0;NDEBUG;sxdebug=0;WIN32;_WINDOWS;Windows=1;PLUGIN=1;STDCALL=__stdcall;DLLEXPORT=__declspec(dllexport);for=if(true)for;_CRT_SECURE_NO_DEPRECATE;PLUGIN_EXPORTS;SXCORE=;SXMODEL=;_SECURE_SCL=0;SXPLUGIN=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../source;../../../boost_1_55_0;../../../include;../../../include/openexr-1.6.1;../../../include/opengl;../libtiff/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SXWINDOWS;SXWIN32;DEMO_PLUGIN=0;NDEBUG;sxdebug=0;WIN32;_WINDOWS;Windows=1;PLUGIN=1;STDCALL=__stdcall;DLLEXPORT=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE;PLUGIN_EXPORTS;SXCORE=;SXMODEL=;_SECURE_SCL=0;SXPLUGIN=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -119,8 +121,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>../source;../../../boost_1_43_0;../../../include;../../../include/openexr-1.6.1;../../../include/opengl;../libtiff/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SXWINDOWS;SXWIN32;DEMO_PLUGIN=0;NDEBUG;sxdebug=0;WIN32;_WINDOWS;Windows=1;PLUGIN=1;STDCALL=__stdcall;DLLEXPORT=__declspec(dllexport);for=if(true)for;_CRT_SECURE_NO_DEPRECATE;PLUGIN_EXPORTS;SXCORE=;SXMODEL=;_SECURE_SCL=0;SXPLUGIN=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../source;../../../boost_1_55_0;../../../include;../../../include/openexr-1.6.1;../../../include/opengl;../libtiff/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SXWINDOWS;SXWIN32;DEMO_PLUGIN=0;NDEBUG;sxdebug=0;WIN32;_WINDOWS;Windows=1;PLUGIN=1;STDCALL=__stdcall;DLLEXPORT=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE;PLUGIN_EXPORTS;SXCORE=;SXMODEL=;_SECURE_SCL=0;SXPLUGIN=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -155,9 +157,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\include\sx\core\com.cpp" />
-    <ClCompile Include="..\..\..\include\sx\core\debug.cpp" />
-    <ClCompile Include="..\..\..\include\sx\core\vectors.cpp" />
+    <ClCompile Include="..\..\..\include\sxcore\com.cpp" />
+    <ClCompile Include="..\..\..\include\sxcore\debug.cpp" />
+    <ClCompile Include="..\..\..\include\sxcore\vectors.cpp" />
     <ClCompile Include="..\source\AreaLightAttributeInterface.cpp" />
     <ClCompile Include="..\source\AttributeWindowInterface.cpp" />
     <ClCompile Include="..\source\BackgroundTexture.cpp" />
