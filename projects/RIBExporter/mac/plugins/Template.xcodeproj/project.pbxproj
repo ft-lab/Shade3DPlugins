@@ -1,0 +1,682 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9213EBA61B12E3E00023FEDA /* GlobalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 9213EBA01B12E3E00023FEDA /* GlobalHeader.h */; };
+		9213EBA71B12E3E00023FEDA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9213EBA11B12E3E00023FEDA /* main.cpp */; };
+		9218BDB61E0FCC7900B9C6A1 /* RIBExporter.info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9218BDB51E0FCC7900B9C6A1 /* RIBExporter.info.plist */; };
+		9218BDD51E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDB71E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.cpp */; };
+		9218BDD61E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDB81E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.h */; };
+		9218BDD71E0FCCBE00B9C6A1 /* AttributeWindowInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDB91E0FCCBE00B9C6A1 /* AttributeWindowInterface.cpp */; };
+		9218BDD81E0FCCBE00B9C6A1 /* AttributeWindowInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDBA1E0FCCBE00B9C6A1 /* AttributeWindowInterface.h */; };
+		9218BDD91E0FCCBE00B9C6A1 /* BackgroundTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDBB1E0FCCBE00B9C6A1 /* BackgroundTexture.cpp */; };
+		9218BDDA1E0FCCBE00B9C6A1 /* BackgroundTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDBC1E0FCCBE00B9C6A1 /* BackgroundTexture.h */; };
+		9218BDDB1E0FCCBE00B9C6A1 /* CameraCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDBD1E0FCCBE00B9C6A1 /* CameraCtrl.cpp */; };
+		9218BDDC1E0FCCBE00B9C6A1 /* CameraCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDBE1E0FCCBE00B9C6A1 /* CameraCtrl.h */; };
+		9218BDDD1E0FCCBE00B9C6A1 /* LightCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDBF1E0FCCBE00B9C6A1 /* LightCtrl.cpp */; };
+		9218BDDE1E0FCCBE00B9C6A1 /* LightCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDC01E0FCCBE00B9C6A1 /* LightCtrl.h */; };
+		9218BDDF1E0FCCBE00B9C6A1 /* MaterialCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDC11E0FCCBE00B9C6A1 /* MaterialCtrl.cpp */; };
+		9218BDE01E0FCCBE00B9C6A1 /* MaterialCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDC21E0FCCBE00B9C6A1 /* MaterialCtrl.h */; };
+		9218BDE11E0FCCBE00B9C6A1 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDC31E0FCCBE00B9C6A1 /* MathUtil.cpp */; };
+		9218BDE21E0FCCBE00B9C6A1 /* MathUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDC41E0FCCBE00B9C6A1 /* MathUtil.h */; };
+		9218BDE31E0FCCBE00B9C6A1 /* PolygonMeshCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDC51E0FCCBE00B9C6A1 /* PolygonMeshCtrl.cpp */; };
+		9218BDE41E0FCCBE00B9C6A1 /* PolygonMeshCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDC61E0FCCBE00B9C6A1 /* PolygonMeshCtrl.h */; };
+		9218BDE51E0FCCBE00B9C6A1 /* RIBExporterInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDC71E0FCCBE00B9C6A1 /* RIBExporterInterface.cpp */; };
+		9218BDE61E0FCCBE00B9C6A1 /* RIBExporterInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDC81E0FCCBE00B9C6A1 /* RIBExporterInterface.h */; };
+		9218BDE71E0FCCBE00B9C6A1 /* SaveRIB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDC91E0FCCBE00B9C6A1 /* SaveRIB.cpp */; };
+		9218BDE81E0FCCBE00B9C6A1 /* SaveRIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDCA1E0FCCBE00B9C6A1 /* SaveRIB.h */; };
+		9218BDE91E0FCCBE00B9C6A1 /* SaveTiff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDCB1E0FCCBE00B9C6A1 /* SaveTiff.cpp */; };
+		9218BDEA1E0FCCBE00B9C6A1 /* SaveTiff.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDCC1E0FCCBE00B9C6A1 /* SaveTiff.h */; };
+		9218BDEB1E0FCCBE00B9C6A1 /* ShapeStack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDCD1E0FCCBE00B9C6A1 /* ShapeStack.cpp */; };
+		9218BDEC1E0FCCBE00B9C6A1 /* ShapeStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDCE1E0FCCBE00B9C6A1 /* ShapeStack.h */; };
+		9218BDED1E0FCCBE00B9C6A1 /* StreamCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDCF1E0FCCBE00B9C6A1 /* StreamCtrl.cpp */; };
+		9218BDEE1E0FCCBE00B9C6A1 /* StreamCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDD01E0FCCBE00B9C6A1 /* StreamCtrl.h */; };
+		9218BDEF1E0FCCBE00B9C6A1 /* TextureCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDD11E0FCCBE00B9C6A1 /* TextureCtrl.cpp */; };
+		9218BDF01E0FCCBE00B9C6A1 /* TextureCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDD21E0FCCBE00B9C6A1 /* TextureCtrl.h */; };
+		9218BDF11E0FCCBE00B9C6A1 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9218BDD31E0FCCBE00B9C6A1 /* Util.cpp */; };
+		9218BDF21E0FCCBE00B9C6A1 /* Util.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDD41E0FCCBE00B9C6A1 /* Util.h */; };
+		9218BE041E0FCCEF00B9C6A1 /* t4.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF41E0FCCEF00B9C6A1 /* t4.h */; };
+		9218BE051E0FCCEF00B9C6A1 /* tif_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF51E0FCCEF00B9C6A1 /* tif_config.h */; };
+		9218BE061E0FCCEF00B9C6A1 /* tif_config.vc.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF61E0FCCEF00B9C6A1 /* tif_config.vc.h */; };
+		9218BE071E0FCCEF00B9C6A1 /* tif_config.wince.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF71E0FCCEF00B9C6A1 /* tif_config.wince.h */; };
+		9218BE081E0FCCEF00B9C6A1 /* tif_dir.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF81E0FCCEF00B9C6A1 /* tif_dir.h */; };
+		9218BE091E0FCCEF00B9C6A1 /* tif_fax3.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDF91E0FCCEF00B9C6A1 /* tif_fax3.h */; };
+		9218BE0A1E0FCCEF00B9C6A1 /* tif_predict.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFA1E0FCCEF00B9C6A1 /* tif_predict.h */; };
+		9218BE0B1E0FCCEF00B9C6A1 /* tiff.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFB1E0FCCEF00B9C6A1 /* tiff.h */; };
+		9218BE0C1E0FCCEF00B9C6A1 /* tiffconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFC1E0FCCEF00B9C6A1 /* tiffconf.h */; };
+		9218BE0D1E0FCCEF00B9C6A1 /* tiffconf.vc.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFD1E0FCCEF00B9C6A1 /* tiffconf.vc.h */; };
+		9218BE0E1E0FCCEF00B9C6A1 /* tiffconf.wince.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFE1E0FCCEF00B9C6A1 /* tiffconf.wince.h */; };
+		9218BE0F1E0FCCEF00B9C6A1 /* tiffio.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BDFF1E0FCCEF00B9C6A1 /* tiffio.h */; };
+		9218BE101E0FCCEF00B9C6A1 /* tiffio.hxx in Headers */ = {isa = PBXBuildFile; fileRef = 9218BE001E0FCCEF00B9C6A1 /* tiffio.hxx */; };
+		9218BE111E0FCCEF00B9C6A1 /* tiffiop.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BE011E0FCCEF00B9C6A1 /* tiffiop.h */; };
+		9218BE121E0FCCEF00B9C6A1 /* tiffvers.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BE021E0FCCEF00B9C6A1 /* tiffvers.h */; };
+		9218BE131E0FCCEF00B9C6A1 /* uvcode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9218BE031E0FCCEF00B9C6A1 /* uvcode.h */; };
+		9218BE151E0FCD0700B9C6A1 /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9218BE141E0FCD0700B9C6A1 /* libtiff.a */; };
+		9218BE171E0FD4DB00B9C6A1 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9218BE161E0FD4DB00B9C6A1 /* libz.dylib */; };
+		FFE6EF5D1A6667E60006CB66 /* shdplugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16F9E21A0546323A00F09F49 /* shdplugin.icns */; };
+		FFE6EF5E1A6667E60006CB66 /* sxuls in Resources */ = {isa = PBXBuildFile; fileRef = A31F019408BD316A00C322BE /* sxuls */; };
+		FFE6EF611A6667E60006CB66 /* com.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7BB47841980FA1500C9F408 /* com.cpp */; };
+		FFE6EF6A1A6667E60006CB66 /* vectors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7BB47861980FA1500C9F408 /* vectors.cpp */; };
+		FFE6EF741A6667E60006CB66 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C7BB47851980FA1500C9F408 /* debug.cpp */; };
+		FFE6EF791A6667E60006CB66 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45C7D13DFD68B005C78EC /* Foundation.framework */; };
+		FFE6EF7A1A6667E60006CB66 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45C8313DFD69F005C78EC /* Cocoa.framework */; };
+		FFE6EF7B1A6667E60006CB66 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */; };
+		FFE6EF7C1A6667E60006CB66 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A45CE313DFD955005C78EC /* libiconv.dylib */; };
+		FFE6EFE41A6669460006CB66 /* RIBExporter.shdplugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = FFE6EF871A6667E60006CB66 /* RIBExporter.shdplugin */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FF39F5911A667C8A00E09111 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FFE6EF811A6667E60006CB66 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = ../../../../../../builds/mac/plugins;
+			dstSubfolderSpec = 16;
+			files = (
+				FFE6EFE41A6669460006CB66 /* RIBExporter.shdplugin in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		16F9E21A0546323A00F09F49 /* shdplugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = shdplugin.icns; path = ../xshade/icns/shdplugin.icns; sourceTree = SOURCE_ROOT; };
+		32DBCF630370AF2F00C91783 /* xplugins_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xplugins_Prefix.pch; sourceTree = "<group>"; };
+		9213EBA01B12E3E00023FEDA /* GlobalHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalHeader.h; path = ../../source/GlobalHeader.h; sourceTree = "<group>"; };
+		9213EBA11B12E3E00023FEDA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../source/main.cpp; sourceTree = "<group>"; };
+		9218BDB51E0FCC7900B9C6A1 /* RIBExporter.info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = RIBExporter.info.plist; path = plists/RIBExporter.info.plist; sourceTree = "<group>"; };
+		9218BDB71E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AreaLightAttributeInterface.cpp; path = ../../source/AreaLightAttributeInterface.cpp; sourceTree = "<group>"; };
+		9218BDB81E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AreaLightAttributeInterface.h; path = ../../source/AreaLightAttributeInterface.h; sourceTree = "<group>"; };
+		9218BDB91E0FCCBE00B9C6A1 /* AttributeWindowInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AttributeWindowInterface.cpp; path = ../../source/AttributeWindowInterface.cpp; sourceTree = "<group>"; };
+		9218BDBA1E0FCCBE00B9C6A1 /* AttributeWindowInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AttributeWindowInterface.h; path = ../../source/AttributeWindowInterface.h; sourceTree = "<group>"; };
+		9218BDBB1E0FCCBE00B9C6A1 /* BackgroundTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BackgroundTexture.cpp; path = ../../source/BackgroundTexture.cpp; sourceTree = "<group>"; };
+		9218BDBC1E0FCCBE00B9C6A1 /* BackgroundTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackgroundTexture.h; path = ../../source/BackgroundTexture.h; sourceTree = "<group>"; };
+		9218BDBD1E0FCCBE00B9C6A1 /* CameraCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraCtrl.cpp; path = ../../source/CameraCtrl.cpp; sourceTree = "<group>"; };
+		9218BDBE1E0FCCBE00B9C6A1 /* CameraCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CameraCtrl.h; path = ../../source/CameraCtrl.h; sourceTree = "<group>"; };
+		9218BDBF1E0FCCBE00B9C6A1 /* LightCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightCtrl.cpp; path = ../../source/LightCtrl.cpp; sourceTree = "<group>"; };
+		9218BDC01E0FCCBE00B9C6A1 /* LightCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightCtrl.h; path = ../../source/LightCtrl.h; sourceTree = "<group>"; };
+		9218BDC11E0FCCBE00B9C6A1 /* MaterialCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaterialCtrl.cpp; path = ../../source/MaterialCtrl.cpp; sourceTree = "<group>"; };
+		9218BDC21E0FCCBE00B9C6A1 /* MaterialCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaterialCtrl.h; path = ../../source/MaterialCtrl.h; sourceTree = "<group>"; };
+		9218BDC31E0FCCBE00B9C6A1 /* MathUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MathUtil.cpp; path = ../../source/MathUtil.cpp; sourceTree = "<group>"; };
+		9218BDC41E0FCCBE00B9C6A1 /* MathUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathUtil.h; path = ../../source/MathUtil.h; sourceTree = "<group>"; };
+		9218BDC51E0FCCBE00B9C6A1 /* PolygonMeshCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonMeshCtrl.cpp; path = ../../source/PolygonMeshCtrl.cpp; sourceTree = "<group>"; };
+		9218BDC61E0FCCBE00B9C6A1 /* PolygonMeshCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PolygonMeshCtrl.h; path = ../../source/PolygonMeshCtrl.h; sourceTree = "<group>"; };
+		9218BDC71E0FCCBE00B9C6A1 /* RIBExporterInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RIBExporterInterface.cpp; path = ../../source/RIBExporterInterface.cpp; sourceTree = "<group>"; };
+		9218BDC81E0FCCBE00B9C6A1 /* RIBExporterInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RIBExporterInterface.h; path = ../../source/RIBExporterInterface.h; sourceTree = "<group>"; };
+		9218BDC91E0FCCBE00B9C6A1 /* SaveRIB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SaveRIB.cpp; path = ../../source/SaveRIB.cpp; sourceTree = "<group>"; };
+		9218BDCA1E0FCCBE00B9C6A1 /* SaveRIB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveRIB.h; path = ../../source/SaveRIB.h; sourceTree = "<group>"; };
+		9218BDCB1E0FCCBE00B9C6A1 /* SaveTiff.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SaveTiff.cpp; path = ../../source/SaveTiff.cpp; sourceTree = "<group>"; };
+		9218BDCC1E0FCCBE00B9C6A1 /* SaveTiff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveTiff.h; path = ../../source/SaveTiff.h; sourceTree = "<group>"; };
+		9218BDCD1E0FCCBE00B9C6A1 /* ShapeStack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShapeStack.cpp; path = ../../source/ShapeStack.cpp; sourceTree = "<group>"; };
+		9218BDCE1E0FCCBE00B9C6A1 /* ShapeStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShapeStack.h; path = ../../source/ShapeStack.h; sourceTree = "<group>"; };
+		9218BDCF1E0FCCBE00B9C6A1 /* StreamCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StreamCtrl.cpp; path = ../../source/StreamCtrl.cpp; sourceTree = "<group>"; };
+		9218BDD01E0FCCBE00B9C6A1 /* StreamCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StreamCtrl.h; path = ../../source/StreamCtrl.h; sourceTree = "<group>"; };
+		9218BDD11E0FCCBE00B9C6A1 /* TextureCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureCtrl.cpp; path = ../../source/TextureCtrl.cpp; sourceTree = "<group>"; };
+		9218BDD21E0FCCBE00B9C6A1 /* TextureCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureCtrl.h; path = ../../source/TextureCtrl.h; sourceTree = "<group>"; };
+		9218BDD31E0FCCBE00B9C6A1 /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Util.cpp; path = ../../source/Util.cpp; sourceTree = "<group>"; };
+		9218BDD41E0FCCBE00B9C6A1 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util.h; path = ../../source/Util.h; sourceTree = "<group>"; };
+		9218BDF41E0FCCEF00B9C6A1 /* t4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = t4.h; path = ../../libtiff/include/t4.h; sourceTree = "<group>"; };
+		9218BDF51E0FCCEF00B9C6A1 /* tif_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_config.h; path = ../../libtiff/include/tif_config.h; sourceTree = "<group>"; };
+		9218BDF61E0FCCEF00B9C6A1 /* tif_config.vc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_config.vc.h; path = ../../libtiff/include/tif_config.vc.h; sourceTree = "<group>"; };
+		9218BDF71E0FCCEF00B9C6A1 /* tif_config.wince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_config.wince.h; path = ../../libtiff/include/tif_config.wince.h; sourceTree = "<group>"; };
+		9218BDF81E0FCCEF00B9C6A1 /* tif_dir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_dir.h; path = ../../libtiff/include/tif_dir.h; sourceTree = "<group>"; };
+		9218BDF91E0FCCEF00B9C6A1 /* tif_fax3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_fax3.h; path = ../../libtiff/include/tif_fax3.h; sourceTree = "<group>"; };
+		9218BDFA1E0FCCEF00B9C6A1 /* tif_predict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tif_predict.h; path = ../../libtiff/include/tif_predict.h; sourceTree = "<group>"; };
+		9218BDFB1E0FCCEF00B9C6A1 /* tiff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiff.h; path = ../../libtiff/include/tiff.h; sourceTree = "<group>"; };
+		9218BDFC1E0FCCEF00B9C6A1 /* tiffconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffconf.h; path = ../../libtiff/include/tiffconf.h; sourceTree = "<group>"; };
+		9218BDFD1E0FCCEF00B9C6A1 /* tiffconf.vc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffconf.vc.h; path = ../../libtiff/include/tiffconf.vc.h; sourceTree = "<group>"; };
+		9218BDFE1E0FCCEF00B9C6A1 /* tiffconf.wince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffconf.wince.h; path = ../../libtiff/include/tiffconf.wince.h; sourceTree = "<group>"; };
+		9218BDFF1E0FCCEF00B9C6A1 /* tiffio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffio.h; path = ../../libtiff/include/tiffio.h; sourceTree = "<group>"; };
+		9218BE001E0FCCEF00B9C6A1 /* tiffio.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = tiffio.hxx; path = ../../libtiff/include/tiffio.hxx; sourceTree = "<group>"; };
+		9218BE011E0FCCEF00B9C6A1 /* tiffiop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffiop.h; path = ../../libtiff/include/tiffiop.h; sourceTree = "<group>"; };
+		9218BE021E0FCCEF00B9C6A1 /* tiffvers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiffvers.h; path = ../../libtiff/include/tiffvers.h; sourceTree = "<group>"; };
+		9218BE031E0FCCEF00B9C6A1 /* uvcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uvcode.h; path = ../../libtiff/include/uvcode.h; sourceTree = "<group>"; };
+		9218BE141E0FCD0700B9C6A1 /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../../libtiff/lib/mac/libtiff.a; sourceTree = "<group>"; };
+		9218BE161E0FD4DB00B9C6A1 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = ../../../../../../../../../usr/lib/libz.dylib; sourceTree = "<group>"; };
+		A31F019508BD316A00C322BE /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = ../../source/resources/en.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		A31F01A808BD318900C322BE /* ja */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ja; path = ../../source/resources/ja.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		A31F01B308BD319F00C322BE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = folder; name = zh_CN; path = ../../source/resources/zh_CN.lproj/sxuls; sourceTree = SOURCE_ROOT; };
+		C724213318B32DA30083BD68 /* config.plugins.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = config.plugins.xcconfig; path = ../../../../xcconfig/config.plugins.xcconfig; sourceTree = "<group>"; };
+		C7A45C7D13DFD68B005C78EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		C7A45C8313DFD69F005C78EC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		C7A45CE313DFD955005C78EC /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = /usr/lib/libiconv.dylib; sourceTree = "<absolute>"; };
+		C7BB47841980FA1500C9F408 /* com.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = com.cpp; path = ../../../../include/sxcore/com.cpp; sourceTree = "<group>"; };
+		C7BB47851980FA1500C9F408 /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = ../../../../include/sxcore/debug.cpp; sourceTree = "<group>"; };
+		C7BB47861980FA1500C9F408 /* vectors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectors.cpp; path = ../../../../include/sxcore/vectors.cpp; sourceTree = "<group>"; };
+		FFE6EF871A6667E60006CB66 /* RIBExporter.shdplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RIBExporter.shdplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FFE6EF781A6667E60006CB66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFE6EF791A6667E60006CB66 /* Foundation.framework in Frameworks */,
+				FFE6EF7A1A6667E60006CB66 /* Cocoa.framework in Frameworks */,
+				FFE6EF7B1A6667E60006CB66 /* SystemConfiguration.framework in Frameworks */,
+				FFE6EF7C1A6667E60006CB66 /* libiconv.dylib in Frameworks */,
+				9218BE151E0FCD0700B9C6A1 /* libtiff.a in Frameworks */,
+				9218BE171E0FD4DB00B9C6A1 /* libz.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* xplugins */ = {
+			isa = PBXGroup;
+			children = (
+				C724213318B32DA30083BD68 /* config.plugins.xcconfig */,
+				4A3E5BC70B0029410006A4FF /* sources */,
+				B8F429BB04BCB35A00A80009 /* plists */,
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* include */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = xplugins;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				9218BE161E0FD4DB00B9C6A1 /* libz.dylib */,
+				9218BE141E0FCD0700B9C6A1 /* libtiff.a */,
+				C7A45C7D13DFD68B005C78EC /* Foundation.framework */,
+				C7A45C8313DFD69F005C78EC /* Cocoa.framework */,
+				C7A45CDB13DFD915005C78EC /* SystemConfiguration.framework */,
+				C7A45CE313DFD955005C78EC /* libiconv.dylib */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A31F019408BD316A00C322BE /* sxuls */,
+				16F9E21A0546323A00F09F49 /* shdplugin.icns */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C7BB47841980FA1500C9F408 /* com.cpp */,
+				C7BB47851980FA1500C9F408 /* debug.cpp */,
+				C7BB47861980FA1500C9F408 /* vectors.cpp */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFE6EF871A6667E60006CB66 /* RIBExporter.shdplugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				9218BDF31E0FCCDD00B9C6A1 /* libtiff */,
+				32DBCF630370AF2F00C91783 /* xplugins_Prefix.pch */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		4A3E5BC70B0029410006A4FF /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				9218BDB71E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.cpp */,
+				9218BDB81E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.h */,
+				9218BDB91E0FCCBE00B9C6A1 /* AttributeWindowInterface.cpp */,
+				9218BDBA1E0FCCBE00B9C6A1 /* AttributeWindowInterface.h */,
+				9218BDBB1E0FCCBE00B9C6A1 /* BackgroundTexture.cpp */,
+				9218BDBC1E0FCCBE00B9C6A1 /* BackgroundTexture.h */,
+				9218BDBD1E0FCCBE00B9C6A1 /* CameraCtrl.cpp */,
+				9218BDBE1E0FCCBE00B9C6A1 /* CameraCtrl.h */,
+				9218BDBF1E0FCCBE00B9C6A1 /* LightCtrl.cpp */,
+				9218BDC01E0FCCBE00B9C6A1 /* LightCtrl.h */,
+				9218BDC11E0FCCBE00B9C6A1 /* MaterialCtrl.cpp */,
+				9218BDC21E0FCCBE00B9C6A1 /* MaterialCtrl.h */,
+				9218BDC31E0FCCBE00B9C6A1 /* MathUtil.cpp */,
+				9218BDC41E0FCCBE00B9C6A1 /* MathUtil.h */,
+				9218BDC51E0FCCBE00B9C6A1 /* PolygonMeshCtrl.cpp */,
+				9218BDC61E0FCCBE00B9C6A1 /* PolygonMeshCtrl.h */,
+				9218BDC71E0FCCBE00B9C6A1 /* RIBExporterInterface.cpp */,
+				9218BDC81E0FCCBE00B9C6A1 /* RIBExporterInterface.h */,
+				9218BDC91E0FCCBE00B9C6A1 /* SaveRIB.cpp */,
+				9218BDCA1E0FCCBE00B9C6A1 /* SaveRIB.h */,
+				9218BDCB1E0FCCBE00B9C6A1 /* SaveTiff.cpp */,
+				9218BDCC1E0FCCBE00B9C6A1 /* SaveTiff.h */,
+				9218BDCD1E0FCCBE00B9C6A1 /* ShapeStack.cpp */,
+				9218BDCE1E0FCCBE00B9C6A1 /* ShapeStack.h */,
+				9218BDCF1E0FCCBE00B9C6A1 /* StreamCtrl.cpp */,
+				9218BDD01E0FCCBE00B9C6A1 /* StreamCtrl.h */,
+				9218BDD11E0FCCBE00B9C6A1 /* TextureCtrl.cpp */,
+				9218BDD21E0FCCBE00B9C6A1 /* TextureCtrl.h */,
+				9218BDD31E0FCCBE00B9C6A1 /* Util.cpp */,
+				9218BDD41E0FCCBE00B9C6A1 /* Util.h */,
+				9213EBA01B12E3E00023FEDA /* GlobalHeader.h */,
+				9213EBA11B12E3E00023FEDA /* main.cpp */,
+			);
+			name = sources;
+			sourceTree = "<group>";
+		};
+		9218BDF31E0FCCDD00B9C6A1 /* libtiff */ = {
+			isa = PBXGroup;
+			children = (
+				9218BDF41E0FCCEF00B9C6A1 /* t4.h */,
+				9218BDF51E0FCCEF00B9C6A1 /* tif_config.h */,
+				9218BDF61E0FCCEF00B9C6A1 /* tif_config.vc.h */,
+				9218BDF71E0FCCEF00B9C6A1 /* tif_config.wince.h */,
+				9218BDF81E0FCCEF00B9C6A1 /* tif_dir.h */,
+				9218BDF91E0FCCEF00B9C6A1 /* tif_fax3.h */,
+				9218BDFA1E0FCCEF00B9C6A1 /* tif_predict.h */,
+				9218BDFB1E0FCCEF00B9C6A1 /* tiff.h */,
+				9218BDFC1E0FCCEF00B9C6A1 /* tiffconf.h */,
+				9218BDFD1E0FCCEF00B9C6A1 /* tiffconf.vc.h */,
+				9218BDFE1E0FCCEF00B9C6A1 /* tiffconf.wince.h */,
+				9218BDFF1E0FCCEF00B9C6A1 /* tiffio.h */,
+				9218BE001E0FCCEF00B9C6A1 /* tiffio.hxx */,
+				9218BE011E0FCCEF00B9C6A1 /* tiffiop.h */,
+				9218BE021E0FCCEF00B9C6A1 /* tiffvers.h */,
+				9218BE031E0FCCEF00B9C6A1 /* uvcode.h */,
+			);
+			name = libtiff;
+			sourceTree = "<group>";
+		};
+		B8F429BB04BCB35A00A80009 /* plists */ = {
+			isa = PBXGroup;
+			children = (
+				9218BDB51E0FCC7900B9C6A1 /* RIBExporter.info.plist */,
+			);
+			name = plists;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		FFE6EF591A6667E60006CB66 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9218BE091E0FCCEF00B9C6A1 /* tif_fax3.h in Headers */,
+				9218BE041E0FCCEF00B9C6A1 /* t4.h in Headers */,
+				9218BDE21E0FCCBE00B9C6A1 /* MathUtil.h in Headers */,
+				9218BE0F1E0FCCEF00B9C6A1 /* tiffio.h in Headers */,
+				9218BE131E0FCCEF00B9C6A1 /* uvcode.h in Headers */,
+				9218BDE81E0FCCBE00B9C6A1 /* SaveRIB.h in Headers */,
+				9218BDE61E0FCCBE00B9C6A1 /* RIBExporterInterface.h in Headers */,
+				9218BDE41E0FCCBE00B9C6A1 /* PolygonMeshCtrl.h in Headers */,
+				9218BE121E0FCCEF00B9C6A1 /* tiffvers.h in Headers */,
+				9218BDE01E0FCCBE00B9C6A1 /* MaterialCtrl.h in Headers */,
+				9218BE051E0FCCEF00B9C6A1 /* tif_config.h in Headers */,
+				9218BE101E0FCCEF00B9C6A1 /* tiffio.hxx in Headers */,
+				9218BDEE1E0FCCBE00B9C6A1 /* StreamCtrl.h in Headers */,
+				9218BE081E0FCCEF00B9C6A1 /* tif_dir.h in Headers */,
+				9218BDDE1E0FCCBE00B9C6A1 /* LightCtrl.h in Headers */,
+				9213EBA61B12E3E00023FEDA /* GlobalHeader.h in Headers */,
+				9218BDD81E0FCCBE00B9C6A1 /* AttributeWindowInterface.h in Headers */,
+				9218BE0B1E0FCCEF00B9C6A1 /* tiff.h in Headers */,
+				9218BDEA1E0FCCBE00B9C6A1 /* SaveTiff.h in Headers */,
+				9218BE0A1E0FCCEF00B9C6A1 /* tif_predict.h in Headers */,
+				9218BDF21E0FCCBE00B9C6A1 /* Util.h in Headers */,
+				9218BDDC1E0FCCBE00B9C6A1 /* CameraCtrl.h in Headers */,
+				9218BE111E0FCCEF00B9C6A1 /* tiffiop.h in Headers */,
+				9218BDDA1E0FCCBE00B9C6A1 /* BackgroundTexture.h in Headers */,
+				9218BE0D1E0FCCEF00B9C6A1 /* tiffconf.vc.h in Headers */,
+				9218BE0C1E0FCCEF00B9C6A1 /* tiffconf.h in Headers */,
+				9218BDD61E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.h in Headers */,
+				9218BE071E0FCCEF00B9C6A1 /* tif_config.wince.h in Headers */,
+				9218BDF01E0FCCBE00B9C6A1 /* TextureCtrl.h in Headers */,
+				9218BE0E1E0FCCEF00B9C6A1 /* tiffconf.wince.h in Headers */,
+				9218BE061E0FCCEF00B9C6A1 /* tif_config.vc.h in Headers */,
+				9218BDEC1E0FCCBE00B9C6A1 /* ShapeStack.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		FFE6EF581A6667E60006CB66 /* RIBExporter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFE6EF831A6667E60006CB66 /* Build configuration list for PBXNativeTarget "RIBExporter" */;
+			buildPhases = (
+				FFE6EF591A6667E60006CB66 /* Headers */,
+				FFE6EF5C1A6667E60006CB66 /* Resources */,
+				FFE6EF5F1A6667E60006CB66 /* Sources */,
+				FF39F5911A667C8A00E09111 /* CopyFiles */,
+				FFE6EF781A6667E60006CB66 /* Frameworks */,
+				FF39F5941A66864400E09111 /* ShellScript */,
+				FFE6EF811A6667E60006CB66 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RIBExporter;
+			productName = multi_plugin;
+			productReference = FFE6EF871A6667E60006CB66 /* RIBExporter.shdplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = A31F017D08BD30B100C322BE /* Build configuration list for PBXProject "Template" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				de,
+				en,
+				es,
+				fr,
+				ja,
+				zh_CN,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* xplugins */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FFE6EF581A6667E60006CB66 /* RIBExporter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FFE6EF5C1A6667E60006CB66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFE6EF5D1A6667E60006CB66 /* shdplugin.icns in Resources */,
+				9218BDB61E0FCC7900B9C6A1 /* RIBExporter.info.plist in Resources */,
+				FFE6EF5E1A6667E60006CB66 /* sxuls in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FF39F5941A66864400E09111 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change $TARGET_BUILD_DIR/$EXECUTABLE_PATH";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FFE6EF5F1A6667E60006CB66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9218BDE71E0FCCBE00B9C6A1 /* SaveRIB.cpp in Sources */,
+				FFE6EF611A6667E60006CB66 /* com.cpp in Sources */,
+				9218BDE51E0FCCBE00B9C6A1 /* RIBExporterInterface.cpp in Sources */,
+				FFE6EF6A1A6667E60006CB66 /* vectors.cpp in Sources */,
+				9218BDD71E0FCCBE00B9C6A1 /* AttributeWindowInterface.cpp in Sources */,
+				9218BDDF1E0FCCBE00B9C6A1 /* MaterialCtrl.cpp in Sources */,
+				9218BDEB1E0FCCBE00B9C6A1 /* ShapeStack.cpp in Sources */,
+				9218BDD91E0FCCBE00B9C6A1 /* BackgroundTexture.cpp in Sources */,
+				9213EBA71B12E3E00023FEDA /* main.cpp in Sources */,
+				9218BDE31E0FCCBE00B9C6A1 /* PolygonMeshCtrl.cpp in Sources */,
+				9218BDEF1E0FCCBE00B9C6A1 /* TextureCtrl.cpp in Sources */,
+				9218BDF11E0FCCBE00B9C6A1 /* Util.cpp in Sources */,
+				9218BDDB1E0FCCBE00B9C6A1 /* CameraCtrl.cpp in Sources */,
+				9218BDE11E0FCCBE00B9C6A1 /* MathUtil.cpp in Sources */,
+				9218BDDD1E0FCCBE00B9C6A1 /* LightCtrl.cpp in Sources */,
+				9218BDE91E0FCCBE00B9C6A1 /* SaveTiff.cpp in Sources */,
+				9218BDD51E0FCCBE00B9C6A1 /* AreaLightAttributeInterface.cpp in Sources */,
+				FFE6EF741A6667E60006CB66 /* debug.cpp in Sources */,
+				9218BDED1E0FCCBE00B9C6A1 /* StreamCtrl.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A31F019408BD316A00C322BE /* sxuls */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A31F019508BD316A00C322BE /* en */,
+				A31F01A808BD318900C322BE /* ja */,
+				A31F01B308BD319F00C322BE /* zh_CN */,
+			);
+			name = sxuls;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A31F017E08BD30B100C322BE /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C724213318B32DA30083BD68 /* config.plugins.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(MACROS)",
+				);
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
+			};
+			name = Development;
+		};
+		A31F017F08BD30B100C322BE /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C724213318B32DA30083BD68 /* config.plugins.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(MACROS)",
+				);
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
+			};
+			name = Deployment;
+		};
+		A31F018008BD30B100C322BE /* Default */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C724213318B32DA30083BD68 /* config.plugins.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(MACROS)",
+				);
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
+				ONLY_ACTIVE_ARCH = NO;
+			};
+			name = Default;
+		};
+		FFE6EF841A6667E60006CB66 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+					../../libtiff/include,
+				);
+				INFOPLIST_FILE = plists/RIBExporter.Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../libtiff/lib/mac;
+				LIBRARY_STYLE = Bundle;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = RIBExporter;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		FFE6EF851A6667E60006CB66 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+					../../libtiff/include,
+				);
+				INFOPLIST_FILE = plists/RIBExporter.Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../libtiff/lib/mac;
+				LIBRARY_STYLE = Bundle;
+				PRODUCT_NAME = RIBExporter;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		FFE6EF861A6667E60006CB66 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAINPATH)",
+					"$(BOOSTPATH)",
+					"$(INCLUDEPATH)",
+					"$(COMMONPATH)",
+					"$(INCLUDEPATH)/openexr-1.6.1/macos",
+					"$(INCLUDEPATH)/openexr-1.6.1/**",
+					../../libtiff/include,
+				);
+				INFOPLIST_FILE = plists/RIBExporter.Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../libtiff/lib/mac;
+				LIBRARY_STYLE = Bundle;
+				PRODUCT_NAME = RIBExporter;
+				SDKROOT = macosx10.9;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-w";
+				WRAPPER_EXTENSION = shdplugin;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A31F017D08BD30B100C322BE /* Build configuration list for PBXProject "Template" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A31F017E08BD30B100C322BE /* Development */,
+				A31F017F08BD30B100C322BE /* Deployment */,
+				A31F018008BD30B100C322BE /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		FFE6EF831A6667E60006CB66 /* Build configuration list for PBXNativeTarget "RIBExporter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFE6EF841A6667E60006CB66 /* Development */,
+				FFE6EF851A6667E60006CB66 /* Deployment */,
+				FFE6EF861A6667E60006CB66 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

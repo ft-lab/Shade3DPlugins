@@ -19,6 +19,13 @@ public:
 
 public:
 	CPxrMaterialBase ();
+	virtual ~CPxrMaterialBase ();
+
+	CPxrMaterialBase (const CPxrMaterialBase& v);
+    CPxrMaterialBase& operator = (const CPxrMaterialBase &v) {
+        this->name = v.name;
+        return (*this);
+    }
 
 	/**
 	 * 情報のクリア.
@@ -38,6 +45,14 @@ public:
 
 public:
 	CPxrMaterialDiffuse ();
+	virtual ~CPxrMaterialDiffuse ();
+	CPxrMaterialDiffuse (const CPxrMaterialDiffuse& v);
+    CPxrMaterialDiffuse& operator = (const CPxrMaterialDiffuse &v) {
+        this->diffuseColor = v.diffuseColor;
+        this->transmissionColor = v.transmissionColor;
+        this->presence = v.presence;
+        return (*this);
+    }
 
 	/**
 	 * 情報のクリア.
@@ -65,7 +80,23 @@ public:
 
 public:
 	CPxrMaterialDisney ();
-
+	virtual ~CPxrMaterialDisney ();
+	CPxrMaterialDisney (const CPxrMaterialDisney& v);
+    CPxrMaterialDisney& operator = (const CPxrMaterialDisney &v) {
+        this->baseColor = v.baseColor;
+        this->emitColor = v.emitColor;
+        this->subsurface = v.subsurface;
+        this->subsurfaceColor = v.subsurfaceColor;
+        this->metallic = v.metallic;
+        this->specular = v.specular;
+        this->specularTint = v.specularTint;
+        this->roughness = v.roughness;
+        this->anisotropic = v.anisotropic;
+        this->sheen = v.sheen;
+        this->sheenTint = v.sheenTint;
+        return (*this);
+    }
+	
 	/**
 	 * 情報のクリア.
 	 */
@@ -89,6 +120,19 @@ public:
 
 public:
 	CPxrMaterialGlass ();
+	virtual ~CPxrMaterialGlass ();
+	CPxrMaterialGlass (const CPxrMaterialGlass& v);
+    CPxrMaterialGlass& operator = (const CPxrMaterialGlass &v) {
+        this->ior = v.ior;
+        this->roughness = v.roughness;
+        this->reflectionColor = v.reflectionColor;
+        this->reflectionGain = v.reflectionGain;
+        this->transmissionColor = v.transmissionColor;
+        this->transmissionGain = v.transmissionGain;
+        this->absorptionGain = v.absorptionGain;
+        this->absorptionColor = v.absorptionColor;
+        return (*this);
+    }
 
 	/**
 	 * 情報のクリア.
@@ -106,6 +150,12 @@ public:
 
 public:
 	CPxrMaterialConstant ();
+	virtual ~CPxrMaterialConstant ();
+	CPxrMaterialConstant (const CPxrMaterialConstant& v);
+    CPxrMaterialConstant& operator = (const CPxrMaterialConstant &v) {
+        this->emitColor = v.emitColor;
+        return (*this);
+    }
 
 	/**
 	 * 情報のクリア.

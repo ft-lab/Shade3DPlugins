@@ -17,6 +17,15 @@ CPxrMaterialBase::CPxrMaterialBase ()
 	name = "";
 }
 
+CPxrMaterialBase::~CPxrMaterialBase ()
+{
+}
+
+CPxrMaterialBase::CPxrMaterialBase (const CPxrMaterialBase& v)
+{
+	this->name = v.name;
+}
+
 /**
  * RenderManでのマテリアル情報 (PxrDiffuse).
  */
@@ -24,6 +33,18 @@ CPxrMaterialDiffuse::CPxrMaterialDiffuse ()
 {
 	name = "PxrDiffuse";
 	Clear();
+}
+
+CPxrMaterialDiffuse::~CPxrMaterialDiffuse ()
+{
+}
+
+CPxrMaterialDiffuse::CPxrMaterialDiffuse (const CPxrMaterialDiffuse& v)
+{
+	this->name = v.name;
+	this->diffuseColor = v.diffuseColor;
+	this->transmissionColor = v.transmissionColor;
+	this->presence = v.presence;
 }
 
 void CPxrMaterialDiffuse::Clear ()
@@ -41,6 +62,9 @@ CPxrMaterialDisney::CPxrMaterialDisney ()
 	name = "PxrDisney";
 	Clear();
 }
+CPxrMaterialDisney::~CPxrMaterialDisney ()
+{
+}
 
 void CPxrMaterialDisney::Clear ()
 {
@@ -57,6 +81,22 @@ void CPxrMaterialDisney::Clear ()
 	sheenTint       = 0.5f;
 }
 
+CPxrMaterialDisney::CPxrMaterialDisney (const CPxrMaterialDisney& v)
+{
+	this->name = v.name;
+	this->baseColor = v.baseColor;
+	this->emitColor = v.emitColor;
+	this->subsurface = v.subsurface;
+	this->subsurfaceColor = v.subsurfaceColor;
+	this->metallic = v.metallic;
+	this->specular = v.specular;
+	this->specularTint = v.specularTint;
+	this->roughness = v.roughness;
+	this->anisotropic = v.anisotropic;
+	this->sheen = v.sheen;
+	this->sheenTint = v.sheenTint;
+}
+
 /**
  * RenderManでのマテリアル情報 (PxrGlass).
  */
@@ -64,6 +104,22 @@ CPxrMaterialGlass::CPxrMaterialGlass ()
 {
 	name = "PxrGlass";
 	Clear();
+}
+CPxrMaterialGlass::~CPxrMaterialGlass ()
+{
+}
+
+CPxrMaterialGlass::CPxrMaterialGlass (const CPxrMaterialGlass& v)
+{
+	this->name = v.name;
+	this->ior = v.ior;
+	this->roughness = v.roughness;
+	this->reflectionColor = v.reflectionColor;
+	this->reflectionGain = v.reflectionGain;
+	this->transmissionColor = v.transmissionColor;
+	this->transmissionGain = v.transmissionGain;
+	this->absorptionGain = v.absorptionGain;
+	this->absorptionColor = v.absorptionColor;
 }
 
 void CPxrMaterialGlass::Clear ()
@@ -86,7 +142,13 @@ CPxrMaterialConstant::CPxrMaterialConstant ()
 	name = "PxrConstant";
 	Clear();
 }
-
+CPxrMaterialConstant::~CPxrMaterialConstant ()
+{
+}
+CPxrMaterialConstant::CPxrMaterialConstant (const CPxrMaterialConstant& v)
+{
+	this->emitColor = v.emitColor;
+}
 void CPxrMaterialConstant::Clear ()
 {
 	emitColor = sxsdk::rgb_class(1, 1, 1);
