@@ -2,7 +2,8 @@
 <dialog default_button="true" title="RIB Export">
 	<tab id="100" label="RIB Export">
 		<vbox id="200" label="Rendering">
-			<selection id="201" label="Integrators:|PxrPathTracer|PxrVCM|PxrDirectLighting" />
+			<selection id="209" label="Version:|20.x|21.x" />
+			<selection id="201" label="Integrators:|PxrPathTracer|PxrVCM|PxrDirectLighting|PxrOcclusion" />
 			<float id="202" label="PixelVariance:" />
 			<int id="203" label="minsamples:" />
 			<int id="204" label="maxsamples:" />

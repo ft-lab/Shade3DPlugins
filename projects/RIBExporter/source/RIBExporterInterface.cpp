@@ -17,6 +17,7 @@ enum
 	dlg_bias_id = 206,
 	dlg_max_diffuse_depth_id = 207,
 	dlg_max_specular_depth_id = 208,
+	dlg_version_id = 209,						// Version : 0(ver.20.x)、1(ver.21.x).
 	dlg_rendering_format_type_id = 221,			// レンダリング画像のフォーマットの種類.
 	dlg_rendering_image_type_id = 222,			// レンダリング画像のピクセルの種類.
 
@@ -355,6 +356,11 @@ void CRIBExporterInterface::load_dialog_data (sxsdk::dialog_interface &d, void *
 	}
 	{
 		sxsdk::dialog_item_class* item;
+		item = &(d.get_dialog_item(dlg_version_id));
+		item->set_selection(m_data.prmanVersion);
+	}
+	{
+		sxsdk::dialog_item_class* item;
 		item = &(d.get_dialog_item(dlg_rendering_format_type_id));
 		item->set_selection((int)m_data.renderingFormatType);
 	}
@@ -476,6 +482,10 @@ bool CRIBExporterInterface::respond (sxsdk::dialog_interface &dialog, sxsdk::dia
 	}
 	if (id == dlg_max_specular_depth_id) {
 		m_data.maxSpecularDepth = item.get_int();
+		return true;
+	}
+	if (id == dlg_version_id) {
+		m_data.prmanVersion = item.get_selection();
 		return true;
 	}
 	if (id == dlg_rendering_format_type_id) {

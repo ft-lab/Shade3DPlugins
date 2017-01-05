@@ -134,7 +134,7 @@ namespace LightCtrl
 	/**
 	 * Shade 3Dでの光源情報より、RIS向けにコンバート.
 	 */
-	void ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight);
+	void ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight, const bool ver21 = false);
 
 	/**
 	 * 指定の面光源情報を取得.

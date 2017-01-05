@@ -63,6 +63,9 @@ void StreamCtrl::SaveRIBExportDlg (sxsdk::scene_interface* scene, const RIBExpor
 		iDat = data.doSubdivision ? 1 : 0;
 		stream->write_int(iDat);
 
+		// ver.1.0.0.5 -.
+		stream->write_int(data.prmanVersion);
+
 	} catch (...) { }
 }
 
@@ -126,6 +129,11 @@ RIBExportData StreamCtrl::LoadRIBExportDlg (sxsdk::scene_interface* scene)
 		if (version >= RIB_EXPORT_DLG_VERSION_104) {
 			stream->read_int(iDat);
 			data.doSubdivision = iDat ? true : false;
+		}
+
+		// ver.1.0.0.5 -.
+		if (version >= RIB_EXPORT_DLG_VERSION_105) {
+			stream->read_int(data.prmanVersion);
 		}
 
 	} catch (...) { }

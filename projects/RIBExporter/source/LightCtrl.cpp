@@ -149,7 +149,7 @@ void CLightCtrl::m_StoreObjectLight (sxsdk::scene_interface* scene, sxsdk::shape
 /**
  * Shade 3Dでの光源情報より、RIS向けにコンバート.
  */
-void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight)
+void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLightInfo& lightInfo, CPxrAreaLight& pxrAreaLight, const bool ver21)
 {
 	pxrAreaLight.Clear();
 
@@ -161,13 +161,17 @@ void LightCtrl::ConvAreaLightShade3DToRIS (sxsdk::shade_interface& shade, CLight
 
 	if (lightInfo.lightType == light_type_point) {
 		// 点光源の場合は、半径10.0の球としたときの表面積を計算.
-		const double r = (double)lightInfo.pointSphereRadius;
-		area = 4.0 * sx::pi * (r * r);
+		if (ver21) {
+			area = sx::pi;
+		} else {
+			const double r = (double)lightInfo.pointSphereRadius;
+			area = 4.0 * sx::pi * (r * r);
+		}
 
 	} else if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
 		// スポットライトの場合は、半径10.0の円としたときの表面積を計算.
 		// 平行光源の場合は、円の表面積を計算.
-		const double r = (double)lightInfo.diskRadius;
+		const double r = ver21 ? 1.0 : (double)lightInfo.diskRadius;
 		area = sx::pi * (r * r);
 	}
 

@@ -25,7 +25,8 @@
 #define RIB_EXPORT_DLG_VERSION_100		0x100		// RIB Export Dialogのバージョン.
 #define RIB_EXPORT_DLG_VERSION_101		0x101		// ver.1.0.0.1 - .
 #define RIB_EXPORT_DLG_VERSION_104		0x104		// ver.1.0.0.4 - .
-#define RIB_EXPORT_DLG_VERSION			0x104		// current (ver.1.0.0.4 - ).
+#define RIB_EXPORT_DLG_VERSION_105		0x105		// ver.1.0.0.5 - .
+#define RIB_EXPORT_DLG_VERSION			0x105		// current (ver.1.0.0.5 - ).
 
 #define RIB_MATERIAL_VERSION_100		0x100		// Materialのバージョン.
 #define RIB_MATERIAL_VERSION_102		0x102		// ver.1.0.0.2 - 
@@ -43,6 +44,7 @@ namespace RIBParam
 		pxrPathTracer = 0,			// 単方向パストレース.
 		pxrVCM,						// 双方向パストレース.
 		pxrDirectLighting,			// 直接照明のみ.
+		pxrOcclusion,				// Ambient Occlusuion.
 	};
 
 	/**
@@ -118,6 +120,7 @@ public:
 	bool statisticsXMLFile;										// XMLファイルを出力.
 
 	bool doSubdivision;											// サブディビジョンする場合はtrue.
+	int prmanVersion;											// RenderManのバージョン（0:20.x、1:21.x）.
 
 public:
 	RIBExportData () {
@@ -133,6 +136,7 @@ public:
 		bias                = 0.001f;
 		maxDiffuseDepth     = 5;
 		maxSpecularDepth    = 10;
+		prmanVersion        = 1;
 
 		renderingFormatType = RIBParam::tiff;
 		renderingImageType  = RIBParam::image_rgb;

@@ -163,6 +163,21 @@ CPxrMaterialVolume::CPxrMaterialVolume ()
 	Clear();
 }
 
+CPxrMaterialVolume::~CPxrMaterialVolume ()
+{
+}
+CPxrMaterialVolume::CPxrMaterialVolume (const CPxrMaterialVolume& v)
+{
+	this->diffuseColor = v.diffuseColor;
+	this->emitColor    = v.emitColor;
+	this->densityColor = v.densityColor;
+	this->densityFloat = v.densityFloat;
+	this->densityScale = v.densityScale;
+	this->anisotropy   = v.anisotropy;
+	this->maxDensity   = v.maxDensity;
+	this->multiScatter = v.multiScatter;
+}
+
 void CPxrMaterialVolume::Clear ()
 {
 	diffuseColor = sxsdk::rgb_class(1, 1, 1);
@@ -267,11 +282,15 @@ void CMaterialInfo::Clear ()
 	normalLayer.clear();
 	trimLayer.clear();
 	volumeDistanceLayer.clear();
+	reflectionLayer.clear();
+	roughnessLayer.clear();
 
 	ribDiffusePatternName = "";
 	ribNormalPatternName  = "";
 	ribTrimPatternName    = "";
 	ribVolumeDistancePatternName = "";
+	ribReflectionPatternName = "";
+	ribRoughnessPatternName = "";
 }
 
 /**
@@ -363,7 +382,14 @@ void CMaterialInfo::m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface
 				} else if (type == sxsdk::enums::volume_distance_mapping) {
 					volumeDistanceLayer.push_back(CMaterialMappingLayerInfo());
 					layerInfo = &(volumeDistanceLayer.back());
+				} else if (type == sxsdk::enums::reflection_mapping) {
+					reflectionLayer.push_back(CMaterialMappingLayerInfo());
+					layerInfo = &(reflectionLayer.back());
+				} else if (type == sxsdk::enums::roughness_mapping) {
+					roughnessLayer.push_back(CMaterialMappingLayerInfo());
+					layerInfo = &(roughnessLayer.back());
 				}
+				
 				if (layerInfo) {
 					layerInfo->patternType  = pattern;
 					layerInfo->color        = mappingLayer.get_mapping_color();
@@ -421,6 +447,28 @@ void CMaterialInfo::m_SetMaterial (sxsdk::scene_interface* scene, sxsdk::surface
 			if (type == sxsdk::enums::volume_distance_mapping) {
 				volumeDistanceLayer.push_back(CMaterialMappingLayerInfo());
 				CMaterialMappingLayerInfo& layerInfo = volumeDistanceLayer.back();
+				layerInfo.patternType  = sxsdk::enums::image_pattern;
+				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
+				layerInfo.repeatX      = mappingLayer.get_repetition_X();
+				layerInfo.repeatY      = mappingLayer.get_repetition_Y();
+				layerInfo.flipColor    = mappingLayer.get_flip_color();
+				layerInfo.weight       = mappingLayer.get_weight();
+			}
+			
+			if (type == sxsdk::enums::reflection_mapping) {
+				reflectionLayer.push_back(CMaterialMappingLayerInfo());
+				CMaterialMappingLayerInfo& layerInfo = reflectionLayer.back();
+				layerInfo.patternType  = sxsdk::enums::image_pattern;
+				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
+				layerInfo.repeatX      = mappingLayer.get_repetition_X();
+				layerInfo.repeatY      = mappingLayer.get_repetition_Y();
+				layerInfo.flipColor    = mappingLayer.get_flip_color();
+				layerInfo.weight       = mappingLayer.get_weight();
+			}
+			
+			if (type == sxsdk::enums::roughness_mapping) {
+				roughnessLayer.push_back(CMaterialMappingLayerInfo());
+				CMaterialMappingLayerInfo& layerInfo = roughnessLayer.back();
 				layerInfo.patternType  = sxsdk::enums::image_pattern;
 				layerInfo.textureIndex = Util::GetMasterImageIndex(scene, image);
 				layerInfo.repeatX      = mappingLayer.get_repetition_X();

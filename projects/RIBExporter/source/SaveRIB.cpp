@@ -254,6 +254,12 @@ void CSaveRIB::m_WriteHeader ()
 				case RIBParam::pxrDirectLighting:
 					typeStr = "PxrDirectLighting";
 					break;
+					
+				case RIBParam::pxrOcclusion:
+					if (m_dlgData.prmanVersion >= 1) {
+						typeStr = "PxrOcclusion";
+					}
+					break;
 			}
 
 			std::stringstream s;
@@ -603,6 +609,8 @@ void CSaveRIB::m_WriteMasterSurfaceMaterials (sxsdk::scene_interface* scene)
 		material.ribDiffusePatternName = m_WriteMaterialRGB(material.name, "diffuse", material.diffuseLayer, material.diffuseColor, diffuseFirst);
 		material.ribNormalPatternName  = m_WriteMaterialNormal(material.name, "normal", material.normalLayer);
 		material.ribVolumeDistancePatternName = m_WriteMaterialVolumeDistance(material.name, "volumeDistance", material.volumeDistanceLayer);
+		material.ribReflectionPatternName = m_WriteMaterialReflection(material.name, "reflection", material.reflectionLayer);
+		material.ribRoughnessPatternName = m_WriteMaterialRoughness(material.name, "roughness", material.roughnessLayer);
 
 		// 「アルファ透明」も加味した透明度データ.
 		std::string alphaTransTexName = "";
@@ -720,6 +728,8 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 	std::string normalPatternName         = "";
 	std::string trimPatternName           = "";
 	std::string volumeDistancePatternName = "";
+	std::string reflectionPatternName     = "";
+	std::string roughnessPatternName      = "";
 
 	if (pCurrentMasterSurface) {
 		// すでに出力したmaster surface情報から参照.
@@ -730,6 +740,8 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				normalPatternName         = material.ribNormalPatternName;
 				trimPatternName           = material.ribTrimPatternName;
 				volumeDistancePatternName = material.ribVolumeDistancePatternName;
+				reflectionPatternName     = material.ribReflectionPatternName;
+				roughnessPatternName      = material.ribRoughnessPatternName;
 				break;
 			}
 		}
@@ -741,6 +753,9 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 		std::string alphaTransTexName = "";
 		if (material.transparentAlpha) alphaTransTexName = diffuseFirst;
 		trimPatternName    = m_WriteMaterialTrim(materialName, "trim", material.trimLayer, alphaTransTexName);
+		
+		reflectionPatternName = m_WriteMaterialReflection(material.name, "reflection", material.reflectionLayer);
+		roughnessPatternName  = m_WriteMaterialRoughness(material.name, "roughness", material.roughnessLayer);
 	}
 
 	switch (risMaterialInfo.type) {
@@ -806,26 +821,42 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				s << "  \"color emitColor\" [" << emitCol.red << " " << emitCol.green << " " << emitCol.blue << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			{
+			
+			if (reflectionPatternName.size() > 0) {
+				std::stringstream s;
+				s << "  \"reference float metallic\" [\"" << reflectionPatternName << ":resultR\"]";
+				m_WriteLine(s.str().c_str());
+			} else {
 				std::stringstream s;
 				s << "  \"float metallic\" [" << risMaterialInfo.pxrDisney.metallic << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			{
+			
+			if (roughnessPatternName.size() > 0) {
+				std::stringstream s;
+				s << "  \"reference float roughness\" [\"" << roughnessPatternName << ":resultR\"]";
+				m_WriteLine(s.str().c_str());
+			} else {
 				std::stringstream s;
 				s << "  \"float roughness\" [" << risMaterialInfo.pxrDisney.roughness << "]";
 				m_WriteLine(s.str().c_str());
 			}
+			
 			{
 				std::stringstream s;
 				s << "  \"float anisotropic\" [" << risMaterialInfo.pxrDisney.anisotropic << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			{
+			if (reflectionPatternName.size() > 0) {
+				std::stringstream s;
+				s << "  \"reference float specular\" [\"" << reflectionPatternName << ":resultR\"]";
+				m_WriteLine(s.str().c_str());
+			} else {
 				std::stringstream s;
 				s << "  \"float specular\" [" << risMaterialInfo.pxrDisney.specular << "]";
 				m_WriteLine(s.str().c_str());
 			}
+			
 			if (!sx::zero(risMaterialInfo.pxrDisney.specularTint)) {
 				std::stringstream s;
 				s << "  \"float specularTint\" [" << risMaterialInfo.pxrDisney.specularTint << "]";
@@ -858,13 +889,19 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 			const sxsdk::rgb_class transCol        = m_CalcLinearColor(risMaterialInfo.pxrGlass.transmissionColor);
 			const sxsdk::rgb_class absorptionCol   = m_CalcLinearColor(risMaterialInfo.pxrGlass.absorptionColor);
 
+			{
+				std::stringstream s;
+				s << "Bxdf \"PxrGlass\" \"" << materialName << "\"";
+				m_WriteLine(s.str().c_str());
+			}
+			
 			if (diffusePatternName.size() > 0) {
 				std::stringstream s;
-				s << "Bxdf \"PxrGlass\" \"" << materialName << "\" \"reference color reflectionColor\" [\"" << diffusePatternName << ":resultRGB\"]";
+				s << "  \"reference color reflectionColor\" [\"" << diffusePatternName << ":resultRGB\"]";
 				m_WriteLine(s.str().c_str());
 			} else {
 				std::stringstream s;
-				s << "Bxdf \"PxrGlass\" \"" << materialName << "\" \"color reflectionColor\" [" << reflectionCol.red << " " << reflectionCol.green << " " << reflectionCol.blue << "]";
+				s << "  \"color reflectionColor\" [" << reflectionCol.red << " " << reflectionCol.green << " " << reflectionCol.blue << "]";
 				m_WriteLine(s.str().c_str());
 			}
 
@@ -879,12 +916,17 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 				s << "  \"float ior\" [" << risMaterialInfo.pxrGlass.ior << "]";
 				m_WriteLine(s.str().c_str());
 			}
-			{
+
+			if (roughnessPatternName.size() > 0) {
+				std::stringstream s;
+				s << "  \"reference float roughness\" [\"" << roughnessPatternName << ":resultR\"]";
+				m_WriteLine(s.str().c_str());
+			} else {
 				std::stringstream s;
 				s << "  \"float roughness\" [" << risMaterialInfo.pxrGlass.roughness << "]";
 				m_WriteLine(s.str().c_str());
 			}
-
+			
 			{
 				std::stringstream s;
 				s << "  \"color transmissionColor\" [" << transCol.red << " " << transCol.green << " " << transCol.blue << "]";
@@ -1004,7 +1046,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 /**
  * マテリアル出力時に、テクスチャの繰り返しや色反転などが存在する場合のPxrManifold2D出力.
  * @param[in]  materialName  マスターサーフェス名.
- * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim）.
+ * @param[in]  typeName      マテリアルの種類（diffuse/bump/normal/trim/reflection/roughness）.
  * @param[in]  mappingLayer  マテリアルのマッピングレイヤリスト.
  * @param[in]  layerIndex    マテリアルのマッピングレイヤ番号.
  * @return RGBを持つパターン名.
@@ -1018,8 +1060,11 @@ std::string CSaveRIB::m_WriteMaterialTexture (const std::string& materialName, c
 	// テクスチャファイル名からテクスチャ名を取得（ファイル拡張子はカット）.
 	const std::string textureName = m_GetTextureName(layerInfo.textureIndex, false);
 
+	bool flipColor = layerInfo.flipColor;
+	if (typeName == "roughness") flipColor = !flipColor;
+	
 	std::string retName = textureName;
-	if (layerInfo.repeatX == 1 && layerInfo.repeatY == 1 && !layerInfo.flipColor) return retName;
+	if (layerInfo.repeatX == 1 && layerInfo.repeatY == 1 && !flipColor) return retName;
 
 	const std::string patternName = materialName + std::string("_") + typeName;
 
@@ -1050,7 +1095,7 @@ std::string CSaveRIB::m_WriteMaterialTexture (const std::string& materialName, c
 		m_WriteLine(s.str());
 	}
 
-	if (!layerInfo.flipColor) return retName;
+	if (!flipColor) return retName;
 
 	// 色反転.
 	const std::string invertName = retName + std::string("_invert");
@@ -1379,6 +1424,34 @@ std::string CSaveRIB::m_WriteMaterialNormal (const std::string& materialName, co
 }
 
 /**
+ * マルチレイヤに対応したマテリアルの出力（Reflection）.
+ */
+std::string CSaveRIB::m_WriteMaterialReflection (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	std::string diffuseFirst;
+	std::string retName = m_WriteMaterialRGB(materialName, typeName, mappingLayer, sxsdk::rgb_class(1, 1, 1), diffuseFirst);
+
+	return retName;
+}
+
+/**
+ * マルチレイヤに対応したマテリアルの出力（Roughness）.
+ * roughnessの場合は、Shade3Dのマッピングテクスチャを反転する必要がある.
+ */
+std::string CSaveRIB::m_WriteMaterialRoughness (const std::string& materialName, const std::string typeName, const std::vector<CMaterialMappingLayerInfo>& mappingLayer)
+{
+	const std::string patternName = materialName + "_" + typeName;
+
+	std::string diffuseFirst;
+	std::string retName = m_WriteMaterialRGB(materialName, typeName, mappingLayer, sxsdk::rgb_class(1, 1, 1), diffuseFirst);
+	if (retName == "") return "";
+
+	return retName;
+}
+
+/**
  * マテリアルの出力終了.
  */
 void CSaveRIB::m_EndWriteMaterial ()
@@ -1412,8 +1485,13 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		m_WriteLine("Rotate 90 1 0 0");
 		m_WriteLine("Scale -1 1 -1");
       
-		{
-			const float intensity = m_RIBInfo.backgroundImageIntensity;
+		const float intensity = m_RIBInfo.backgroundImageIntensity;
+
+		if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+			std::stringstream s;
+			s << "Light \"PxrDomeLight\" \"envLight\" \"string lightColorMap\" [\"" << m_backgroundTextureName << ".tiff\"] " << "\"float intensity\" [" << intensity << "]";
+			m_WriteLine(s.str());
+		} else {
 			std::stringstream s;
 			s << "AreaLightSource \"PxrEnvMapLight\" \"envLight\" \"string envmap\" [\"" << m_backgroundTextureName << ".tiff\"] " << "\"float intensity\" [" << intensity << "]";
 			m_WriteLine(s.str());
@@ -1548,7 +1626,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		CPxrAreaLight pxrAreaLightInfo;
 		if (lightInfo.shape) {
 			CLightInfo tmpLInfo = LightCtrl::GetAreaLightInfo(*lightInfo.shape);			// 光源情報を取得.
-			LightCtrl::ConvAreaLightShade3DToRIS(shade, tmpLInfo, pxrAreaLightInfo);		// RenderMan向けのパラメータに変換.
+			LightCtrl::ConvAreaLightShade3DToRIS(shade, tmpLInfo, pxrAreaLightInfo, m_dlgData.prmanVersion == 1 ? true : false);		// RenderMan向けのパラメータに変換.
 			if (StreamCtrl::HasRIBAreaLight(*lightInfo.shape)) {
 				pxrAreaLightInfo = StreamCtrl::LoadRIBAreaLight(*lightInfo.shape);			// streamよりPxrAreaLightの光源情報を読み込み.
 			}
@@ -1576,11 +1654,39 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 
 		if (lightInfo.lightType == light_type_ambient) {
 			if (ambient > 0.0f) {
-				std::stringstream s;
-				s << "LightSource \"ambientlight\" " << index << " \"intensity\" [" << ambient << "]";
-				m_WriteLine(s.str());
+				if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				} else {
+					std::stringstream s;
+					s << "LightSource \"ambientlight\" " << index << " \"intensity\" [" << ambient << "]";
+					m_WriteLine(s.str());
+				}
 			}
 			continue;
+		}
+
+		intensity        = pxrAreaLightInfo.intensity;
+		lightInfo.color  = pxrAreaLightInfo.lightColor;
+
+		const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
+
+		if (m_dlgData.prmanVersion == 1) {		// ver.21.xの場合は、Lightの記述をTransformBegin - TransformEnd内で書く必要あり.
+			m_WriteLine("TransformBegin");
+			m_indent++;
+
+			if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
+				// +Z方向がデフォルトのスポットライト/平行光源の向き.
+				const sxsdk::vec3 defaultDir(0, 0, 1);
+				sxsdk::mat4 m = sxsdk::mat4::rotate(lightInfo.direction, defaultDir);
+
+				m[3][0] = lightInfo.pos.x;
+				m[3][1] = lightInfo.pos.y;
+				m[3][2] = lightInfo.pos.z;
+				m_WriteMatrix(m, false);
+
+			} else if (lightInfo.lightType == light_type_point) {
+				sxsdk::mat4 m = sxsdk::mat4::translate(lightInfo.pos);
+				m_WriteMatrix(m, false);
+			}
 		}
 
 		if (lightInfo.lightType == light_type_distant) {
@@ -1595,40 +1701,59 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			ambient *= intensity;
 
 		} else {
-			{
-				std::stringstream s;
-				s << "AreaLightSource \"PxrAreaLight\" \"mylighthandle\"";
-				m_WriteLine(s.str());
-			}
+			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				if (lightInfo.lightType == light_type_area) {
+					std::stringstream s;
+					s << "Light \"PxrMeshLight\" \"" << lightInfo.shape->get_name() << "\"";
+					m_WriteLine(s.str());
+				}
 
-			if (lightInfo.lightType == light_type_spot) {
-				std::stringstream s;
-				s << "  \"string shape\" [\"spot\"]";
-				m_WriteLine(s.str());
+				if (lightInfo.lightType == light_type_spot) {
+					std::stringstream s;
+					s << "Light \"PxrDiskLight\" \"" << lightInfo.shape->get_name() << "\"";
+					m_WriteLine(s.str());
 
-			} else if (lightInfo.lightType == light_type_point) {
-				std::stringstream s;
-				s << "  \"string shape\" [\"sphere\"]";
-				m_WriteLine(s.str());
+				} else if (lightInfo.lightType == light_type_point) {
+					std::stringstream s;
+					s << "Light \"PxrSphereLight\" \"" << lightInfo.shape->get_name() << "\"";
+					m_WriteLine(s.str());
+				}
 
-			} else if (lightInfo.lightType == light_type_directional) {
-				std::stringstream s;
-				s << "  \"string shape\" [\"disk\"]";
-				m_WriteLine(s.str());
+			} else {
+				{
+					std::stringstream s;
+					s << "AreaLightSource \"PxrAreaLight\" \"mylighthandle\"";
+					m_WriteLine(s.str());
+				}
+
+				if (lightInfo.lightType == light_type_spot) {
+					std::stringstream s;
+					s << "  \"string shape\" [\"spot\"]";
+					m_WriteLine(s.str());
+
+				} else if (lightInfo.lightType == light_type_point) {
+					std::stringstream s;
+					s << "  \"string shape\" [\"sphere\"]";
+					m_WriteLine(s.str());
+
+				} else if (lightInfo.lightType == light_type_directional) {
+					std::stringstream s;
+					s << "  \"string shape\" [\"disk\"]";
+					m_WriteLine(s.str());
+				}
 			}
 		}
-
-		intensity        = pxrAreaLightInfo.intensity;
-		lightInfo.color  = pxrAreaLightInfo.lightColor;
-
-		const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
 
 		{
 			std::stringstream s;
 			s << "  \"float intensity\" [" << intensity << "]";
 			m_WriteLine(s.str());
 		}
-		{
+		if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+			std::stringstream s;
+			s << "  \"color lightColor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
+			m_WriteLine(s.str());
+		} else {
 			std::stringstream s;
 			s << "  \"color lightcolor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
 			m_WriteLine(s.str());
@@ -1658,20 +1783,62 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 
 			if (lightInfo.lightType == light_type_spot) {
-				if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
-					std::stringstream s;
-					s << "  \"float coneangle\" [" << pxrAreaLightInfo.coneAngle << "]";
-					m_WriteLine(s.str());
+				//if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
+				{
+
+					if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+						// TODO : RenderMan 21で、スポットライト角度が正しく反映されない。レンダリングすると角度が小さくレンダリングされる.
+						// 90度(cos45   = 0.7071)の場合は、(90/2) x 1.4142   = sqrt(2) で一致する.
+						// 85度(cos42.5 = 0.7372)の場合は、(85/2) x 1.447
+						// 80度(cos40   = 0.7660)の場合は、(80/2) x 1.5
+						// 75度(cos37.5 = 0.7933)の場合は、(75/2) x 1.5
+						// 70度(cos35   = 0.8191)の場合は、(70/2) x 1.57
+						// 65度(cos32.5 = 0.8433)の場合は、(65/2) x 1.6
+						// 60度(cos30   = 0.8660)の場合は、(60/2) x 1.63
+						// 55度(cos27.5 = 0.8870)の場合は、(55/2) x 1.687
+						// 50度(cos25   = 0.9063)の場合は、(50/2) x 1.74
+						// 45度(cos22.5 = 0.9238)の場合は、(45/2) x 1.786
+						// 40度(cos20   = 0.9396)の場合は、(40/2) x 1.825
+						// 35度(cos17.5 = 0.9537)の場合は、(35/2) x 1.8857
+						// 30度(cos15   = 0.9659)の場合は、(30/2) x 1.966
+						// 25度(cos12.5 = 0.9762)の場合は、(25/2) x 2.0
+						// 20度(cos10   = 0.9848)の場合は、(20/2) x 2.0
+						// 15度(cos7.5  = 0.9914)の場合は、(15/2) x 2.0
+						
+						// 線形ではない、、、。角度をcos()にして比較すると、
+						// cos((角度/2) * PI / 180.0) で、オリジナルの角度とRenderManで一致すると思われる角度を比較。
+						
+						const float angleScale = 1.0f;	//std::sqrt(2.0f);
+						std::stringstream s;
+						if (sx::zero(pxrAreaLightInfo.penumbraAngle)) {
+							s << "  \"float coneAngle\" [" << (pxrAreaLightInfo.coneAngle * angleScale) << "]";
+						} else {
+							s << "  \"float coneAngle\" [" << (std::min((pxrAreaLightInfo.coneAngle + pxrAreaLightInfo.penumbraAngle), 90.0f) * 2.0f) << "]";
+						}
+						m_WriteLine(s.str());
+
+					} else {
+						std::stringstream s;
+						s << "  \"float coneangle\" [" << pxrAreaLightInfo.coneAngle << "]";
+						m_WriteLine(s.str());
+					}
 				}
-				if (!sx::zero(pxrAreaLightInfo.penumbraExponent)) {
+				if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
 					std::stringstream s;
-					s << "  \"float penumbraexponent\" [" << pxrAreaLightInfo.penumbraExponent << "]";
+					s << "  \"float coneSoftness\" [" << (lightInfo.spotSoftness) << "]";
 					m_WriteLine(s.str());
-				}
-				if (!sx::zero(pxrAreaLightInfo.penumbraAngle - 5.0f)) {
-					std::stringstream s;
-					s << "  \"float penumbraangle\" [" << pxrAreaLightInfo.penumbraAngle << "]";
-					m_WriteLine(s.str());
+
+				} else {
+					if (!sx::zero(pxrAreaLightInfo.penumbraExponent)) {
+						std::stringstream s;
+						s << "  \"float penumbraexponent\" [" << pxrAreaLightInfo.penumbraExponent << "]";
+						m_WriteLine(s.str());
+					}
+					if (!sx::zero(pxrAreaLightInfo.penumbraAngle - 5.0f)) {
+						std::stringstream s;
+						s << "  \"float penumbraangle\" [" << pxrAreaLightInfo.penumbraAngle << "]";
+						m_WriteLine(s.str());
+					}
 				}
 			}
 			if (!sx::zero(pxrAreaLightInfo.profileRange - 180.0f)) {
@@ -1708,6 +1875,29 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				m_WriteLine(s.str());
 			}
 
+			if (m_dlgData.prmanVersion == 1) {		// ver.21.xの場合.
+				const float exposureVal = 2.0f;		// ??
+				std::stringstream s;
+				s << "  \"float exposure\" [" << exposureVal << "]";
+				m_WriteLine(s.str());
+			}
+		}
+
+		if (m_dlgData.prmanVersion == 1) {		// ver.21.xの場合.
+			if (lightInfo.lightType == light_type_area) {
+				std::stringstream s;
+				s << "Polygon \"P\" [";
+
+				const int vCou = lightInfo.areaLightPos.size();
+				for (int i = 0; i < vCou; i++) {
+					const sxsdk::vec3& v = lightInfo.areaLightPos[i];
+					s << v.x << " " << v.y << " " << -v.z << "  ";
+				}
+				s << "]";
+				m_WriteLine(s.str());
+			}
+
+		} else {								// ver.20以前の場合.
 			m_WriteLine("TransformBegin");
 			m_indent++;
 
@@ -1770,6 +1960,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				m_WriteLine(s.str());
 			}
 
+			m_indent--;
+			m_WriteLine("TransformEnd");
+		}
+
+		if (m_dlgData.prmanVersion == 1) {		// ver.21.xの場合.
 			m_indent--;
 			m_WriteLine("TransformEnd");
 		}
