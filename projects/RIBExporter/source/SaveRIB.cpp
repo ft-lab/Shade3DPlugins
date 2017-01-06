@@ -30,6 +30,13 @@ namespace {
 	bool CheckColorWhite (const sxsdk::rgb_class& col) {
 		return (sx::zero(col.red - 1.0f) && sx::zero(col.green - 1.0f) && sx::zero(col.blue - 1.0f));
 	}
+
+	// RenderMan 21で、PxrDiskLightのconeAngleを補間する計算.
+	float ConvDiskLightConeAngle (const float angle) {
+		const float cosV = std::max(std::cos((angle * 0.5f) * sx::pi / 180.0f), 0.00001f);
+		const float v  = ((1.0f / cosV) - 1.008629f) * ((2.252123f - 1.035276f) / (1.414213f - 1.008629f)) + 1.035276f;
+		return std::acos(1.0f / v) * 180.0f / sx::pi;
+	}
 }
 
 /*
@@ -1785,9 +1792,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			if (lightInfo.lightType == light_type_spot) {
 				//if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
 				{
-
 					if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
-						// TODO : RenderMan 21で、スポットライト角度が正しく反映されない。レンダリングすると角度が小さくレンダリングされる.
+						// RenderMan 21で、スポットライト角度が正しく反映されない。レンダリングすると角度が小さくレンダリングされる.
 						// 90度(cos45   = 0.7071)の場合は、(90/2) x 1.4142   = sqrt(2) で一致する.
 						// 85度(cos42.5 = 0.7372)の場合は、(85/2) x 1.447
 						// 80度(cos40   = 0.7660)の場合は、(80/2) x 1.5
@@ -1804,14 +1810,12 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						// 25度(cos12.5 = 0.9762)の場合は、(25/2) x 2.0
 						// 20度(cos10   = 0.9848)の場合は、(20/2) x 2.0
 						// 15度(cos7.5  = 0.9914)の場合は、(15/2) x 2.0
+
+						// これを「::ConvDiskLightConeAngle()」で近似計算している.
 						
-						// 線形ではない、、、。角度をcos()にして比較すると、
-						// cos((角度/2) * PI / 180.0) で、オリジナルの角度とRenderManで一致すると思われる角度を比較。
-						
-						const float angleScale = 1.0f;	//std::sqrt(2.0f);
 						std::stringstream s;
 						if (sx::zero(pxrAreaLightInfo.penumbraAngle)) {
-							s << "  \"float coneAngle\" [" << (pxrAreaLightInfo.coneAngle * angleScale) << "]";
+							s << "  \"float coneAngle\" [" << ::ConvDiskLightConeAngle(lightInfo.spotConeAngle) << "]";
 						} else {
 							s << "  \"float coneAngle\" [" << (std::min((pxrAreaLightInfo.coneAngle + pxrAreaLightInfo.penumbraAngle), 90.0f) * 2.0f) << "]";
 						}
