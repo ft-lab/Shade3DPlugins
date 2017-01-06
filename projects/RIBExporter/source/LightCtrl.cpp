@@ -29,6 +29,7 @@ void CLightInfo::Clear ()
 	attenuation     = sxsdk::enums::quadratic_attenuation;
 	shadowMap       = false;
 	shadowValue     = 1.0f;
+	shadowColor     = sxsdk::rgb_class(0, 0, 0);
 	spotConeAngle   = 50.0f;
 	spotSoftness    = 0.1f;
 	areaLightclosed = true;

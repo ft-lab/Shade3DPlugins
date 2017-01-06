@@ -1526,6 +1526,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 	}
 
 	bool useSunLight = false;
+	int distantLightIndex = 0;		// 無限遠光源の番号.
 	for (int loop = 0; loop < m_lightCtrl.GetLightsCount(); loop++) {
 		CLightInfo lightInfo = m_lightCtrl.GetLightInfo(loop);
 
@@ -1624,6 +1625,101 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 
 			m_indent--;
 			m_WriteLine("AttributeEnd");
+
+		} else {
+			if (m_dlgData.prmanVersion == 1) {		// Ver21の場合.
+				// 無限遠光源は、PxrDistantLightで出力.
+				if (!m_RIBInfo.lightDayLight && lightInfo.lightType == light_type_distant) {
+					m_WriteLine("AttributeBegin");
+					m_indent++;
+
+					std::string name = "distantLight";
+					{
+						std::stringstream s;
+						s << "distantLight" << distantLightIndex;
+						name = s.str();
+					}
+					distantLightIndex++;
+
+					{
+						std::stringstream s;
+						s << "Attribute \"identifier\" \"name\" [\"" << name << "\"]";
+						m_WriteLine(s.str());
+					}
+
+					{
+						std::stringstream s;
+						s << "Attribute \"visibility\" \"int indirect\" [0] ";			// 間接照明の反映 Off.
+						s << "\"int transmission\" [0] ";								// 影の反映 Off.
+						s << "\"int camera\" [0]";										// 可視.
+						m_WriteLine(s.str());
+					}
+
+					const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
+
+					m_WriteLine("TransformBegin");
+					m_indent++;
+
+					const sxsdk::vec3 defaultDir(0, 0, -1);
+					sxsdk::mat4 m = sxsdk::mat4::rotate(lightInfo.direction, defaultDir);
+
+					m[3][0] = lightInfo.pos.x;
+					m[3][1] = lightInfo.pos.y;
+					m[3][2] = lightInfo.pos.z;
+					m_WriteMatrix(m, false);
+
+					{
+						std::stringstream s;
+						s << "Light \"PxrDistantLight\" \"" << name << "\"";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"color lightColor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
+						m_WriteLine(s.str());
+					}
+					{
+						const float lightIntensity = lightInfo.intensity * 5000.0f;
+						std::stringstream s;
+						s << "  \"float intensity\" [" << lightIntensity << "]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"float shadowDistance\" [-1]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int enableShadows\" [1]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"float exposure\" [2]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int areaNormalize\" [1]";
+						m_WriteLine(s.str());
+					}
+					{
+						sxsdk::rgb_class shadowCol(1.0f - lightInfo.shadowValue, 1.0f - lightInfo.shadowValue, 1.0f - lightInfo.shadowValue);
+						shadowCol = m_CalcLinearColor(shadowCol);
+						std::stringstream s;
+						s << "  \"color shadowColor\" [" << shadowCol.red << " " << shadowCol.green << " " << shadowCol.blue << "]";
+						m_WriteLine(s.str());
+					}
+
+					m_indent--;
+					m_WriteLine("TransformEnd");
+
+					m_indent--;
+					m_WriteLine("AttributeEnd");
+					continue;
+				}
+			}
 		}
 
 		// 面光源/スポットライト/点光源/平行光源以外はスキップ.
@@ -1817,7 +1913,9 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						if (sx::zero(pxrAreaLightInfo.penumbraAngle)) {
 							s << "  \"float coneAngle\" [" << ::ConvDiskLightConeAngle(lightInfo.spotConeAngle) << "]";
 						} else {
-							s << "  \"float coneAngle\" [" << (std::min((pxrAreaLightInfo.coneAngle + pxrAreaLightInfo.penumbraAngle), 90.0f) * 2.0f) << "]";
+							const float scaleV = 2.5f;
+							const float angle2 = std::min((pxrAreaLightInfo.coneAngle + pxrAreaLightInfo.penumbraAngle * scaleV), 90.0f) * 2.0f;
+							s << "  \"float coneAngle\" [" << ::ConvDiskLightConeAngle(angle2) << "]";
 						}
 						m_WriteLine(s.str());
 
@@ -1828,8 +1926,9 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					}
 				}
 				if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+					const float softnessVal = std::min(lightInfo.spotSoftness * 5.0f, 1.0f);
 					std::stringstream s;
-					s << "  \"float coneSoftness\" [" << (lightInfo.spotSoftness) << "]";
+					s << "  \"float coneSoftness\" [" << softnessVal << "]";
 					m_WriteLine(s.str());
 
 				} else {

@@ -39,6 +39,7 @@ public:
 
 	bool shadowMap;							// シャドウマップかどうか.
 	float shadowValue;						// 影の影響度.
+	sxsdk::rgb_class shadowColor;			// 影の色.
 
 	float spotConeAngle;					// スポットライトの角度.
 	float spotSoftness;						// スポットライトのソフトネス値.
