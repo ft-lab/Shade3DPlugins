@@ -1545,26 +1545,63 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_WriteLine("TransformBegin");
 			m_indent++;
 
-			m_WriteLine("Translate 0 0 0");
-			m_WriteLine("Rotate 0 0 0 1");
-			m_WriteLine("Rotate 0 0 1 0");
-			m_WriteLine("Rotate 90 1 0 0");
-
-			{
-				std::stringstream s;
-				s << "Attribute \"visibility\" \"int indirect\" [0] \"int transmission\" [0] \"int camera\" [0]";
-				m_WriteLine(s.str());
+			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				m_WriteLine("Translate 0 0 0");
+				m_WriteLine("Rotate 0 0 1 0");
+				m_WriteLine("Rotate -90 1 0 0");
+				m_WriteLine("Rotate -90 0 0 1");
+			} else {
+				m_WriteLine("Translate 0 0 0");
+				m_WriteLine("Rotate 0 0 0 1");
+				m_WriteLine("Rotate 0 0 1 0");
+				m_WriteLine("Rotate 90 1 0 0");
 			}
 
 			{
+				std::stringstream s;
+				s << "Attribute \"visibility\" \"int indirect\" [0] \"int transmission\" [0] \"int camera\" [1]";
+				m_WriteLine(s.str());
+			}
+
+			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				std::stringstream s;
+				s << "Light \"PxrEnvDayLight\" \"envDayLightHandle\"";
+				m_WriteLine(s.str());
+
+			} else {
 				std::stringstream s;
 				s << "AreaLightSource \"PxrEnvDayLight\" \"envDayLightHandle\"";
 				m_WriteLine(s.str());
 			}
 
-			{
+			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				std::stringstream s;
+				s << "  \"vector sunDirection\" [" << -lightInfo.direction.x << " " << -lightInfo.direction.y << " " << lightInfo.direction.z << "]";
+				m_WriteLine(s.str());
+
+			} else {
 				std::stringstream s;
 				s << "  \"vector direction\" [" << -lightInfo.direction.x << " " << -lightInfo.direction.y << " " << lightInfo.direction.z << "]";
+				m_WriteLine(s.str());
+			}
+
+			{
+				std::stringstream s;
+				const float intensityVal = lightInfo.intensity * 1.0f;
+				s << "  \"float specular\" [" << 1.0f << "]";
+				m_WriteLine(s.str());
+			}
+			{
+				std::stringstream s;
+				const float intensityVal = lightInfo.intensity * 1.0f;
+				s << "  \"float diffuse\" [" << 1.0f << "]";
+				m_WriteLine(s.str());
+			}
+
+			{
+				std::stringstream s;
+				const float intensityVal = lightInfo.intensity * 1.0f;
+				s << "  \"float intensity\" [" << intensityVal << "]";
 				m_WriteLine(s.str());
 			}
 
@@ -1583,42 +1620,79 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						const float latitude  = physical_sky.get_latitude();
 						const float longitude = physical_sky.get_longitude();
 
-						{
-							std::stringstream s;
-							s << "  \"float month\" [" << (month - 1) << "]";
-							m_WriteLine(s.str());
-						}
-						{
-							std::stringstream s;
-							s << "  \"float day\" [" << day << "]";
-							m_WriteLine(s.str());
-						}
-						{
-							float hourV = (float)hour + ((float)minutes / 60.0f) + ((float)sec / (60.0f * 60.0f));
-							std::stringstream s;
-							s << "  \"float hour\" [" << hour << "]";
-							m_WriteLine(s.str());
-						}
-						{
-							std::stringstream s;
-							s << "  \"float zone\" [" << utc << "]";
-							m_WriteLine(s.str());
-						}
-						{
-							std::stringstream s;
-							s << "  \"float latitude\" [" << latitude << "]";
-							m_WriteLine(s.str());
-						}
-						{
-							std::stringstream s;
-							s << "  \"float longitude\" [" << longitude << "]";
-							m_WriteLine(s.str());
+						if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+							{
+								std::stringstream s;
+								s << "  \"int month\" [" << month << "]";	// month = 0の場合は、光源の方向ベクトルが使用される.
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"int day\" [" << day << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								float hourV = (float)hour + ((float)minutes / 60.0f) + ((float)sec / (60.0f * 60.0f));
+								std::stringstream s;
+								s << "  \"float hour\" [" << hour << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float zone\" [" << utc << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float latitude\" [" << latitude << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float longitude\" [" << longitude << "]";
+								m_WriteLine(s.str());
+							}
+
+						} else {
+							{
+								std::stringstream s;
+								s << "  \"float month\" [" << (month - 1) << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float day\" [" << day << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								float hourV = (float)hour + ((float)minutes / 60.0f) + ((float)sec / (60.0f * 60.0f));
+								std::stringstream s;
+								s << "  \"float hour\" [" << hour << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float zone\" [" << utc << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float latitude\" [" << latitude << "]";
+								m_WriteLine(s.str());
+							}
+							{
+								std::stringstream s;
+								s << "  \"float longitude\" [" << longitude << "]";
+								m_WriteLine(s.str());
+							}
 						}
 					}
 				}
 			} catch (...) { }
 
-			m_WriteLine("Geometry \"envsphere\" \"constant float radius\" [-1] \"constant int infinite\" [1065353216] \"constant float[2] resolution\" [-1 -1]");
+			if (m_dlgData.prmanVersion == 0) {
+				m_WriteLine("Geometry \"envsphere\" \"constant float radius\" [-1] \"constant int infinite\" [1065353216] \"constant float[2] resolution\" [-1 -1]");
+			}
 
 			m_indent--;
 			m_WriteLine("TransformEnd");
@@ -1886,7 +1960,6 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 
 			if (lightInfo.lightType == light_type_spot) {
-				//if (!sx::zero(pxrAreaLightInfo.coneAngle - 20.0f)) {
 				{
 					if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
 						// RenderMan 21で、スポットライト角度が正しく反映されない。レンダリングすると角度が小さくレンダリングされる.
