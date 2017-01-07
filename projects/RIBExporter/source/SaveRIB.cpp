@@ -1591,13 +1591,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 
 			{
 				std::stringstream s;
-				const float intensityVal = lightInfo.intensity * 1.0f;
 				s << "  \"float specular\" [" << 1.0f << "]";
 				m_WriteLine(s.str());
 			}
 			{
 				std::stringstream s;
-				const float intensityVal = lightInfo.intensity * 1.0f;
 				s << "  \"float diffuse\" [" << 1.0f << "]";
 				m_WriteLine(s.str());
 			}
@@ -1963,6 +1961,12 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				const float scaleV = 10.0f;
 				std::stringstream s;
 				s << "  \"float intensity\" [" << (1.0f * scaleV) << "]";
+				m_WriteLine(s.str());
+
+			} else if (lightInfo.lightType == light_type_area) {
+				const float scaleV = 0.2f;
+				std::stringstream s;
+				s << "  \"float intensity\" [" << (intensity * scaleV) << "]";
 				m_WriteLine(s.str());
 
 			} else {
