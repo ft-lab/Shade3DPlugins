@@ -25,11 +25,13 @@ extern "C" SXSDKEXPORT void STDCALL create_interface (const IID &iid, int i, voi
 			u = new CAttributeWindowInterface(*shade);
 		}
 	}
+#if 0
 	if (iid == attribute_iid) {
 		if (i == 0) {
 			u = new CAreaLightAttributeInterface(*shade);
 		}
 	}
+#endif
 
 	if (u) {
 		u->AddRef();
@@ -43,7 +45,7 @@ extern "C" SXSDKEXPORT void STDCALL create_interface (const IID &iid, int i, voi
 extern "C" SXSDKEXPORT int STDCALL has_interface (const IID &iid, sxsdk::shade_interface *shade) {
 	if (iid == exporter_iid) return 1;
 	if (iid == window_iid) return 1;
-	if (iid == attribute_iid) return 1;
+	if (iid == attribute_iid) return 0;
 
 	return 0;
 }
@@ -63,11 +65,13 @@ extern "C" SXSDKEXPORT const char * STDCALL get_name (const IID &iid, int i, sxs
 			return CAttributeWindowInterface::name(shade);
 		}
 	}
+#if 0
 	if (iid == attribute_iid) {
 		if (i == 0) {
 			return CAreaLightAttributeInterface::name(shade);
 		}
 	}
+#endif
 
 	return 0;
 }
@@ -86,11 +90,13 @@ extern "C" SXSDKEXPORT sx::uuid_class STDCALL get_uuid (const IID &iid, int i, v
 			return RIB_ATTRIBUTE_WINDOW_ID;
 		}
 	}
+#if 0
 	if (iid == attribute_iid) {
 		if (i == 0) {
 			return RIB_AREA_LIGHT_ATTRIBUTE_ID;
 		}
 	}
+#endif
 
 	return sx::uuid_class(0, 0, 0, 0);
 }

@@ -1806,9 +1806,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		if (lightInfo.shape) {
 			CLightInfo tmpLInfo = LightCtrl::GetAreaLightInfo(*lightInfo.shape);			// 光源情報を取得.
 			LightCtrl::ConvAreaLightShade3DToRIS(shade, tmpLInfo, pxrAreaLightInfo, m_dlgData.prmanVersion == 1 ? true : false);		// RenderMan向けのパラメータに変換.
+#if 0
 			if (StreamCtrl::HasRIBAreaLight(*lightInfo.shape)) {
 				pxrAreaLightInfo = StreamCtrl::LoadRIBAreaLight(*lightInfo.shape);			// streamよりPxrAreaLightの光源情報を読み込み.
 			}
+#endif
 		}
 
 		// AttributeBegin - AttributeEndで囲む必要あり.
@@ -1995,25 +1997,27 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		}
 
 		{
-			if (!sx::zero(pxrAreaLightInfo.areaNormalize)) {
-					std::stringstream s;
-					s << "  \"float areaNormalize\" [" << pxrAreaLightInfo.areaNormalize << "]";
-					m_WriteLine(s.str());
-			}
-			{
-				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.specAmount);
-				if (!::CheckColorWhite(col)) {
-					std::stringstream s;
-					s << "  \"color specAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
-					m_WriteLine(s.str());
+			if (m_dlgData.prmanVersion == 0) {		// ver.20.
+				if (!sx::zero(pxrAreaLightInfo.areaNormalize)) {
+						std::stringstream s;
+						s << "  \"float areaNormalize\" [" << pxrAreaLightInfo.areaNormalize << "]";
+						m_WriteLine(s.str());
 				}
-			}
-			{
-				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.diffAmount);
-				if (!::CheckColorWhite(col)) {
-					std::stringstream s;
-					s << "  \"color diffAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
-					m_WriteLine(s.str());
+				{
+					const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.specAmount);
+					if (!::CheckColorWhite(col)) {
+						std::stringstream s;
+						s << "  \"color specAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
+						m_WriteLine(s.str());
+					}
+				}
+				{
+					const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.diffAmount);
+					if (!::CheckColorWhite(col)) {
+						std::stringstream s;
+						s << "  \"color diffAmount\" [" << col.red << " " << col.green << " " << col.blue << "]";
+						m_WriteLine(s.str());
+					}
 				}
 			}
 

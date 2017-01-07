@@ -3,17 +3,17 @@
 	<vbox>
 		<float id="101" label="Intensity:" />
 		<rgb id="102" label="LightColor:" />
-		<float id="103" label="AreaNormalize:" />
-		<rgb id="104" label="SpecAmount:" />
-		<rgb id="105" label="DiffAmount:" />
+		<float id="103" label="AreaNormalize(ver.20):" />
+		<rgb id="104" label="SpecAmount(ver.20):" />
+		<rgb id="105" label="DiffAmount(ver.20):" />
 		<float id="106" label="ConeAngle:" />
 		<float id="107" label="PenumbraAngle:" />
-		<float id="108" label="PenumbraExponent:" />
-		<float id="109" label="ProfileRange:" />
-		<float id="110" label="CosinePower:" />
-		<float id="111" label="AngularVisibility:" />
-		<rgb id="112" label="ShadowColor:" />
-		<float id="113" label="TraceShadows:" />
-		<float id="114" label="AdaptiveShadows:" />
+		<float id="108" label="PenumbraExponent(ver.20):" />
+		<float id="109" label="ProfileRange(ver.20):" />
+		<float id="110" label="CosinePower(ver.20):" />
+		<float id="111" label="AngularVisibility(ver.20):" />
+		<rgb id="112" label="ShadowColor(ver.20):" />
+		<float id="113" label="TraceShadows(ver.20):" />
+		<float id="114" label="AdaptiveShadows(ver.20):" />
 	</vbox>
 </dialog>
