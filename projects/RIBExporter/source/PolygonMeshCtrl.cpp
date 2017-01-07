@@ -4,6 +4,7 @@
  */
 
 #include "PolygonMeshCtrl.h"
+#include <cmath>
 
 CPolygonMeshCtrl::CPolygonMeshCtrl (sxsdk::shade_interface& shade): shade(shade)
 {
@@ -57,6 +58,33 @@ void CPolygonMeshCtrl::AppendVertex (const sxsdk::vec3& v)
  */
 void CPolygonMeshCtrl::AppendPolygon (const std::vector<int>& indices, const std::vector<sxsdk::vec3>& normals, const std::vector<sxsdk::vec2>& uvs, const int faceGroupIndex)
 {
+	// 面積のない面の場合/NANの頂点を持つ面の場合はスキップ.
+	{
+		const int vCou = (int)indices.size();
+		if (vCou <= 2) return;
+		if (vCou == 3 || vCou == 4) {
+			sxsdk::vec3 versA[4];
+			bool nanF = false;
+			for (int i = 0; i < vCou; i++) {
+				versA[i] = m_vertices[indices[i]];
+				if (std::isnan(versA[i].x) || std::isnan(versA[i].y) || std::isnan(versA[i].z)) {
+					nanF = true;
+					break;
+				}
+			}
+			if (nanF) return;
+
+			{
+				int cou = vCou;
+				for (int i = 0; i < vCou; i++) {
+					const sxsdk::vec3 v = versA[i] - versA[(i + 1) % vCou];
+					if (sx::zero(v)) cou--;
+				}
+				if (cou <= 2) return;
+			}
+		}
+	}
+
 	m_polygons.push_back(CMeshPolygon());
 	CMeshPolygon& polygon = m_polygons.back();
 
