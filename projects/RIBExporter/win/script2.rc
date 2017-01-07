@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// ì˙ñ{åÍ resources
+// ÔøΩÔøΩÔøΩ{ÔøΩÔøΩ resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 #ifdef _WIN32
@@ -38,8 +38,8 @@ AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\ja.lproj
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,5
- PRODUCTVERSION 1,0,0,5
+ FILEVERSION 1,1,0,0
+ PRODUCTVERSION 1,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -56,11 +56,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ft-lab"
             VALUE "FileDescription", "RIB Exporter"
-            VALUE "FileVersion", "1, 0, 0, 5"
+            VALUE "FileVersion", "1, 1, 0, 0"
             VALUE "InternalName", "RIB Exporter"
             VALUE "LegalCopyright", "Copyright (C) 2015-2017 ft-lab."
             VALUE "ProductName", "RIB Exporter"
-            VALUE "ProductVersion", "1, 0, 0, 5"
+            VALUE "ProductVersion", "1, 1, 0, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -95,12 +95,12 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // ì˙ñ{åÍ resources
+#endif    // ÔøΩÔøΩÔøΩ{ÔøΩÔøΩ resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// íÜçëåÍ (P.R.C.) resources
+// ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ (P.R.C.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -119,12 +119,12 @@ EXPORT_DLG              SXUL                    "..\\source\\resources\\zh_CN.lp
 MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\material_window.sxul"
 AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\zh_CN.lproj\\sxuls\\area_light_dlg.sxul"
 
-#endif    // íÜçëåÍ (P.R.C.) resources
+#endif    // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// âpåÍ (ïƒçë) resources
+// ÔøΩpÔøΩÔøΩ (ÔøΩƒçÔøΩ) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -143,7 +143,7 @@ EXPORT_DLG              SXUL                    "..\\source\\resources\\en.lproj
 MATERIAL_WINDOW         SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\material_window.sxul"
 AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\en.lproj\\sxuls\\area_light_dlg.sxul"
 
-#endif    // âpåÍ (ïƒçë) resources
+#endif    // ÔøΩpÔøΩÔøΩ (ÔøΩƒçÔøΩ) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
