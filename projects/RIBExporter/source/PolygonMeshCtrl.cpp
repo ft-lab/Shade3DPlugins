@@ -5,6 +5,7 @@
 
 #include "PolygonMeshCtrl.h"
 #include <cmath>
+#include "Util.h"
 
 CPolygonMeshCtrl::CPolygonMeshCtrl (sxsdk::shade_interface& shade): shade(shade)
 {
@@ -33,7 +34,7 @@ void CPolygonMeshCtrl::BeginStore (const std::string name, const bool separateUV
 	m_separateUV     = separateUV;
 	m_separateNormal = separateNormal;
 
-	m_name = name;
+	m_name = Util::ReplaceName(name);
 }
 
 /**

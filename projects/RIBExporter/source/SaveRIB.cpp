@@ -1817,8 +1817,9 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			m_indent++;
 
 			if (lightInfo.shape) {
+				const std::string name = Util::ReplaceName(std::string(lightInfo.shape->get_name()));
 				std::stringstream s;
-				s << "Attribute \"identifier\" \"name\" [\"" << lightInfo.shape->get_name() << "\"]";
+				s << "Attribute \"identifier\" \"name\" [\"" << name << "\"]";
 				m_WriteLine(s.str());
 			}
 
@@ -1914,20 +1915,22 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 
 		} else {
 			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				const std::string name = Util::ReplaceName(std::string(lightInfo.shape->get_name()));
+
 				if (lightInfo.lightType == light_type_area) {
 					std::stringstream s;
-					s << "Light \"PxrMeshLight\" \"" << lightInfo.shape->get_name() << "\"";
+					s << "Light \"PxrMeshLight\" \"" << name << "\"";
 					m_WriteLine(s.str());
 				}
 
 				if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
 					std::stringstream s;
-					s << "Light \"PxrDiskLight\" \"" << lightInfo.shape->get_name() << "\"";
+					s << "Light \"PxrDiskLight\" \"" << name << "\"";
 					m_WriteLine(s.str());
 
 				} else if (lightInfo.lightType == light_type_point) {
 					std::stringstream s;
-					s << "Light \"PxrSphereLight\" \"" << lightInfo.shape->get_name() << "\"";
+					s << "Light \"PxrSphereLight\" \"" << name << "\"";
 					m_WriteLine(s.str());
 				}
 
@@ -2330,7 +2333,7 @@ void CSaveRIB::m_OutputBackgroundTextureFile (sxsdk::scene_interface* scene)
 
 		// ファイルフルパス.
 		const std::string& saveFilePath = m_RIBInfo.filePath;
-		std::string name = BACKGROUND_TEXTURE_NAME;
+		std::string name = Util::ReplaceName(BACKGROUND_TEXTURE_NAME);
 		
 		// imagesフォルダがない場合は作成.
 		{
@@ -2401,7 +2404,7 @@ std::string CSaveRIB::m_OutputTexture (sxsdk::scene_interface* scene, sxsdk::sha
 
 	sxsdk::master_image_class& masterImage = pShape->get_master_image();
 	try {
-		std::string name = masterImage.get_name();
+		std::string name = Util::ReplaceName(masterImage.get_name());
 		int iPos = name.find_last_of(".");
 		if (iPos != std::string::npos) name = name.substr(0, iPos);
 		const std::string saveFileName = saveFilePath + "/images/" + name + ".tiff";
@@ -2443,7 +2446,8 @@ void CSaveRIB::BeginPolygonMesh (sxsdk::shape_class* shape)
 	bool separeteNormal = (m_dlgData.doSubdivision || m_currentSubdivisionType == 0);
 
 	// TODO : UVも連続している必要があるので、separeteNormalでUV/法線での頂点を増やす作業を無効化している.
-	m_polygonMeshCtrl.BeginStore(shape->get_name(), separeteNormal, separeteNormal);
+	const std::string name = Util::ReplaceName(std::string(shape->get_name()));
+	m_polygonMeshCtrl.BeginStore(name, separeteNormal, separeteNormal);
 	m_pCurrentShape = shape;
 
 	// Subdivison情報を保持.
@@ -2508,10 +2512,11 @@ void CSaveRIB::EndPolygonMesh ()
 
 		{
 			std::stringstream s;
+			const std::string name = Util::ReplaceName(std::string(m_pCurrentShape->get_name()));
 			if (loop == 0) {
-				s << "Attribute \"identifier\" \"name\" [\"" << std::string(m_pCurrentShape->get_name()) << "\"]";
+				s << "Attribute \"identifier\" \"name\" [\"" << name << "\"]";
 			} else {
-				s << "Attribute \"identifier\" \"name\" [\"" << std::string(m_pCurrentShape->get_name()) << "_" << loop << "\"]";
+				s << "Attribute \"identifier\" \"name\" [\"" << name << "_" << loop << "\"]";
 			}
 			m_WriteLine(s.str());
 		}

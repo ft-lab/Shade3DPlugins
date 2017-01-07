@@ -116,3 +116,23 @@ int Util::GetMasterImageIndex (sxsdk::scene_interface* scene, sxsdk::image_inter
 
 	return retIndex;
 }
+
+/**
+ * 形状名に、「;:- " '」などが含まれる場合は、「_」に置き換え.
+ */
+std::string Util::ReplaceName (const std::string& str)
+{
+	std::string ignoreChars = "\\/:;*?\"\'<>|-";
+	std::string name2 = str;
+
+	for (int i = 0; i < ignoreChars.length(); ++i) {
+		const std::string chkStr = ignoreChars.substr(i, 1);
+		while (1) {
+			const int pos = name2.find(chkStr);
+			if (pos == std::string::npos) break;
+			name2.replace(pos, chkStr.length(), "_");
+		}
+	}
+
+	return name2;
+}

@@ -301,10 +301,10 @@ void CMaterialInfo::SetMaterial (sxsdk::scene_interface* scene, sxsdk::shape_cla
 	Clear();
 	if (!shape.has_surface()) return;
 
-	name = std::string(shape.get_name()) + std::string("_material");
+	name = Util::ReplaceName(std::string(shape.get_name())) + std::string("_material");
 
 	masterSurface = shape.get_master_surface();
-	if (masterSurface) name = std::string(masterSurface->get_name());
+	if (masterSurface) name = Util::ReplaceName(std::string(masterSurface->get_name()));
 
 	sxsdk::surface_class* surface = shape.get_surface();
 	if (!surface) return;
@@ -317,7 +317,7 @@ void CMaterialInfo::SetMaterial (sxsdk::scene_interface* scene, sxsdk::master_su
 	Clear();
 	this->masterSurface = &masterSurface;
 
-	name = std::string(masterSurface.get_name());
+	name = Util::ReplaceName(std::string(masterSurface.get_name()));
 
 	sxsdk::surface_class* surface = masterSurface.get_surface();
 	if (!surface) return;

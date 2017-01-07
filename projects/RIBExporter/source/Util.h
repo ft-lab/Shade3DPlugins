@@ -33,6 +33,10 @@ namespace Util {
 	 */
 	int GetMasterImageIndex (sxsdk::scene_interface* scene, sxsdk::image_interface* image);
 
+	/**
+	 * 形状名に、「;:- " '」が含まれる場合は、「_」に置き換え.
+	 */
+	std::string ReplaceName (const std::string& str);
 }
 
 #endif
