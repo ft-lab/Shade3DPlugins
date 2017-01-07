@@ -1887,6 +1887,14 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 				m[3][2] = lightInfo.pos.z;
 				m_WriteMatrix(m, false);
 
+				// 平行光源の直径がスケール値になる.
+				if (lightInfo.lightType == light_type_directional) {
+					const float scaleV = lightInfo.diskRadius * 2.0f;
+					std::stringstream s;
+					s << "Scale " << scaleV << " " << scaleV << " " << scaleV;
+					m_WriteLine(s.str());
+				}
+
 			} else if (lightInfo.lightType == light_type_point) {
 				sxsdk::mat4 m = sxsdk::mat4::translate(lightInfo.pos);
 				m_WriteMatrix(m, false);
@@ -1950,11 +1958,25 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 		}
 
-		{
+		if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+			if (lightInfo.lightType == light_type_directional) {
+				const float scaleV = 10.0f;
+				std::stringstream s;
+				s << "  \"float intensity\" [" << (1.0f * scaleV) << "]";
+				m_WriteLine(s.str());
+
+			} else {
+				std::stringstream s;
+				s << "  \"float intensity\" [" << intensity << "]";
+				m_WriteLine(s.str());
+			}
+
+		} else {
 			std::stringstream s;
 			s << "  \"float intensity\" [" << intensity << "]";
 			m_WriteLine(s.str());
 		}
+
 		if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
 			std::stringstream s;
 			s << "  \"color lightColor\" [" << lightCol.red << " " << lightCol.green << " " << lightCol.blue << "]";
@@ -2028,7 +2050,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					}
 				}
 				if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
-					const float softnessVal = std::min(lightInfo.spotSoftness * 5.0f, 1.0f);
+					const float softnessVal = std::min(lightInfo.spotSoftness, 1.0f);
 					std::stringstream s;
 					s << "  \"float coneSoftness\" [" << softnessVal << "]";
 					m_WriteLine(s.str());
@@ -2046,45 +2068,82 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					}
 				}
 			}
-			if (!sx::zero(pxrAreaLightInfo.profileRange - 180.0f)) {
-				std::stringstream s;
-				s << "  \"float profilerange\" [" << pxrAreaLightInfo.profileRange << "]";
-				m_WriteLine(s.str());
-			}
-			if (!sx::zero(pxrAreaLightInfo.cosinePower - 90.0f)) {
-				std::stringstream s;
-				s << "  \"float cosinepower\" [" << pxrAreaLightInfo.cosinePower << "]";
-				m_WriteLine(s.str());
-			}
-			if (!sx::zero(pxrAreaLightInfo.angularVisibility - 1.0f)) {
-				std::stringstream s;
-				s << "  \"float angularVisibility\" [" << pxrAreaLightInfo.angularVisibility << "]";
-				m_WriteLine(s.str());
-			}
-			{
-				const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.shadowColor);
-				if (!::CheckColorBlack(col)) {
+			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+				if (lightInfo.lightType == light_type_directional) {
+					const float softnessVal = std::min(lightInfo.spotSoftness * 5.0f, 1.0f);
 					std::stringstream s;
-					s << "  \"color shadowColor\" [" << col.red << " " << col.green << " " << col.blue << "]";
+					s << "  \"float coneSoftness\" [" << softnessVal << "]";
+					m_WriteLine(s.str());
+				}
+
+			} else {
+				if (!sx::zero(pxrAreaLightInfo.profileRange - 180.0f)) {
+					std::stringstream s;
+					s << "  \"float profilerange\" [" << pxrAreaLightInfo.profileRange << "]";
+					m_WriteLine(s.str());
+				}
+				if (!sx::zero(pxrAreaLightInfo.cosinePower - 90.0f)) {
+					std::stringstream s;
+					s << "  \"float cosinepower\" [" << pxrAreaLightInfo.cosinePower << "]";
+					m_WriteLine(s.str());
+				}
+				if (!sx::zero(pxrAreaLightInfo.angularVisibility - 1.0f)) {
+					std::stringstream s;
+					s << "  \"float angularVisibility\" [" << pxrAreaLightInfo.angularVisibility << "]";
+					m_WriteLine(s.str());
+				}
+				{
+					const sxsdk::rgb_class col = m_CalcLinearColor(pxrAreaLightInfo.shadowColor);
+					if (!::CheckColorBlack(col)) {
+						std::stringstream s;
+						s << "  \"color shadowColor\" [" << col.red << " " << col.green << " " << col.blue << "]";
+						m_WriteLine(s.str());
+					}
+				}
+				if (!sx::zero(pxrAreaLightInfo.traceShadows - 1.0f)) {
+					std::stringstream s;
+					s << "  \"float traceShadows\" [" << pxrAreaLightInfo.traceShadows << "]";
+					m_WriteLine(s.str());
+				}
+				if (!sx::zero(pxrAreaLightInfo.adaptiveShadows - 1.0f)) {
+					std::stringstream s;
+					s << "  \"float adaptiveShadows\" [" << pxrAreaLightInfo.adaptiveShadows << "]";
 					m_WriteLine(s.str());
 				}
 			}
-			if (!sx::zero(pxrAreaLightInfo.traceShadows - 1.0f)) {
-				std::stringstream s;
-				s << "  \"float traceShadows\" [" << pxrAreaLightInfo.traceShadows << "]";
-				m_WriteLine(s.str());
-			}
-			if (!sx::zero(pxrAreaLightInfo.adaptiveShadows - 1.0f)) {
-				std::stringstream s;
-				s << "  \"float adaptiveShadows\" [" << pxrAreaLightInfo.adaptiveShadows << "]";
-				m_WriteLine(s.str());
-			}
+
 
 			if (m_dlgData.prmanVersion == 1) {		// ver.21.xの場合.
-				const float exposureVal = 2.0f;		// ??
-				std::stringstream s;
-				s << "  \"float exposure\" [" << exposureVal << "]";
-				m_WriteLine(s.str());
+				{
+					const float exposureVal = 2.0f;		// ??
+					std::stringstream s;
+					s << "  \"float exposure\" [" << exposureVal << "]";
+					m_WriteLine(s.str());
+				}
+				if (lightInfo.lightType == light_type_directional) {
+					{
+						std::stringstream s;
+						s << "  \"float coneAngle\" [0]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"float shadowDistance\" [-1]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int enableShadows\" [1]";
+						m_WriteLine(s.str());
+					}
+					{
+						sxsdk::rgb_class shadowCol(1.0f - lightInfo.shadowValue, 1.0f - lightInfo.shadowValue, 1.0f - lightInfo.shadowValue);
+						shadowCol = m_CalcLinearColor(shadowCol);
+						std::stringstream s;
+						s << "  \"color shadowColor\" [" << shadowCol.red << " " << shadowCol.green << " " << shadowCol.blue << "]";
+						m_WriteLine(s.str());
+					}
+				}
 			}
 		}
 

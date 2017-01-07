@@ -263,6 +263,8 @@ CLightInfo LightCtrl::GetAreaLightInfo (sxsdk::shape_class& shape)
 		lightInfo.spotSoftness  = light.get_softness();
 		lightInfo.visible       = false;
 
+		lightInfo.color *= light.get_light_color_quantity();		// 光源色の適用率を反映.
+
 		switch (light.get_distribution_type()) {
 		case sxsdk::enums::point_light:
 			lightInfo.lightType = light_type_point;
