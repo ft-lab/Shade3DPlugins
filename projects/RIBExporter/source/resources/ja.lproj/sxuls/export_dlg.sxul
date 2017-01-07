@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dialog default_button="true" title="RIB Export">
-	<tab id="100" label="RIB Export">
-		<vbox id="200" label="Rendering">
+<dialog default_button="true" title="RIB エクスポート">
+	<tab id="100" label="RIB エクスポート">
+		<vbox id="200" label="レンダリング">
 			<selection id="209" label="Version:|20.x|21.x" />
 			<selection id="201" label="Integrators:|PxrPathTracer|PxrVCM|PxrDirectLighting|PxrOcclusion" />
 			<float id="202" label="PixelVariance:" />
@@ -12,32 +12,32 @@
 			<int id="207" label="maxdiffusedepth:" />
 			<int id="208" label="maxspeculardepth:" />
 
-			<group id="220" label="Rendering Image">
-				<selection id="221" label="Image Format:|TIFF|OpenEXR" />
-				<selection id="222" label="Image Type:|RGB|RGBA" />
+			<group id="220" label="レンダリング画像">
+				<selection id="221" label="フォーマット:|TIFF|OpenEXR" />
+				<selection id="222" label="画像の種類:|RGB|RGBA" />
 			</group>
 
-			<group id="230" label="Statistics">
+			<group id="230" label="統計情報">
 				<bool id="231" label="endofframe" />
 				<bool id="232" label="xml file" />
 			</group>
-			<bool id="240" label="Subdivision" />
+			<bool id="240" label="サブディビジョン" />
 		</vbox>
 
-		<vbox id="500" label="Light">
-			<bool id="501" label="Day light" />
+		<vbox id="500" label="光源情報">
+			<bool id="501" label="フィジカルスカイを反映" />
 		</vbox>
 
-		<vbox id="300" label="Background">
-			<bool id="301" label="Output the background image" />
-			<selection id="302" label="Image Size:|256 x 128|512 x 256|1024 x 512|2048 x 1024|4096 x 2048|8192 x 4096" />
-			<float id="303" label="Light intensity:" />
-			<bool id="304" label="Draw background" />
+		<vbox id="300" label="背景">
+			<bool id="301" label="背景画像を出力" />
+			<selection id="302" label="画像サイズ:|256 x 128|512 x 256|1024 x 512|2048 x 1024|4096 x 2048|8192 x 4096" />
+			<float id="303" label="光源の明るさ:" />
+			<bool id="304" label="背景画像を反映" />
 		</vbox>
 
-		<vbox id="400" label="Color">
-			<bool id="401" label="Color to linear" />
-			<bool id="402" label="Texture to linear" />
+		<vbox id="400" label="色変換">
+			<bool id="401" label="色をリニア変換" />
+			<bool id="402" label="テクスチャ画像をリニア変換" />
 		</vbox>
 	</tab>
 </dialog>

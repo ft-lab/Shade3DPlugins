@@ -4,9 +4,9 @@
 		<control size='400 2'/>
 		<static-text id="target_master_surface_name" label="target_master_surface_name" size="200" />
 		<control size='400 2'/>
-		<checkbox id="use_custom" label="Use custom" />
+		<checkbox id="use_custom" label="カスタム情報を使用" />
 		<control size='400 2'/>
-		<push-button id="convert_from_surface_but" label="Convert from Surface" />
+		<push-button id="convert_from_surface_but" label="表面材質から変換" />
 		<control size='400 4'/>
 
 		<group id="visibility_group" label="visibility">
@@ -16,7 +16,7 @@
 			<checkbox id="visibility_indirect" label="indirect" />
 		</group>
 		<control size='400 4'/>
-		<checkbox id="use_depth" label="Use depth" />
+		<checkbox id="use_depth" label="depthを使用" />
 		<hbox>
 			<control size='20 4'/>
 			<static-text id="maxdiffusedepth_text" label="maxdiffusedepth" size="100" />
@@ -29,7 +29,7 @@
 		</hbox>
 		<control size='400 4'/>
 
-		<popup-menu id="material_type" label="Material Type">
+		<popup-menu id="material_type" label="マテリアルの種類">
 			<item id="popup_item_0" label="PxrDiffuse"/>
 			<item id="popup_item_1" label="PxrDisney"/>
 			<item id="popup_item_2" label="PxrGlass"/>
@@ -183,8 +183,8 @@
 
 		<control size='400 8'/>
 		<hbox>
-			<push-button id="apply_but" label="Apply" />
-			<push-button id="revert_but" label="Revert" />
+			<push-button id="apply_but" label="確定" />
+			<push-button id="revert_but" label="戻す" />
 		</hbox>
 	</vbox>
 </palette>

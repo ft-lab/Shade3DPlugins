@@ -6,10 +6,10 @@
 	<string id="comments" value="RIB Exporter" />
 
 	<string id="rib_exporter_title" value="RIB (RenderMan) ..." />
-	<string id="renderman_attribute_title" value="RenderMan Material" />
+	<string id="renderman_attribute_title" value="RenderManマテリアル" />
 
-	<string id="msg_select_master_surface" value="Plase select the master surface." />
-	<string id="msg_select_area_light" value="Plase select the area light." />
+	<string id="msg_select_master_surface" value="マスターサーフェスを選択してください。" />
+	<string id="msg_select_area_light" value="面光源を選択してください。" />
 
 	<string id="ris_material_diffuse" value="PxrDiffuse" />
 	<string id="ris_material_disney" value="PxrDisney" />
@@ -18,5 +18,5 @@
 	<string id="ris_material_skin" value="PxrSkin" />
 	<string id="ris_material_volume" value="PxrVolume" />
 
-	<string id="rib_attribute_title" value="RenderMan Attribute ..." />
+	<string id="rib_attribute_title" value="RenderMan属性 ..." />
 </strings>
