@@ -545,7 +545,7 @@ void MaterialCtrl::ConvShade3DToRIS (CMaterialInfo& materialInfo, CRISMaterialIn
 		risMaterialInfo.pxrDisney.emitColor     = emmitCol;
 		risMaterialInfo.pxrDisney.metallic      = materialInfo.reflection;
 		risMaterialInfo.pxrDisney.specular      = materialInfo.specularValue;
-		risMaterialInfo.pxrDisney.roughness     = materialInfo.roughness;
+		risMaterialInfo.pxrDisney.roughness     = (sx::zero(materialInfo.reflection)) ? 0.8f : materialInfo.roughness;
 		risMaterialInfo.pxrDisney.anisotropic   = materialInfo.anisotropic;
 
 	} else {
