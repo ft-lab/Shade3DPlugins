@@ -728,7 +728,7 @@ void CSaveRIB::m_BeginWriteMaterial (sxsdk::scene_interface* scene, sxsdk::shape
 		}
 	}
 
-	const std::string materialName = material.name;
+	const std::string materialName = (material.name == "") ? "default" : material.name;
 
 	// テクスチャの繰り返しや色反転が存在する場合は、パターンを再度出力.
 	std::string diffusePatternName        = "";
@@ -1495,9 +1495,11 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		const float intensity = m_RIBInfo.backgroundImageIntensity;
 
 		if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
-			std::stringstream s;
-			s << "Light \"PxrDomeLight\" \"envLight\" \"string lightColorMap\" [\"" << m_backgroundTextureName << ".tiff\"] " << "\"float intensity\" [" << intensity << "]";
-			m_WriteLine(s.str());
+			{
+				std::stringstream s;
+				s << "Light \"PxrDomeLight\" \"envLight\" \"string lightColorMap\" [\"" << m_backgroundTextureName << ".tiff\"] " << "\"float intensity\" [" << intensity << "]";
+				m_WriteLine(s.str());
+			}
 		} else {
 			std::stringstream s;
 			s << "AreaLightSource \"PxrEnvMapLight\" \"envLight\" \"string envmap\" [\"" << m_backgroundTextureName << ".tiff\"] " << "\"float intensity\" [" << intensity << "]";
@@ -1534,6 +1536,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 
 		double intensity = lightInfo.intensity;
 		double ambient   = lightInfo.ambient;
+		if (lightInfo.lightType == light_type_ambient && sx::zero(ambient)) continue;
+		if (lightInfo.lightType != light_type_ambient && sx::zero(intensity)) continue;
 
 		// 無限遠光源でのDayLight.
 		// Physical Skyの日時情報も持ってくる.
@@ -1796,8 +1800,8 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			}
 		}
 
-		// 面光源/スポットライト/点光源/平行光源以外はスキップ.
-		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot && lightInfo.lightType != light_type_point && lightInfo.lightType != light_type_directional) continue;
+		// 面光源/スポットライト/点光源/平行光源/環境光以外はスキップ.
+		if (lightInfo.lightType != light_type_area && lightInfo.lightType != light_type_spot && lightInfo.lightType != light_type_point && lightInfo.lightType != light_type_directional && lightInfo.lightType != light_type_ambient) continue;
 
 		// PxrAreaLightとしての光源情報を取得 (streamに情報が保持されている).
 		CPxrAreaLight pxrAreaLightInfo;
@@ -1832,11 +1836,34 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		if (lightInfo.lightType == light_type_ambient) {
 			if (ambient > 0.0f) {
 				if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
+					{
+						std::stringstream s;
+						s << "Light \"PxrDomeLight\" \"Ambient\"";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int thinShadow\" [0]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int enableShadows\" [0]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"float intensity\" [" << ambient << "]";
+						m_WriteLine(s.str());
+					}
+
 				} else {
 					std::stringstream s;
 					s << "LightSource \"ambientlight\" " << index << " \"intensity\" [" << ambient << "]";
 					m_WriteLine(s.str());
 				}
+				m_indent--;
+				m_WriteLine("AttributeEnd");
 			}
 			continue;
 		}
@@ -1867,15 +1894,17 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 		}
 
 		if (lightInfo.lightType == light_type_distant) {
-			std::stringstream s;
+			if (m_dlgData.prmanVersion == 0) {		// ver.20.
+				std::stringstream s;
 
-			s << "LightSource \"";
-			if (sx::zero(lightInfo.shadowValue)) s << "distant";
-			else s << "shadowdistant";
-			s << "\" " << index << " \"to\" [" << lightInfo.direction.x << " " << lightInfo.direction.y << " " << -lightInfo.direction.z << "]";
-			m_WriteLine(s.str());
-			intensity = intensity * sx::pi;
-			ambient *= intensity;
+				s << "LightSource \"";
+				if (sx::zero(lightInfo.shadowValue)) s << "distant";
+				else s << "shadowdistant";
+				s << "\" " << index << " \"to\" [" << lightInfo.direction.x << " " << lightInfo.direction.y << " " << -lightInfo.direction.z << "]";
+				m_WriteLine(s.str());
+				intensity = intensity * sx::pi;
+				ambient *= intensity;
+			}
 
 		} else {
 			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
@@ -1885,7 +1914,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					m_WriteLine(s.str());
 				}
 
-				if (lightInfo.lightType == light_type_spot) {
+				if (lightInfo.lightType == light_type_spot || lightInfo.lightType == light_type_directional) {
 					std::stringstream s;
 					s << "Light \"PxrDiskLight\" \"" << lightInfo.shape->get_name() << "\"";
 					m_WriteLine(s.str());
