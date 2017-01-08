@@ -1788,6 +1788,18 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						m_WriteLine(s.str());
 					}
 
+					// 透過時の影に色を付ける.
+					{
+						std::stringstream s;
+						s << "  \"int thinShadow\" [1]";
+						m_WriteLine(s.str());
+					}
+					{
+						std::stringstream s;
+						s << "  \"int traceLightPaths\" [1]";
+						m_WriteLine(s.str());
+					}
+
 					m_indent--;
 					m_WriteLine("TransformEnd");
 
@@ -2142,6 +2154,9 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						s << "  \"float shadowDistance\" [-1]";
 						m_WriteLine(s.str());
 					}
+				}
+
+				if (lightInfo.lightType != light_type_area) {
 					{
 						std::stringstream s;
 						s << "  \"int enableShadows\" [1]";
@@ -2154,6 +2169,18 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 						s << "  \"color shadowColor\" [" << shadowCol.red << " " << shadowCol.green << " " << shadowCol.blue << "]";
 						m_WriteLine(s.str());
 					}
+				}
+
+				// 透過時の影に色を付ける.
+				{
+					std::stringstream s;
+					s << "  \"int thinShadow\" [1]";
+					m_WriteLine(s.str());
+				}
+				{
+					std::stringstream s;
+					s << "  \"int traceLightPaths\" [1]";
+					m_WriteLine(s.str());
 				}
 			}
 		}
