@@ -9,7 +9,7 @@
 		<push-button id="convert_from_surface_but" label="表面材質から変換" />
 		<control size='400 4'/>
 
-		<group id="visibility_group" label="visibility">
+		<group id="visibility_group" label="Visibility">
 			<checkbox id="visibility_camera" label="Camera" />
 			<checkbox id="visibility_diffuse" label="Diffuse" />
 			<checkbox id="visibility_specular" label="Specular" />
