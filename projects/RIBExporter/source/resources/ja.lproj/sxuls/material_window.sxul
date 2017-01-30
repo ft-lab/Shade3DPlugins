@@ -19,10 +19,12 @@
 		<checkbox id="use_depth" label="depthを使用" />
 		<hbox>
 			<control size='20 4'/>
+			<static-text id="maxdiffusedepth_text" label="Max Diffuse Depth" size="150" />
 			<number id="maxdiffusedepth" label="" type="integer" size="64" />
 		</hbox>
 		<hbox>
 			<control size='20 4'/>
+			<static-text id="maxspeculardepth_text" label="Max Specular Depth" size="150" />
 			<number id="maxspeculardepth" label="" type="integer" size="64" />
 		</hbox>
 		<control size='400 4'/>
