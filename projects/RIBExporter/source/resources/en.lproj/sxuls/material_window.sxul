@@ -4,27 +4,25 @@
 		<control size='400 2'/>
 		<static-text id="target_master_surface_name" label="target_master_surface_name" size="200" />
 		<control size='400 2'/>
-		<checkbox id="use_custom" label="Use custom" />
+		<checkbox id="use_custom" label="Use Custom" />
 		<control size='400 2'/>
 		<push-button id="convert_from_surface_but" label="Convert from Surface" />
 		<control size='400 4'/>
 
-		<group id="visibility_group" label="visibility">
-			<checkbox id="visibility_camera" label="camera" />
-			<checkbox id="visibility_diffuse" label="diffuse" />
-			<checkbox id="visibility_specular" label="specular" />
-			<checkbox id="visibility_indirect" label="indirect" />
+		<group id="visibility_group" label="Visibility">
+			<checkbox id="visibility_camera" label="Camera" />
+			<checkbox id="visibility_diffuse" label="Diffuse" />
+			<checkbox id="visibility_specular" label="Specular" />
+			<checkbox id="visibility_indirect" label="Indirect" />
 		</group>
 		<control size='400 4'/>
-		<checkbox id="use_depth" label="Use depth" />
+		<checkbox id="use_depth" label="Use Depth" />
 		<hbox>
 			<control size='20 4'/>
-			<static-text id="maxdiffusedepth_text" label="maxdiffusedepth" size="100" />
 			<number id="maxdiffusedepth" label="" type="integer" size="64" />
 		</hbox>
 		<hbox>
 			<control size='20 4'/>
-			<static-text id="maxspeculardepth_text" label="maxspeculardepth" size="100" />
 			<number id="maxspeculardepth" label="" type="integer" size="64" />
 		</hbox>
 		<control size='400 4'/>

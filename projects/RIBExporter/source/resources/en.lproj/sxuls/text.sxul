@@ -6,9 +6,9 @@
 	<string id="comments" value="RIB Exporter" />
 
 	<string id="rib_exporter_title" value="RIB (RenderMan) ..." />
-	<string id="renderman_attribute_title" value="RenderMan Material" />
+	<string id="renderman_attribute_title" value="RenderMan Materials" />
 
-	<string id="msg_select_master_surface" value="Plase select the master surface." />
+	<string id="msg_select_master_surface" value="Please select a master surface." />
 	<string id="msg_select_area_light" value="Plase select the area light." />
 
 	<string id="ris_material_diffuse" value="PxrDiffuse" />

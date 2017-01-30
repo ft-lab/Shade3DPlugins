@@ -10,21 +10,19 @@
 		<control size='400 4'/>
 
 		<group id="visibility_group" label="visibility">
-			<checkbox id="visibility_camera" label="camera" />
-			<checkbox id="visibility_diffuse" label="diffuse" />
-			<checkbox id="visibility_specular" label="specular" />
-			<checkbox id="visibility_indirect" label="indirect" />
+			<checkbox id="visibility_camera" label="Camera" />
+			<checkbox id="visibility_diffuse" label="Diffuse" />
+			<checkbox id="visibility_specular" label="Specular" />
+			<checkbox id="visibility_indirect" label="Indirect" />
 		</group>
 		<control size='400 4'/>
 		<checkbox id="use_depth" label="depthを使用" />
 		<hbox>
 			<control size='20 4'/>
-			<static-text id="maxdiffusedepth_text" label="maxdiffusedepth" size="100" />
 			<number id="maxdiffusedepth" label="" type="integer" size="64" />
 		</hbox>
 		<hbox>
 			<control size='20 4'/>
-			<static-text id="maxspeculardepth_text" label="maxspeculardepth" size="100" />
 			<number id="maxspeculardepth" label="" type="integer" size="64" />
 		</hbox>
 		<control size='400 4'/>

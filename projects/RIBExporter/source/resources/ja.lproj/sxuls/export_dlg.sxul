@@ -4,13 +4,13 @@
 		<vbox id="200" label="レンダリング">
 			<selection id="209" label="Version:|20.x|21.x" />
 			<selection id="201" label="Integrators:|PxrPathTracer|PxrVCM|PxrDirectLighting|PxrOcclusion" />
-			<float id="202" label="PixelVariance:" />
-			<int id="203" label="minsamples:" />
-			<int id="204" label="maxsamples:" />
-			<bool id="205" label="incremental" />
-			<float id="206" label="bias:" />
-			<int id="207" label="maxdiffusedepth:" />
-			<int id="208" label="maxspeculardepth:" />
+			<float id="202" label="Pixel Variance:" />
+			<int id="203" label="Min Samples:" />
+			<int id="204" label="Max Samples:" />
+			<bool id="205" label="Incremental Mode" />
+			<float id="206" label="Bias:" />
+			<int id="207" label="Max Diffuse Depth:" />
+			<int id="208" label="Max Specular Depth:" />
 
 			<group id="220" label="レンダリング画像">
 				<selection id="221" label="フォーマット:|TIFF|OpenEXR" />
@@ -18,8 +18,8 @@
 			</group>
 
 			<group id="230" label="統計情報">
-				<bool id="231" label="endofframe" />
-				<bool id="232" label="xml file" />
+				<bool id="231" label="End of Frame" />
+				<bool id="232" label="XML File" />
 			</group>
 			<bool id="240" label="サブディビジョン" />
 		</vbox>
