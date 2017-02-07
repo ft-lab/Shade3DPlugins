@@ -3,6 +3,7 @@
 Shade3DでRenderManのRIBファイルをエクスポートするプラグインです。<br>
 projects/RIBExporter がプロジェクト一式です。<br>
 RIB Exporter 1.0.0.4では、RenderMan 20.xまでに対応。21.x以降は未対応です。<br>
+RIB Exporter 1.1.0.0以降で、RenderMan 21.x以降にも対応しました。<br>
 
 ## ビルド方法
 
