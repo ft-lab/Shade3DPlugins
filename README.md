@@ -17,7 +17,7 @@ RIB Exporter 1.1.0.0以降で、RenderMan 21.x以降にも対応しました。<
 
 ## 使い方
 
-［使い方](https://github.com/ft-lab/Shade3DPlugins/wiki/%E4%BD%BF%E3%81%84%E6%96%B9) を参照してください。<br>
+[使い方](https://github.com/ft-lab/Shade3DPlugins/wiki/%E4%BD%BF%E3%81%84%E6%96%B9) を参照してください。<br>
 
 ## 更新履歴
 
