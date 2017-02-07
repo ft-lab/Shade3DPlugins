@@ -17,8 +17,8 @@ Shade 3D ver.14/ver.15/ver.16で動作。
       [source]
       [win]
 
-Win環境の場合は、projects/win/Template.sln をVisual Studio 2013で起動します。
-Mac環境の場合は、projects/mac/plugins/Template.xcodeproj を XCode 6.4.xで起動します。
+Win環境の場合は、projects/RIBExporter/win/Template.sln をVisual Studio 2013で起動します。
+Mac環境の場合は、projects/RIBExporter/mac/plugins/Template.xcodeproj を XCode 6.4.xで起動します。
 
 Winの場合はRelease、Macの場合はDeploymentでビルドするとプラグインが生成されます。
 
