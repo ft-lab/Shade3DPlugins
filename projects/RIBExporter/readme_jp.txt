@@ -1,16 +1,14 @@
 ＜＜ 概要 ＞＞ ----------------
 
-Shade 13.2.2 Plugin SDK(463042)を使用した
+Shade 15.1 Plugin SDKを使用した
 RenderManのRIBファイルと画像をエクスポートするプラグインです。
 
-Shade 3D ver.14/ver.15で動作。
+Shade 3D ver.14/ver.15/ver.16で動作。
 
  SDKを解凍後、以下のようなディレクトリ配置にします。
 
-[boost_1_43_0]
-[doc]
+[boost_1_55_0]
 [include]
-[samples]
 
 [projects]         <== なければ作成
    [RIBExporter]   <== 複製
@@ -19,8 +17,8 @@ Shade 3D ver.14/ver.15で動作。
       [source]
       [win]
 
-Win環境の場合は、projects/win/Template.sln をVisual Studio 2010で起動します。
-Mac環境の場合は、projects/mac/plugins/xplugins.xcodeproj を XCode 6.1.xで起動します。
+Win環境の場合は、projects/win/Template.sln をVisual Studio 2013で起動します。
+Mac環境の場合は、projects/mac/plugins/Template.xcodeproj を XCode 6.4.xで起動します。
 
 Winの場合はRelease、Macの場合はDeploymentでビルドするとプラグインが生成されます。
 
