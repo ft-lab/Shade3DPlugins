@@ -38,8 +38,8 @@ AREA_LIGHT_DLG          SXUL                    "..\\source\\resources\\ja.lproj
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,2
- PRODUCTVERSION 1,1,0,2
+ FILEVERSION 1,1,0,3
+ PRODUCTVERSION 1,1,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -56,11 +56,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ft-lab"
             VALUE "FileDescription", "RIB Exporter"
-            VALUE "FileVersion", "1, 1, 0, 2"
+            VALUE "FileVersion", "1, 1, 0, 3"
             VALUE "InternalName", "RIB Exporter"
             VALUE "LegalCopyright", "Copyright (C) 2015-2017 ft-lab."
             VALUE "ProductName", "RIB Exporter"
-            VALUE "ProductVersion", "1, 1, 0, 2"
+            VALUE "ProductVersion", "1, 1, 0, 3"
         END
     END
     BLOCK "VarFileInfo"

@@ -37,6 +37,15 @@ enum
 	dlg_subdivision_id = 240,						// Subdivision.
 };
 
+enum {
+	binary_text_id = 10002,
+	eol_id = 10003,
+	all_objects_id = 10004,
+	subdivision_level_id = 10005,
+	surface_attributes_id = 10006,
+};
+
+
 CRIBExporterInterface::CRIBExporterInterface (sxsdk::shade_interface& shade) : shade(shade)
 {
 	m_pCurrentShape = NULL;
@@ -314,6 +323,13 @@ void CRIBExporterInterface::initialize_dialog (sxsdk::dialog_interface& dialog, 
 
 void CRIBExporterInterface::load_dialog_data (sxsdk::dialog_interface &d, void *)
 {
+	// 「バイナリ/テキスト」を無効化.
+	{
+		sxsdk::dialog_item_class* item;
+		item = &(d.get_dialog_item(binary_text_id));
+		item->set_enabled(false);
+	}
+
 	{
 		sxsdk::dialog_item_class* item;
 		item = &(d.get_dialog_item(dlg_integrators_id));
