@@ -30,6 +30,7 @@ sxsdk::image_interface* CBackgroundTexture::CalcBackgroundTextureImage (sxsdk::s
 		std::vector<sxsdk::rgba_class> lines;
 		lines.resize(texWidth);
 
+		bool notBlack = false;
 		const float pxPos = -sx::pi * 0.5f;
 		sxsdk::vec3 v;
 		float py = 0.0f;
@@ -49,13 +50,26 @@ sxsdk::image_interface* CBackgroundTexture::CalcBackgroundTextureImage (sxsdk::s
 
 				// 指定の方向での色を計算.
 				lines[x] = sxsdk::rgba_class(background->calculate_background_color(v), 1.0f);
-
+				if (!notBlack) {
+					if (!sx::zero(lines[x].red) || !sx::zero(lines[x].green) || !sx::zero(lines[x].blue)) notBlack = true;
+				}
 				px += dTheta;
 			}
 			image->set_pixels_rgba_float(0, y, texWidth, 1, &lines[0]);
 
 			py += dPhy;
 		}
+
+		// RenderMan 21では、真っ黒だとなぜかPxrDomeLightとして貼り付けると真っ白になるので.
+		// わずかに色を入れる.
+		if (!notBlack) {
+			const sxsdk::rgba_class col(0.001f, 0.001f, 0.001f, 1.0f);
+			for (int x = 0; x < texWidth; x++) lines[x] = col;
+			for (int y = 0; y < texHeight; y++) {
+				image->set_pixels_rgba_float(0, y, texWidth, 1, &lines[0]);
+			}
+		}
+
 		image->update();
 
 		return image;
