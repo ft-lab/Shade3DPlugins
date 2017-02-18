@@ -1734,6 +1734,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 					const sxsdk::rgb_class lightCol = m_CalcLinearColor(lightInfo.color);
 
 					m_WriteLine("TransformBegin");
+					m_WriteLine("Sides 1");
 					m_indent++;
 
 					const sxsdk::vec3 defaultDir(0, 0, -1);
@@ -1931,6 +1932,7 @@ void CSaveRIB::m_WriteLights (sxsdk::scene_interface* scene)
 			if (m_dlgData.prmanVersion == 1) {		// ver.21以降.
 				const std::string name = Util::ReplaceName(std::string(lightInfo.shape->get_name()));
 
+				m_WriteLine("Sides 1");
 				if (lightInfo.lightType == light_type_area) {
 					std::stringstream s;
 					s << "Light \"PxrMeshLight\" \"" << name << "\"";
