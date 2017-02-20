@@ -22,6 +22,7 @@
 				<bool id="232" label="XML File" />
 			</group>
 			<bool id="240" label="サブディビジョン" />
+			<bool id="241" label="Denoise" />
 		</vbox>
 
 		<vbox id="500" label="光源情報">

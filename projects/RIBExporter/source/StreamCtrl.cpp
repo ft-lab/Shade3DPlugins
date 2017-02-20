@@ -66,6 +66,9 @@ void StreamCtrl::SaveRIBExportDlg (sxsdk::scene_interface* scene, const RIBExpor
 		// ver.1.0.0.5 -.
 		stream->write_int(data.prmanVersion);
 
+		// ver.1.1.0.5 -.
+		iDat = data.doDenoise ? 1 : 0;
+		stream->write_int(iDat);
 	} catch (...) { }
 }
 
@@ -134,6 +137,12 @@ RIBExportData StreamCtrl::LoadRIBExportDlg (sxsdk::scene_interface* scene)
 		// ver.1.0.0.5 -.
 		if (version >= RIB_EXPORT_DLG_VERSION_105) {
 			stream->read_int(data.prmanVersion);
+		}
+
+		// ver.1.1.0.5 -.
+		if (version >= RIB_EXPORT_DLG_VERSION_1105) {
+			stream->read_int(iDat);
+			data.doDenoise = iDat ? true : false;
 		}
 
 	} catch (...) { }

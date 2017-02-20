@@ -35,6 +35,7 @@ enum
 	dlg_statistics_xml_file_id = 232,				// XMLファイル出力.
 
 	dlg_subdivision_id = 240,						// Subdivision.
+	dlg_denoise_id = 241,							// Denoise.
 };
 
 enum {
@@ -441,6 +442,12 @@ void CRIBExporterInterface::load_dialog_data (sxsdk::dialog_interface &d, void *
 		item = &(d.get_dialog_item(dlg_subdivision_id));
 		item->set_bool(m_data.doSubdivision);
 	}
+	{
+		sxsdk::dialog_item_class* item;
+		item = &(d.get_dialog_item(dlg_denoise_id));
+		item->set_bool(m_data.doDenoise);
+	}
+
 }
 
 void CRIBExporterInterface::save_dialog_data (sxsdk::dialog_interface &dialog,void *)
@@ -563,6 +570,10 @@ bool CRIBExporterInterface::respond (sxsdk::dialog_interface &dialog, sxsdk::dia
 	}
 	if (id == dlg_subdivision_id) {
 		m_data.doSubdivision = item.get_bool();
+		return true;
+	}
+	if (id == dlg_denoise_id) {
+		m_data.doDenoise = item.get_bool();
 		return true;
 	}
 

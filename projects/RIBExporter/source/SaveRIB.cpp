@@ -221,6 +221,39 @@ void CSaveRIB::m_WriteHeader ()
 	}
 	m_WriteLine("");
 
+	// Denoise情報を出力.
+	if (m_dlgData.prmanVersion >= 1 && m_dlgData.doDenoise) {
+		m_WriteLine("# Denoise Settings.");
+		m_WriteLine("DisplayChannel \"color Ci\"");
+		m_WriteLine("DisplayChannel \"float a\"");
+		m_WriteLine("DisplayChannel \"color mse\" \"string statistics\" [\"mse\"] \"string source\" [\"color Ci\"]");
+		m_WriteLine("DisplayChannel \"color albedo\" \"string source\" [\"color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O\"]");
+		m_WriteLine("DisplayChannel \"color albedo_var\" \"string statistics\" [\"variance\"] \"string source\" [\"color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O\"]");
+		m_WriteLine("DisplayChannel \"color diffuse\" \"string source\" [\"color lpe:C(D[DS]*[LO])|O\"]");
+		m_WriteLine("DisplayChannel \"color diffuse_mse\" \"string statistics\" [\"mse\"] \"string source\" [\"color lpe:C(D[DS]*[LO])|O\"]");
+		m_WriteLine("DisplayChannel \"color specular\" \"string source\" [\"color lpe:CS[DS]*[LO]\"]");
+		m_WriteLine("DisplayChannel \"color specular_mse\" \"string statistics\" [\"mse\"] \"string source\" [\"color lpe:CS[DS]*[LO]\"]");
+		m_WriteLine("DisplayChannel \"float z\" \"string filter\" [\"gaussian\"] \"string source\" [\"float z\"]");
+		m_WriteLine("DisplayChannel \"float z_var\" \"string statistics\" [\"variance\"] \"string filter\" [\"gaussian\"] \"string source\" [\"float z\"]");
+		m_WriteLine("DisplayChannel \"normal normal\" \"string source\" [\"normal Nn\"]");
+		m_WriteLine("DisplayChannel \"normal normal_var\" \"string statistics\" [\"variance\"] \"string source\" [\"normal Nn\"]");
+		m_WriteLine("DisplayChannel \"vector forward\" \"string source\" [\"vector motionFore\"]");
+		m_WriteLine("DisplayChannel \"vector backward\" \"string source\" [\"vector motionBack\"]");
+		{
+			std::string name = m_RIBInfo.renderingFileName;
+			const int iPos = name.find(".");
+			if (iPos != std::string::npos) {
+				name = name.substr(0, iPos);
+			}
+
+			std::stringstream s;
+			s << "Display \"+" << name << ".variance.exr\" \"openexr\" " << "\"Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,z,z_var,normal,normal_var,forward,backward\" \"string storage\" [\"tiled\"]";
+			m_WriteLine(s.str());
+		}
+
+		m_WriteLine("");
+	}
+
 	// RISの設定.
 #if USE_PRMAN_RIS
 	{
@@ -247,6 +280,9 @@ void CSaveRIB::m_WriteHeader ()
 		{
 			std::stringstream s;
 			s << "Hider \"raytrace\" \"int minsamples\" [" << m_RIBInfo.minSamples << "] \"int maxsamples\" [" << m_RIBInfo.maxSamples << "] \"int incremental\" [" << (m_RIBInfo.incremental ? 1 : 0) << "]";
+			if (m_dlgData.prmanVersion >= 1) {
+				s << " \"string pixelfiltermode\" [\"importance\"]";		// Importance Samplingを行う。これがないと、denoiseがきれいにできない.
+			}
 			m_WriteLine(s.str());
 		}
 

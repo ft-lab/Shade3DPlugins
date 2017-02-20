@@ -26,7 +26,8 @@
 #define RIB_EXPORT_DLG_VERSION_101		0x101		// ver.1.0.0.1 - .
 #define RIB_EXPORT_DLG_VERSION_104		0x104		// ver.1.0.0.4 - .
 #define RIB_EXPORT_DLG_VERSION_105		0x105		// ver.1.0.0.5 - .
-#define RIB_EXPORT_DLG_VERSION			0x105		// current (ver.1.0.0.5 - ).
+#define RIB_EXPORT_DLG_VERSION_1105		0x1105		// current (ver.1.1.0.5 - ).
+#define RIB_EXPORT_DLG_VERSION			0x1105		// current (ver.1.1.0.5 - ).
 
 #define RIB_MATERIAL_VERSION_100		0x100		// Materialのバージョン.
 #define RIB_MATERIAL_VERSION_102		0x102		// ver.1.0.0.2 - 
@@ -122,6 +123,8 @@ public:
 	bool doSubdivision;											// サブディビジョンする場合はtrue.
 	int prmanVersion;											// RenderManのバージョン（0:20.x、1:21.x）.
 
+	bool doDenoise;												// Denoise処理を有効にする場合はtrue.
+
 public:
 	RIBExportData () {
 		Clear();
@@ -154,6 +157,7 @@ public:
 		statisticsEndOfFrame = true;
 		statisticsXMLFile    = false;
 		doSubdivision        = true;
+		doDenoise			 = false;
 	}
 };
 
